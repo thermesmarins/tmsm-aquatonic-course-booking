@@ -122,6 +122,11 @@ class Tmsm_Aquatonic_Course_Booking {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-tmsm-aquatonic-course-booking-public.php';
 
+		/**
+		 * The class responsible for sanitizing user input
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tmsm-aquatonic-course-booking-sanitize.php';
+
 		$this->loader = new Tmsm_Aquatonic_Course_Booking_Loader();
 
 	}
@@ -157,6 +162,14 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// Settings
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_sections' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_fields' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'options_page_menu' );
+		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
+		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
+
 	}
 
 	/**
@@ -175,6 +188,8 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_postlisting' );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_post' );
+
+		$this->loader->add_action( 'gform_after_submission_8', $plugin_public, 'booking_submission', 10, 2 );
 
 	}
 

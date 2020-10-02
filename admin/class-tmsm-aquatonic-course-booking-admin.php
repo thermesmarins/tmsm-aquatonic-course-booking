@@ -41,6 +41,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	private $version;
 
 	/**
+	 * The plugin options.
+	 *
+	 * @since 		1.0.0
+	 * @access 		private
+	 * @var 		string 			$options    The plugin options.
+	 */
+	private $options;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,6 +60,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+
+		$this->set_options();
 
 	}
 
@@ -100,4 +111,373 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 	}
 
+
+	/**
+	 * Register the Settings page.
+	 *
+	 * @since    1.0.0
+	 */
+	public function options_page_menu() {
+		add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'manage_options', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+
+	}
+
+	/**
+	 * Plugin Settings Link on plugin page
+	 *
+	 * @since 		1.0.0
+	 * @return 		mixed 			The settings field
+	 */
+	function settings_link( $links ) {
+		$setting_link = array(
+			'<a href="' . admin_url( 'options-general.php?page='.$this->plugin_name.'-settings' ) . '">'.__('Settings', 'tmsm-aquatonic-course-booking').'</a>',
+		);
+		return array_merge( $setting_link, $links );
+	}
+
+
+	/**
+	 * Render the settings page for this plugin.
+	 *
+	 * @since    1.0.0
+	 */
+	public function options_page_display() {
+		include_once( 'partials/' . $this->plugin_name . '-admin-options-page.php' );
+	}
+
+
+	/**
+	 * Creates a settings section
+	 *
+	 * @since 		1.0.0
+	 * @param 		array 		$params 		Array of parameters for the section
+	 * @return 		mixed 						The settings section
+	 */
+	public function section_times( $params ) {
+		include_once( plugin_dir_path( __FILE__ ) . 'partials/'. $this->plugin_name.'-admin-section-times.php' );
+	}
+
+	/**
+	 * Registers settings fields with WordPress
+	 */
+	public function register_fields() {
+
+		add_settings_field(
+			'slotsize',
+			esc_html__( 'Slot Size', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_select' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'description' 	=> __( 'Number of slots per hour', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'slotsize',
+				'selections' => [
+					2 => 2,
+					3 => 3,
+					4 => 4,
+					6 => 6,
+				],
+			)
+		);
+
+		add_settings_field(
+			'courseaverage',
+			esc_html__( 'Course Average', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'description' 	=> __( 'Number of minutes of an average course', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'courseaverage',
+			)
+		);
+
+		add_settings_field(
+			'hoursbefore',
+			esc_html__( 'Booking Possible Before', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'description' 	=> __( 'Number of hours before the possibility to book', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'hoursbefore',
+			)
+		);
+
+
+		add_settings_field(
+			'hoursafter',
+			esc_html__( 'Booking Possible After', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'description' 	=> __( 'Number of hours after the possibility to book', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'hoursafter',
+			)
+		);
+
+
+
+
+
+	}
+
+
+	/**
+	 * Registers settings sections with WordPress
+	 */
+	public function register_sections() {
+
+
+		add_settings_section(
+			$this->plugin_name . '-times',
+			esc_html__( 'Times', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_times' ),
+			$this->plugin_name
+		);
+
+
+	}
+
+
+	/**
+	 * Registers plugin settings
+	 *
+	 * @since 		1.0.0
+	 * @return 		void
+	 */
+	public function register_settings() {
+		register_setting(
+			$this->plugin_name . '-options',
+			$this->plugin_name . '-options',
+			array( $this, 'validate_options' )
+		);
+	}
+
+	/**
+	 * Sanitize fields
+	 *
+	 * @param $type
+	 * @param $data
+	 *
+	 * @return string|void
+	 */
+	private function sanitizer( $type, $data ) {
+		if ( empty( $type ) ) { return; }
+		if ( empty( $data ) ) { return; }
+		$return 	= '';
+		$sanitizer 	= new Tmsm_Aquatonic_Course_Booking_Sanitize();
+		$sanitizer->set_data( $data );
+		$sanitizer->set_type( $type );
+		$return = $sanitizer->clean();
+		unset( $sanitizer );
+		return $return;
+	}
+
+	/**
+	 * Sets the class variable $options
+	 */
+	private function set_options() {
+		$this->options = get_option( $this->plugin_name . '-options' );
+	}
+
+	/**
+	 * Validates saved options
+	 *
+	 * @since 		1.0.0
+	 * @param 		array 		$input 			array of submitted plugin options
+	 * @return 		array 						array of validated plugin options
+	 */
+	public function validate_options( $input ) {
+		//wp_die( print_r( $input ) );
+		$valid 		= array();
+		$options 	= $this->get_options_list();
+		foreach ( $options as $option ) {
+			$name = $option[0];
+			$type = $option[1];
+
+			$valid[$option[0]] = $this->sanitizer( $type, $input[$name] );
+
+		}
+		return $valid;
+	}
+
+	/**
+	 * Creates a checkbox field
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_checkbox( $args ) {
+		$defaults['class'] 			= '';
+		$defaults['description'] 	= '';
+		$defaults['label'] 			= '';
+		$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		$defaults['value'] 			= 0;
+		apply_filters( $this->plugin_name . '-field-checkbox-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-checkbox.php' );
+	}
+
+	/**
+	 * Creates an editor field
+	 *
+	 * NOTE: ID must only be lowercase letter, no spaces, dashes, or underscores.
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_editor( $args ) {
+		$defaults['description'] 	= '';
+		$defaults['settings'] 		= array( 'textarea_name' => $this->plugin_name . '-options[' . $args['id'] . ']' );
+		$defaults['value'] 			= '';
+		apply_filters( $this->plugin_name . '-field-editor-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-editor.php' );
+	}
+
+	/**
+	 * Creates a set of radios field
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_radios( $args ) {
+		$defaults['class'] 			= '';
+		$defaults['description'] 	= '';
+		$defaults['label'] 			= '';
+		$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		$defaults['value'] 			= 0;
+		apply_filters( $this->plugin_name . '-field-radios-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-radios.php' );
+	}
+
+	public function field_repeater( $args ) {
+		$defaults['class'] 			= 'repeater';
+		$defaults['fields'] 		= array();
+		$defaults['id'] 			= '';
+		$defaults['label-add'] 		= 'Add Item';
+		$defaults['label-edit'] 	= 'Edit Item';
+		$defaults['label-header'] 	= 'Item Name';
+		$defaults['label-remove'] 	= 'Remove Item';
+		$defaults['title-field'] 	= '';
+		/*
+				$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		*/
+		apply_filters( $this->plugin_name . '-field-repeater-options-defaults', $defaults );
+		$setatts 	= wp_parse_args( $args, $defaults );
+		$count 		= 1;
+		$repeater 	= array();
+		if ( ! empty( $this->options[$setatts['id']] ) ) {
+			$repeater = maybe_unserialize( $this->options[$setatts['id']][0] );
+		}
+		if ( ! empty( $repeater ) ) {
+			$count = count( $repeater );
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-repeater.php' );
+	}
+
+	/**
+	 * Creates a select field
+	 *
+	 * Note: label is blank since its created in the Settings API
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_select( $args ) {
+		$defaults['aria'] 			= '';
+		$defaults['blank'] 			= '';
+		$defaults['class'] 			= 'widefat';
+		$defaults['context'] 		= '';
+		$defaults['description'] 	= '';
+		$defaults['label'] 			= '';
+		$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		$defaults['selections'] 	= array();
+		$defaults['value'] 			= '';
+		apply_filters( $this->plugin_name . '-field-select-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		if ( empty( $atts['aria'] ) && ! empty( $atts['description'] ) ) {
+			$atts['aria'] = $atts['description'];
+		} elseif ( empty( $atts['aria'] ) && ! empty( $atts['label'] ) ) {
+			$atts['aria'] = $atts['label'];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-select.php' );
+	}
+
+	/**
+	 * Creates a text field
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_text( $args ) {
+		$defaults['class'] 			= 'regular-text';
+		$defaults['description'] 	= '';
+		$defaults['label'] 			= '';
+		$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		$defaults['placeholder'] 	= '';
+		$defaults['type'] 			= 'text';
+		$defaults['value'] 			= '';
+		apply_filters( $this->plugin_name . '-field-text-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-text.php' );
+	}
+
+	/**
+	 * Creates a textarea field
+	 *
+	 * @param 	array 		$args 			The arguments for the field
+	 * @return 	string 						The HTML field
+	 */
+	public function field_textarea( $args ) {
+		$defaults['class'] 			= 'large-text';
+		$defaults['cols'] 			= 50;
+		$defaults['context'] 		= '';
+		$defaults['description'] 	= '';
+		$defaults['label'] 			= '';
+		$defaults['name'] 			= $this->plugin_name . '-options[' . $args['id'] . ']';
+		$defaults['rows'] 			= 10;
+		$defaults['value'] 			= '';
+		apply_filters( $this->plugin_name . '-field-textarea-options-defaults', $defaults );
+		$atts = wp_parse_args( $args, $defaults );
+		if ( ! empty( $this->options[$atts['id']] ) ) {
+			$atts['value'] = $this->options[$atts['id']];
+		}
+		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-textarea.php' );
+	}
+
+	/**
+	 * Returns an array of options names, fields types, and default values
+	 *
+	 * @return 		array 			An array of options
+	 */
+	public static function get_options_list() {
+		$options   = array();
+
+		$options[] = array( 'slotsize', 'text', '4' );
+		$options[] = array( 'courseaverage', 'text', '90' );
+		$options[] = array( 'hoursbefore', 'text', '' );
+		$options[] = array( 'hoursafter', 'text', '' );
+
+
+		return $options;
+	}
 }

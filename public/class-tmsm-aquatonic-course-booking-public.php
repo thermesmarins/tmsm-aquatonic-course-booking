@@ -189,5 +189,115 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		<?php
 	}
 
+
+	/**
+	 * Booking Submission
+	 *
+	 * @param $entry
+	 * @param $form
+	 */
+	function booking_submission( $entry, $form ) {
+		global $wpdb;
+		//error_log(print_r($entry, true));
+		//error_log(print_r($form, true));
+
+
+		error_log('field firstname: '. self::field_id_from_class('tmsm-aquatonic-course-firstname', $form['fields']));
+		error_log('field lastname: '. self::field_id_from_class('tmsm-aquatonic-course-lastname', $form['fields']));
+		error_log('field birthdate: '. self::field_id_from_class('tmsm-aquatonic-course-birthdate', $form['fields']));
+		error_log('field email: '. self::field_id_from_class('tmsm-aquatonic-course-email', $form['fields']));
+		error_log('field phone: '. self::field_id_from_class('tmsm-aquatonic-course-phone', $form['fields']));
+		error_log('field participants: '. self::field_id_from_class('tmsm-aquatonic-course-participants', $form['fields']));
+		error_log('field date: '. self::field_id_from_class('tmsm-aquatonic-course-date', $form['fields']));
+		error_log('field hourminutes: '. self::field_id_from_class('tmsm-aquatonic-course-hourminutes', $form['fields']));
+
+		error_log('field firstname: '. self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry));
+		error_log('field lastname: '. self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry));
+		error_log('field email: '. self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry));
+		error_log('field phone: '. self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry));
+		error_log('field participants: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
+		error_log('field date: '. self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry));
+		error_log('field hourminutes: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
+
+
+		$table = $wpdb->prefix.'aquatonic_course_booking';
+		$data = array(
+			'firstname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
+			'lastname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
+			'email' => self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry),
+			'phone' => self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry),
+			'birthdate' => self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry),
+			'participants' => self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry),
+			'status' => 'active',
+			'date_created' => date('Y-m-d H:i:s'),
+			'course_start' => date('Y-m-d H:i:s'),
+			'course_end' => date('Y-m-d H:i:s'),
+			'author' => get_current_user_id(),
+		);
+
+		$format = array(
+			'%s',
+			'%s',
+			'%s',
+			'%s',
+			'%s',
+			'%d',
+			'%s',
+			'%s',
+			'%s',
+			'%s',
+			'%d',
+			);
+
+		$wpdb->insert($table,$data,$format);
+		$my_id = $wpdb->insert_id;
+
+
+	}
+
+	/**
+	 * Find the field value with a class in a field list from a Gravity Form
+	 *
+	 * @param $find_class
+	 * @param $fields
+	 * @param $entry
+	 *
+	 * @return string
+	 */
+	static function field_value_from_class($find_class, $fields, $entry){
+
+		return rgar($entry, self::field_id_from_class($find_class, $fields));
+
+	}
+
+	/**
+	 * Find the field id with a class in a field list from a Gravity Form
+	 *
+	 * @param $find_class
+	 * @param $fields
+	 *
+	 * @return string
+	 */
+	static function field_id_from_class($find_class, $fields){
+
+		foreach($fields as $field){
+
+			$class = $field['cssClass'];
+			if($class === $find_class){
+				return $field['id'];
+
+			}
+			else{
+				if(!empty($field['inputs'])){
+					foreach($field['inputs'] as $field_input){
+						$class = $field_input['name'];
+						if($class === $find_class){
+							return $field_input['id'];
+						}
+					}
+				}
+			}
+		}
+	}
 	
 }

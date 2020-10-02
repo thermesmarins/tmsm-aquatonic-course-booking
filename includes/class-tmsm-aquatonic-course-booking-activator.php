@@ -56,6 +56,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
         course_end DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
         date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
         author BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+        status VARCHAR(10) NOT NULL DEFAULT 'active',
         PRIMARY KEY (booking_id)
         ) $charset_collate;";
 
@@ -65,7 +66,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 		dbDelta($sql);
 
 		// save current database version for later use (on upgrade)
-		add_option('tmsm_aquatonic_course_booking_db_version', TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
+		add_option('tmsm-aquatonic-course-booking-db-version', TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
 
 	}
 
