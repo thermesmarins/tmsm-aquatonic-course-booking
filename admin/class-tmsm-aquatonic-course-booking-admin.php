@@ -204,7 +204,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
-
 		add_settings_field(
 			'hoursafter',
 			esc_html__( 'Booking Possible After', 'tmsm-aquatonic-course-booking' ),
@@ -217,9 +216,22 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		foreach (GFAPI::get_forms() as $form){
+			$forms[] = ['value' => $form['id'], 'label' => $form['title']];
+		}
 
-
-
+		add_settings_field(
+			'gform_id',
+			esc_html__( 'Gravity Form', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_select' ),
+			$this->plugin_name,
+			$this->plugin_name . '-form',
+			array(
+				'description' 	=> __( 'Number of hours after the possibility to book', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'gform_id',
+				'selections' => $forms,
+			)
+		);
 
 	}
 
@@ -237,6 +249,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name
 		);
 
+		add_settings_section(
+			$this->plugin_name . '-form',
+			esc_html__( 'Form', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_form' ),
+			$this->plugin_name
+		);
 
 	}
 
@@ -476,6 +494,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'courseaverage', 'text', '90' );
 		$options[] = array( 'hoursbefore', 'text', '' );
 		$options[] = array( 'hoursafter', 'text', '' );
+
+		$options[] = array( 'gform_id', 'text', '' );
 
 
 		return $options;
