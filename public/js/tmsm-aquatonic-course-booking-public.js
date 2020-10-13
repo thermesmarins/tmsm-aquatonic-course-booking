@@ -1,7 +1,9 @@
 (function( $ ) {
 	'use strict';
 
-	/**
+  $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: tmsm_aquatonic_course_booking_i18n.birthdateformat});
+
+  /**
 	 * All of the code for your public-facing JavaScript source
 	 * should reside in this file.
 	 *

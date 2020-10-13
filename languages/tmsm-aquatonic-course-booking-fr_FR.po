@@ -1,0 +1,412 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TMSM Aquatonic Course Booking\n"
+"POT-Creation-Date: 2020-10-12 18:01+0200\n"
+"PO-Revision-Date: 2020-10-12 18:02+0200\n"
+"Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
+"Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-KeywordsList: _e;__;_n:1,2;_x:1,2c;esc_attr__;esc_attr_e;"
+"esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SearchPath-0: languages\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPathExcluded-0: vendor\n"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:121
+msgid "Aquatonic Course"
+msgstr "Parcours Aquatonic"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:133
+msgid "Settings"
+msgstr "Réglages"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:167
+msgid "Slot Size"
+msgstr "Taille des créneaux"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:172
+msgid "Number of slots per hour"
+msgstr "Nombre de créneaux par heure"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:185
+msgid "Course Average"
+msgstr "Moyenne de la durée d’un parcours"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:190
+msgid "Number of minutes of an average course"
+msgstr "Nombre de minutes moyen d’un parcours"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:197
+msgid "Booking Possible Before"
+msgstr "Réservation possible avant"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:202
+msgid "Number of hours before the possibility to book"
+msgstr "Nombre d’heures avant la possibilité de réserver"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:209
+msgid "Booking Possible After"
+msgstr "Réservation possible après"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:214
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:230
+msgid "Number of hours after the possibility to book"
+msgstr "Nombre d’heures après la date courante"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:225
+msgid "Gravity Form"
+msgstr "Gravity Form"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:247
+msgid "Times"
+msgstr "Créneaux horaires"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:254
+msgid "Form"
+msgstr "Formulaire"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:18
+msgid "Save options"
+msgstr "Enregistrer les options"
+
+#: includes/class-tmsm-aquatonic-course-booking-sanitize.php:192
+msgid "Specify the data type to sanitize."
+msgstr "Spécifier de type de données à normaliser."
+
+#: includes/class-tmsm-aquatonic-course-booking-sanitize.php:198
+msgid "Forgot data type"
+msgstr "Type de données oublié"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:122
+msgctxt "birthdate date format for humans"
+msgid "mm/dd/yyyy"
+msgstr "jj/mm/aaaa"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:186
+msgid "Published"
+msgstr "Publié"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:187
+msgid "Draft"
+msgstr "Brouillon"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:191
+msgid "Save"
+msgstr "Enregistrer"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:206
+msgid "Title"
+msgstr "Titre"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:207
+msgid "Publish Status"
+msgstr "Etat de publication"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:208
+msgid "Action"
+msgstr "Action"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:214
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:215
+msgid "Previous"
+msgstr "Précédent"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:216
+msgid "Next"
+msgstr "Suivant"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:256
+msgctxt "birthdate date format for machines"
+msgid "m/d/y"
+msgstr "d/m/y"
+
+#~ msgid "TMSM Aquatonic Attendance Cron Schedule Exists"
+#~ msgstr "La planification de cron de TMSM Aquatonic Attendance existe"
+
+#~ msgctxt "Issue counter label for the admin menu"
+#~ msgid "Critical issues"
+#~ msgstr "Problèmes critiques"
+
+#~ msgid "Site Health"
+#~ msgstr "Santé du site"
+
+#~ msgid "Web Service Count URL"
+#~ msgstr "URL du web service pour le comptage"
+
+#~ msgid "URL of the Web Service for Count Method"
+#~ msgstr "URL du web service pour le comptage"
+
+#~ msgid "Attendance Page ID"
+#~ msgstr "ID de la page d’affluence"
+
+#~ msgid "Page ID of the attendance page"
+#~ msgstr "ID de la page détaillant l’affluence"
+
+#, php-format
+#~ msgid "Tier %s Value"
+#~ msgstr "Valeur du palier %s"
+
+#, php-format
+#~ msgid "Tier %s Color"
+#~ msgstr "Couleur du palier %s"
+
+#~ msgid "Hexadecimal"
+#~ msgstr "Hexadécimal"
+
+#, php-format
+#~ msgid "Tier %s Short Description"
+#~ msgstr "Description courte du palier %s"
+
+#, php-format
+#~ msgid "Tier %s Long Description"
+#~ msgstr "Description longue du palier %s"
+
+#~ msgid "Html accepted."
+#~ msgstr "Html accepté."
+
+#~ msgid ""
+#~ "Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day "
+#~ "Number is: 0 for Sunday, 1 for Monday, etc."
+#~ msgstr ""
+#~ "Format : Nombre du jour=09:00-14:00,15:30-17:30=65 séparé par des sauts "
+#~ "de ligne. Nombre du jour est : 0 pour dimanche, 1 pour lundi, etc."
+
+#~ msgid "Web Service"
+#~ msgstr "Service web"
+
+#~ msgid "Tiers"
+#~ msgstr "Paliers"
+
+#~ msgid "Time Slots"
+#~ msgstr "Créneaux horaires"
+
+#~ msgid "Performance"
+#~ msgstr "Performance"
+
+#~ msgid "Cron Schedule is not fired"
+#~ msgstr "La planification du cron n’est pas exécutée"
+
+#~ msgid "TMSM Aquatonic Attendance Cron Schedule is not added"
+#~ msgstr "Le cron TMSM Aquatonic Attendance n’a pas été ajouté"
+
+#~ msgid ""
+#~ "Cron schedule is not fired, prices will not update from Aquatonic "
+#~ "Attendance."
+#~ msgstr ""
+#~ "Le cron n’est pas planifié, les prix ne seront pas mis à joue depuis "
+#~ "Aquatonic Attendance."
+
+#~ msgid "Disable and enable again the plugin"
+#~ msgstr "Désactiver puis activer l’extension"
+
+#~ msgid "Every 15 minutes"
+#~ msgstr "Toutes les 15 minutes"
+
+#~ msgid "Live Attendance"
+#~ msgstr "Affluence en direct"
+
+#~ msgid "More Info About Attendance"
+#~ msgstr "En savoir plus"
+
+#, php-format
+#~ msgid "TMSM Aquatonic Attendance cron is not scheduled on %s"
+#~ msgstr "Le cron de TMSM Aquatonic Attendance n’est pas planifié sur %s"
+
+#~ msgid "Loading"
+#~ msgstr "Chargement"
+
+#~ msgid "Web service is not available"
+#~ msgstr "Le service web n’est pas disponible"
+
+#~ msgid "No data available"
+#~ msgstr "Aucune donnée disponible"
+
+#, php-format
+#~ msgid "Error code %s: %s"
+#~ msgstr "Code erreur %s : %s"
+
+#~ msgid "Token security is not valid"
+#~ msgstr "Le jeton de sécurité n’est pas valide"
+
+#~ msgid "Ajax referer is not valid"
+#~ msgstr "Le référant ajax n’est pas valide"
+
+#~ msgid "Consumer key"
+#~ msgstr "Clé client"
+
+#~ msgid "Consumer secret"
+#~ msgstr "Secret client"
+
+#~ msgid "Access token"
+#~ msgstr "Token d’accès"
+
+#~ msgid "Token secret"
+#~ msgstr "Secret de token"
+
+#~ msgid "Group ID"
+#~ msgstr "Identifiant du groupe"
+
+#~ msgid "Hotel ID"
+#~ msgstr "Identifiant de l'hôtel"
+
+#~ msgid "Room IDs"
+#~ msgstr "Identifiants de chambre"
+
+#~ msgid "Separated by comma."
+#~ msgstr "Séparé par des virgules."
+
+#~ msgid "Accommodation Rate IDs"
+#~ msgstr "Identifiants de prix de l’établissement"
+
+#~ msgid "OTA Rate IDs"
+#~ msgstr "Identifiants de prix OTA"
+
+#~ msgid "Currency (ISO 4217 code)"
+#~ msgstr "Monnaie (code ISO 4217)"
+
+#~ msgid "Engine (format: name/id/)"
+#~ msgstr "Moteur (format : nom/identifiant/)"
+
+#~ msgid "Intro"
+#~ msgstr "Intro"
+
+#~ msgid "Outro"
+#~ msgstr "Outro"
+
+#~ msgid "Book Button Label"
+#~ msgstr "Libellé du bouton réservation"
+
+#~ msgid "Year Best Price Label"
+#~ msgstr "Libellé du meilleur prix annuel"
+
+#~ msgid "Html accepted. Use % as placeholder for price."
+#~ msgstr "Html accepté. Utilisez % pour afficher le prix."
+
+#~ msgid "Accommodation Price Label"
+#~ msgstr "Libellé du prix de l’établissement"
+
+#~ msgid "OTA Compare Label"
+#~ msgstr "Libellé du prix OTA"
+
+#~ msgid "API"
+#~ msgstr "API"
+
+#~ msgid "Filters"
+#~ msgstr "Filtres"
+
+#~ msgctxt "money format"
+#~ msgid "From %"
+#~ msgstr "À partir de %"
+
+#~ msgid "Compare with the OTA: %"
+#~ msgstr "Comparez avec les OTA : %"
+
+#~ msgid "Calendar color for selected date"
+#~ msgstr "Couleur pour la date sélectionnée dans le calendrier"
+
+#~ msgid "Calendar color for range date"
+#~ msgstr "Couleur pour la plage sélectionnée dans le calendrier"
+
+#~ msgid "Calendar best price color"
+#~ msgstr "Couleur pour le meilleur prix dans le calendrier"
+
+#~ msgid "Customize colors"
+#~ msgstr "Personnaliser les couleurs"
+
+#~ msgctxt "price"
+#~ msgid "From"
+#~ msgstr "À partir de"
+
+#~ msgid "Available"
+#~ msgstr "Disponible"
+
+#~ msgid "Lowest price"
+#~ msgstr "Prix le plus bas"
+
+#~ msgid "Last rooms"
+#~ msgstr "Dernières disponibilités"
+
+#~ msgid "Minimum stay"
+#~ msgstr "Durée minimum"
+
+#~ msgctxt "date selection"
+#~ msgid "From"
+#~ msgstr "Du"
+
+#~ msgctxt "date selection"
+#~ msgid "to"
+#~ msgstr "au"
+
+#~ msgid "Number of nights:"
+#~ msgstr "Nombre de nuits :"
+
+#~ msgid "Minimum stay:"
+#~ msgstr "Durée minimum :"
+
+#~ msgid "Book now"
+#~ msgstr "Réserver maintenant"
+
+#~ msgid "Date is empty"
+#~ msgstr "La date est vide"
+
+#~ msgid "Nights number are empty"
+#~ msgstr "Le nombre de nuit est vide"
+
+#~ msgid "No availability"
+#~ msgstr "Aucune disponibilité"
+
+#~ msgid "Rate IDs (separated by comma)"
+#~ msgstr "Identifiants de tarifs (séparé par des virgules)"
+
+#~ msgid "Accommodation Rate IDs (separated by comma)"
+#~ msgstr "Identifiants de tarifs de l’établissement (séparé par des virgules)"
+
+#~ msgid "OTA Rate IDs (separated by comma)"
+#~ msgstr "Identifiants de tarifs OTA (séparé par des virgules)"
+
+#~ msgid "From %"
+#~ msgstr "À partir de %"
+
+#~ msgid "Total price:"
+#~ msgstr "Prix total :"
+
+#~ msgctxt "money format"
+#~ msgid "From €%.0n"
+#~ msgstr "À partir de %.0n €"
+
+#~ msgctxt "money format"
+#~ msgid "€%.0n"
+#~ msgstr "%.0n €"
+
+#~ msgctxt "price"
+#~ msgid "from"
+#~ msgstr "à partir de"
+
+#~ msgid "To"
+#~ msgstr "Au"
+
+#~ msgid "Checkin"
+#~ msgstr "Arrivée"
+
+#~ msgid "Checkout"
+#~ msgstr "Départ"
+
+#~ msgid "Number of adults:"
+#~ msgstr "Nombre d’adultes :"
+
+#~ msgid "%s adult"
+#~ msgid_plural "%s adults"
+#~ msgstr[0] "%s adulte"
+#~ msgstr[1] "%s adultes"
+
+#~ msgid "Engine"
+#~ msgstr "Moteur"

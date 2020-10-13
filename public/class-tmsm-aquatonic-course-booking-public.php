@@ -113,8 +113,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			);
 		}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public.js', array( 'wp-backbone', 'moment', 'jquery' ), $this->version, true );
+		wp_enqueue_script( 'jquery-mask', plugin_dir_url( __FILE__ ) . 'js/jquery.mask.min.js', array( 'jquery' ), null, true );
 
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms' ), $this->version, true );
+
+		// Javascript localization
+		$translation_array = array(
+			'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
+		);
+		wp_localize_script( $this->plugin_name, 'tmsm_aquatonic_course_booking_i18n', $translation_array );
+
+
+		// Rest data
 		wp_localize_script(
 			$this->plugin_name,
 			'bbdata',
@@ -127,6 +137,25 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
+
+	/**
+	 * Get option
+	 * @param string $option_name
+	 *
+	 * @return null
+	 */
+	private function get_option($option_name = null){
+
+		$options = get_option($this->plugin_name . '-options');
+
+		if(!empty($option_name)){
+			return $options[$option_name] ?? null;
+		}
+		else{
+			return $options;
+		}
+
+	}
 
 	/**
 	 * Have Voucher Template
@@ -154,12 +183,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			<# //console.log(data) #>
 			<td>
 				<select class="status">
-					<option value="publish"<# if ( data.status == 'publish' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Published', 'backbone-example' ) ) ?></option>
-					<option value="draft"<# if ( data.status == 'draft' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Draft', 'backbone-example' ) ) ?></option>
+					<option value="publish"<# if ( data.status == 'publish' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Published', 'tmsm-aquatonic-course-booking' ) ) ?></option>
+					<option value="draft"<# if ( data.status == 'draft' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Draft', 'tmsm-aquatonic-course-booking' ) ) ?></option>
 				</select>
 			</td>
 			<td>
-				<button class="button save"><?php echo esc_html( __( 'Save', 'backbone-example' ) ) ?></button>
+				<button class="button save"><?php echo esc_html( __( 'Save', 'tmsm-aquatonic-course-booking' ) ) ?></button>
 			</td>
 		</script>
 		<?php
@@ -174,17 +203,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		<script type="text/template" id="tmpl-bb-post-listing">
 			<table class="wp-list-table widefat">
 				<thead>
-				<th><?php echo esc_html( __( 'Title', 'backbone-example' ) ) ?></th>
-				<th><?php echo esc_html( __( 'Publish Status', 'backbone-example' ) ) ?></th>
-				<th><?php echo esc_html( __( 'Action', 'backbone-example' ) ) ?></th>
+				<th><?php echo esc_html( __( 'Title', 'tmsm-aquatonic-course-booking' ) ) ?></th>
+				<th><?php echo esc_html( __( 'Publish Status', 'tmsm-aquatonic-course-booking' ) ) ?></th>
+				<th><?php echo esc_html( __( 'Action', 'tmsm-aquatonic-course-booking' ) ) ?></th>
 				<th>{{ moment().add(0, 'days').format('MMMM Do YYYY, h:mm:ss a') }}</th>
 				</thead>
 				<tbody class="bb-posts"></tbody>
 			</table>
 
-			<p><button class="button button-primary refresh"><?php echo esc_html( __( 'Refresh', 'backbone-example' ) ) ?></button></p>
-			<p><button class="btn-default previous"><?php echo esc_html( __( 'Previous', 'backbone-example' ) ) ?></button></p>
-			<p><button class="btn-default next"><?php echo esc_html( __( 'Next', 'backbone-example' ) ) ?></button></p>
+			<p><button class="button button-primary refresh"><?php echo esc_html( __( 'Refresh', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
+			<p><button class="btn-default previous"><?php echo esc_html( __( 'Previous', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
+			<p><button class="btn-default next"><?php echo esc_html( __( 'Next', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
 		</script>
 		<?php
 	}
@@ -202,9 +231,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		//error_log(print_r($form, true));
 
 
+		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
+		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
+
 		error_log('field firstname: '. self::field_id_from_class('tmsm-aquatonic-course-firstname', $form['fields']));
 		error_log('field lastname: '. self::field_id_from_class('tmsm-aquatonic-course-lastname', $form['fields']));
-		error_log('field birthdate: '. self::field_id_from_class('tmsm-aquatonic-course-birthdate', $form['fields']));
+		error_log('value birthdate: '. $birthdate);
 		error_log('field email: '. self::field_id_from_class('tmsm-aquatonic-course-email', $form['fields']));
 		error_log('field phone: '. self::field_id_from_class('tmsm-aquatonic-course-phone', $form['fields']));
 		error_log('field participants: '. self::field_id_from_class('tmsm-aquatonic-course-participants', $form['fields']));
@@ -216,22 +248,35 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		error_log('field email: '. self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry));
 		error_log('field phone: '. self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry));
 		error_log('field participants: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
-		error_log('field date: '. self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry));
+		error_log('field course_start: '. $course_start);
 		error_log('field hourminutes: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
 
+		// Convert birthdate
+		if(!empty($birthdate)){
+			$objdate = DateTime::createFromFormat( _x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
+			error_log($objdate);
+			$birthdate_computed = $objdate ?? $objdate->format( 'Y-m-d' );
+		}
 
-		$table = $wpdb->prefix.'aquatonic_course_booking';
+		// Calculate date start and end of course
+		error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
+		$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+		$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
+		$course_end = $objdate->format( 'Y-m-d H:i:s' );
+
+
+		$table = $wpdb->prefix . 'aquatonic_course_booking';
 		$data = array(
 			'firstname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
-			'lastname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
+			'lastname' => self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry),
 			'email' => self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry),
 			'phone' => self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry),
-			'birthdate' => self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry),
-			'participants' => self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry),
+			'birthdate' => $birthdate_computed,
+			'participants' => self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry),
 			'status' => 'active',
 			'date_created' => date('Y-m-d H:i:s'),
-			'course_start' => date('Y-m-d H:i:s'),
-			'course_end' => date('Y-m-d H:i:s'),
+			'course_start' => $course_start,
+			'course_end' => $course_end,
 			'author' => get_current_user_id(),
 		);
 
