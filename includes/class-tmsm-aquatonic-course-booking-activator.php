@@ -23,7 +23,7 @@
 class Tmsm_Aquatonic_Course_Booking_Activator {
 
 	/**
-	 * Install custoom table
+	 * Install custom table
 	 *
 	 * @link https://mac-blog.org.ua/wordpress-custom-database-table-example-full/
 	 * @link https://premium.wpmudev.org/blog/creating-database-tables-for-plugins/
@@ -50,7 +50,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
         lastname VARCHAR(50) NOT NULL,
         email VARCHAR(100) NOT NULL,
         phone VARCHAR(50) NOT NULL,
-        birthdate DATE NOT NULL,
+        birthdate DATE DEFAULT NULL,
         participants TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
         course_start DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
         course_end DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2020-10-12 18:01+0200\n"
-"PO-Revision-Date: 2020-10-12 18:02+0200\n"
+"POT-Creation-Date: 2020-12-14 16:23+0100\n"
+"PO-Revision-Date: 2020-12-14 16:23+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -84,6 +84,7 @@ msgid "Forgot data type"
 msgstr "Type de données oublié"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:122
+#: public/class-tmsm-aquatonic-course-booking-public.php:259
 msgctxt "birthdate date format for humans"
 msgid "mm/dd/yyyy"
 msgstr "jj/mm/aaaa"
@@ -125,6 +126,11 @@ msgid "Next"
 msgstr "Suivant"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:256
+msgctxt "birthdate date format for machines"
+msgid "m/d/Y"
+msgstr "d/m/Y"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:260
 msgctxt "birthdate date format for machines"
 msgid "m/d/y"
 msgstr "d/m/y"

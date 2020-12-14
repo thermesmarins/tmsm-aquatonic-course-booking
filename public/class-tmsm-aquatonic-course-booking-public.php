@@ -253,9 +253,14 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Convert birthdate
 		if(!empty($birthdate)){
-			$objdate = DateTime::createFromFormat( _x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
-			error_log($objdate);
-			$birthdate_computed = $objdate ?? $objdate->format( 'Y-m-d' );
+			$objdate = DateTime::createFromFormat( _x( 'm/d/Y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
+			error_log('birthdate object:');
+
+			error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
+			error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
+			error_log(print_r($objdate, true));
+			$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
+			error_log('birthdate_computed: '. $birthdate_computed);
 		}
 
 		// Calculate date start and end of course
