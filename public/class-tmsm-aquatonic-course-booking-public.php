@@ -119,9 +119,22 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Javascript localization
 		$translation_array = array(
-			'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
+			'options' => [
+				'rest_url' => get_rest_url(),
+				'canviewpriority' => current_user_can('edit_posts'),
+			],
+			'data' => [
+				'timeslots' => [],
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+			],
+			'i18n' => [
+				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
+				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
+				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
+			] ,
+
 		);
-		wp_localize_script( $this->plugin_name, 'tmsm_aquatonic_course_booking_i18n', $translation_array );
+		wp_localize_script( $this->plugin_name, 'tmsm_aquatonic_course_booking_params', $translation_array );
 
 
 		// Rest data
@@ -132,6 +145,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'posts' => $post_data,
 				'rest_url' => get_rest_url(),
 				'nonce' => wp_create_nonce( 'wp_rest' ),
+
+
 			)
 		);
 
@@ -157,16 +172,35 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
+
 	/**
-	 * Have Voucher Template
+	 * Weekday Template
 	 */
-	public function template_day(){
+	public function template_weekday(){
 		?>
 
-		<script type="text/html" id="tmpl-tmsm-aquos-spa-booking-havevoucher">
+		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-weekday">
+			{{ data.date_label_firstline }} <span class="secondline">{{ data.date_label_secondline }}</span>
+			<ul class="tmsm-aquatonic-course-booking-weekday-times list-unstyled" data-date="{{ data.date_computed }}" >
+				<li>{{ tmsm_aquatonic_course_booking_params.i18n.loading }}</li>
+			</ul>
+		</script>
 
-			<p><strong></strong></p>
-			<ul></ul>
+		<?php
+	}
+
+	/**
+	 * Time Template
+	 */
+	public function template_time(){
+		?>
+
+		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-time">
+			<# if ( data.hourminutes != null) { #>
+			<a class="tmsm-aquatonic-course-booking-time-button <?php echo self::button_class_default(); ?> tmsm-aquatonic-course-booking-time" href="#" data-date="{{ data.date }}" data-hour="{{ data.hour }}" data-minutes="{{ data.minutes }}" data-hourminutes="{{ data.hourminutes }}" data-priority="{{ data.priority }}">{{ data.hourminutes }} <# if ( tmsm_aquatonic_course_booking_params.canviewpriority == "1" && data.priority == 1) { #> <!--*--><# } #></a> <a href="#" class="tmsm-aquatonic-course-booking-time-change-label"><?php echo __( 'Change time', 'tmsm-aquatonic-course-booking' ); ?></a>
+			<# } else { #>
+			{{  tmsm_aquatonic_course_booking_params.i18n.notimeslot }}
+			<# } #>
 
 		</script>
 		<?php
@@ -349,5 +383,58 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 		}
 	}
-	
+
+
+	/**
+	 * Button Class Default
+	 *
+	 * @return string
+	 */
+	private static function button_class_default(){
+		$theme = wp_get_theme();
+		$buttonclass = '';
+		if ( 'StormBringer' == $theme->get( 'Name' ) || 'stormbringer' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'btn btn-default';
+		}
+		if ( 'OceanWP' == $theme->get( 'Name' ) || 'oceanwp' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'button';
+		}
+		return $buttonclass;
+	}
+
+	/**
+	 * Button Class Primary
+	 *
+	 * @return string
+	 */
+	private static function button_class_primary(){
+		$theme = wp_get_theme();
+		$buttonclass = '';
+		if ( 'StormBringer' == $theme->get( 'Name' ) || 'stormbringer' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'btn btn-primary';
+		}
+		if ( 'OceanWP' == $theme->get( 'Name' ) || 'oceanwp' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'button';
+		}
+		return $buttonclass;
+	}
+
+
+	/**
+	 * Alert Class Error
+	 *
+	 * @return string
+	 */
+	private static function alert_class_error(){
+		$theme = wp_get_theme();
+		$buttonclass = '';
+		if ( 'StormBringer' == $theme->get( 'Name' ) || 'stormbringer' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'alert alert-danger';
+		}
+		if ( 'OceanWP' == $theme->get( 'Name' ) || 'oceanwp' == $theme->get( 'Template' ) ) {
+			$buttonclass = 'alert';
+		}
+		return $buttonclass;
+	}
+
 }

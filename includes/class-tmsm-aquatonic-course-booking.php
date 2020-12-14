@@ -189,6 +189,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_postlisting' );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_post' );
 
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_weekday' );
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time' );
+
 		$this->loader->add_action( 'gform_after_submission_8', $plugin_public, 'booking_submission', 10, 2 );
 
 	}
