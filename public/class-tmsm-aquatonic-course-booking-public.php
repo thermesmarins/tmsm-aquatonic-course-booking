@@ -119,13 +119,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Javascript localization
 		$translation_array = array(
-			'options' => [
-				'rest_url' => get_rest_url(),
-				'canviewpriority' => current_user_can('edit_posts'),
-			],
 			'data' => [
 				'timeslots' => [],
-				'nonce' => wp_create_nonce( 'wp_rest' ),
+				'locale'   => $this->get_locale(),
+				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( 'tmsm-aquatonic-course-booking-nonce-action' ),
+				'rest_url' => get_rest_url(),
+				'canviewpriority' => current_user_can('edit_posts'),
 			],
 			'i18n' => [
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
@@ -134,7 +134,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			] ,
 
 		);
-		wp_localize_script( $this->plugin_name, 'tmsm_aquatonic_course_booking_params', $translation_array );
+		wp_localize_script( $this->plugin_name, 'TmsmAquatonicCourseApp', $translation_array );
 
 
 		// Rest data
@@ -172,6 +172,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
+	/**
+	 * Get locale
+	 */
+	private function get_locale() {
+		return (function_exists('pll_current_language') ? pll_current_language() : substr(get_locale(),0, 2));
+	}
 
 	/**
 	 * Weekday Template
