@@ -459,8 +459,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$this->ajax_checksecurity();
 		$this->ajax_return( $this->_get_times() );
-
 	}
+
+
 
 	/**
 	 * Ajax check nonce security
@@ -531,5 +532,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		return $times;
 	}
+
 
 }

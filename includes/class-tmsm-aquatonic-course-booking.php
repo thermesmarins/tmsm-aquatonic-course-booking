@@ -197,7 +197,6 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 
-
 	}
 
 	/**
