@@ -141,19 +141,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		wp_localize_script( $this->plugin_name, 'TmsmAquatonicCourseApp', $translation_array );
 
 
-		// Rest data
-		wp_localize_script(
-			$this->plugin_name,
-			'bbdata',
-			array(
-				'posts' => $post_data,
-				'rest_url' => get_rest_url(),
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-
-
-			)
-		);
-
 	}
 
 
@@ -216,51 +203,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		<?php
 	}
 
-	/**
-	 * Template
-	 */
-	public function template_post(){
-		?>
 
-		<script type="text/template" id="tmpl-bb-post">
-			<td><input type="text" class="title" value="{{{ data.title }}}" /></td>
-			<# //console.log(data) #>
-			<td>
-				<select class="status">
-					<option value="publish"<# if ( data.status == 'publish' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Published', 'tmsm-aquatonic-course-booking' ) ) ?></option>
-					<option value="draft"<# if ( data.status == 'draft' ) { #> SELECTED<# } #>><?php echo esc_html( __( 'Draft', 'tmsm-aquatonic-course-booking' ) ) ?></option>
-				</select>
-			</td>
-			<td>
-				<button class="button save"><?php echo esc_html( __( 'Save', 'tmsm-aquatonic-course-booking' ) ) ?></button>
-			</td>
-		</script>
-		<?php
-	}
-
-	/**
-	 * Template
-	 */
-	public function template_postlisting(){
-		?>
-
-		<script type="text/template" id="tmpl-bb-post-listing">
-			<table class="wp-list-table widefat">
-				<thead>
-				<th><?php echo esc_html( __( 'Title', 'tmsm-aquatonic-course-booking' ) ) ?></th>
-				<th><?php echo esc_html( __( 'Publish Status', 'tmsm-aquatonic-course-booking' ) ) ?></th>
-				<th><?php echo esc_html( __( 'Action', 'tmsm-aquatonic-course-booking' ) ) ?></th>
-				<th>{{ moment().add(0, 'days').format('MMMM Do YYYY, h:mm:ss a') }}</th>
-				</thead>
-				<tbody class="bb-posts"></tbody>
-			</table>
-
-			<p><button class="button button-primary refresh"><?php echo esc_html( __( 'Refresh', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
-			<p><button class="btn-default previous"><?php echo esc_html( __( 'Previous', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
-			<p><button class="btn-default next"><?php echo esc_html( __( 'Next', 'tmsm-aquatonic-course-booking' ) ) ?></button></p>
-		</script>
-		<?php
-	}
 
 
 	/**
