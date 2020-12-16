@@ -1,11 +1,11 @@
 (function( $ ) {
 	'use strict';
 
-  $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: tmsm_aquatonic_course_booking_params.i18n.birthdateformat});
+  $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
 
 	if($('.tmsm-aquatonic-course-participants').length > 0 ){
 	  var participants = $('.tmsm-aquatonic-course-participants input').val();
-    $('#tmsm-aquatonic-course-slots-container').html('participants: '+participants);
+    //$('#tmsm-aquatonic-course-slots-container').html('participants: '+participants);
   }
 
   var bbdemo = bbdemo || {};
@@ -130,7 +130,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
    * @see https://www.synbioz.com/blog/tech/debuter-avec-backbonejs
    */
   var TmsmAquatonicCourseAdminAjaxSyncableMixin = {
-    url: TmsmAquatonicCourseApp.ajaxurl,
+    url: TmsmAquatonicCourseApp.data.ajaxurl,
     action: 'tmsm-aquatonic-course-booking-weekday',
 
     sync: function( method, object, options ) {
@@ -139,7 +139,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         options.data = {};
       }
 
-      options.data.nonce = TmsmAquatonicCourseApp.nonce; // From localized script.
+      options.data.nonce = TmsmAquatonicCourseApp.data.nonce; // From localized script.
       options.data.action_type = method;
 
 
@@ -202,11 +202,173 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     // }
   }, TmsmAquatonicCourseAdminAjaxSyncableMixin ) );
 
+
+  /**
+   * Time
+   */
+  TmsmAquatonicCourseApp.TimeModel = TmsmAquatonicCourseBaseModel.extend( {
+    action: 'tmsm-aquatonic-course-booking-times',
+    defaults: {
+      date: null,
+      hour: null,
+      minute: null,
+      priority: null,
+      hourminutes: null,
+    }
+  } );
+
+
+  TmsmAquatonicCourseApp.TimesCollection = TmsmAquatonicCourseBaseCollection.extend( {
+    action: 'tmsm-aquatonic-course-booking-times',
+    model: TmsmAquatonicCourseApp.TimeModel,
+
+  } );
+
+  TmsmAquatonicCourseApp.TimesListView = Backbone.View.extend( {
+    el: '#tmsm-aquatonic-course-booking-times-container',
+    selectedValue: null,
+    listElement: '#tmsm-aquatonic-course-booking-times-list',
+    loadingElement: '#tmsm-aquatonic-course-booking-times-loading',
+    errorElement: '#tmsm-aquatonic-course-booking-times-error',
+    anotherDateElement: '#tmsm-aquatonic-course-booking-times-anotherdate',
+    selectButtons: '.tmsm-aquatonic-course-booking-time-button',
+    cancelButtons: '.tmsm-aquatonic-course-booking-time-change-label',
+
+    initialize: function() {
+
+      console.log('TimesListView initialize');
+      this.hide();
+      this.listenTo( this.collection, 'sync', this.render );
+    },
+
+    events : {
+      'click .tmsm-aquatonic-course-booking-time-button' : 'selectTime',
+      'click .tmsm-aquatonic-course-booking-time-change-label' : 'cancelTime',
+      'click #tmsm-aquatonic-course-booking-times-anotherdate' : 'changeDate',
+      'click .previous': 'previous',
+      'click .next': 'next',
+    },
+
+    loading: function(){
+      console.log('TimesListView loading');
+      $( this.errorElement ).hide();
+      $( this.loadingElement ).show();
+      $( this.listElement ).hide();
+    },
+    loaded: function(){
+      console.log('TimesListView loaded');
+      $( this.loadingElement ).hide();
+      $( this.listElement ).show();
+    },
+
+    render: function() {
+      console.log('TimesListView render');
+      var $list = this.$( this.listElement ).empty().val('');
+
+      $list.hide();
+
+      console.log('TimesListView collection:');
+      console.log(this.collection);
+      console.log('TimesListView collection length: ' + this.collection.length);
+
+      var i = 0;
+      this.collection.each( function( model ) {
+        i++;
+        if(i===1){
+          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]').empty();
+        }
+        var item = new TmsmAquatonicCourseApp.TimesListItemView( { model: model } );
+        if ($('.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').length > 0) {
+          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().$el.context.outerHTML);
+        }
+        else{
+          console.log('tmsm-aquatonic-course-booking-weekday-times not added for '+model.attributes.date);
+        }
+        //
+        //$( '.tmsm-aquatonic-course-booking-weekday-times[data-date=\''+model.attributes.date+'\']').append(item.render().$el);
+
+        $list.append( item.render().$el );
+      }, this );
+
+      this.loaded();
+
+      if(this.collection.length === 0){
+        $( this.errorElement ).show();
+      }
+      else{
+        $( this.errorElement ).hide();
+      }
+
+      return this;
+    },
+
+    selectTime: function(event){
+      event.preventDefault();
+      console.log('TimeListView selectTime');
+      this.selectedValue = $(event.target).data('hourminutes');
+      console.log('TimeListView selectedValue: '+ this.selectedValue);
+      $( this.selectButtons ).hide().removeClass('disabled').removeClass('selected').addClass('not-selected');
+      $(event.target).show().addClass('selected').removeClass('not-selected').find('.tmsm-aquatonic-course-booking-time').addClass('disabled');
+
+      TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
+    },
+
+    cancelTime: function(event){
+      event.preventDefault();
+      $( this.selectButtons ).show().removeClass('disabled').removeClass('selected').addClass('not-selected');
+      this.selectedValue = null;
+
+      TmsmAquatonicCourseApp.selectedData.set('hourminutes', null);
+    },
+
+    changeDate: function(event){
+      event.preventDefault();
+      TmsmAquatonicCourseApp.dateList.reset();
+      TmsmAquatonicCourseApp.timesList.reset();
+      TmsmAquatonicCourseApp.animateTransition(TmsmAquatonicCourseApp.dateList.element());
+    },
+
+    reset: function (){
+      this.selectedValue = null;
+      TmsmAquatonicCourseApp.selectedData.set('hourminutes', null);
+      this.hide();
+    },
+
+    element: function (){
+      return this.$el;
+    },
+    hide: function (){
+      this.$el.hide();
+    },
+    show: function (){
+      this.$el.show();
+    }
+  } );
+
+
+  TmsmAquatonicCourseApp.TimesListItemView = Backbone.View.extend( {
+    tagName: 'li',
+    className: 'tmsm-aquatonic-course-booking-time-item',
+    template: wp.template( 'tmsm-aquatonic-course-booking-time' ),
+
+    initialize: function() {
+      this.listenTo( this.model, 'change', this.render );
+      this.listenTo( this.model, 'destroy', this.remove );
+    },
+
+    render: function() {
+      var html = this.template( this.model.toJSON() );
+      this.$el.html( html );
+      return this;
+    },
+
+  } );
+  
   /**
    * WeekDay
    */
   TmsmAquatonicCourseApp.WeekDayModel = TmsmAquatonicCourseBaseModel.extend( {
-    action: 'tmsm-aquos-spa-booking-weekday',
+    action: 'tmsm-aquatonic-course-booking-weekday',
     defaults: {
       date_label: null,
       date_computed: null,
@@ -214,16 +376,16 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   } );
 
   TmsmAquatonicCourseApp.WeekDayCollection = TmsmAquatonicCourseBaseCollection.extend( {
-    action: 'tmsm-aquos-spa-booking-weekday',
+    action: 'tmsm-aquatonic-course-booking-weekday',
     model: TmsmAquatonicCourseApp.WeekDayModel,
 
   } );
 
   TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend( {
-    el: '#tmsm-aquos-spa-booking-date-container',
-    listElement: '#tmsm-aquos-spa-booking-weekdays-list',
-    selectButtons: '.tmsm-aquos-spa-booking-time-button',
-    addAppointmentButton: '#tmsm-aquos-spa-booking-confirm',
+    el: '#tmsm-aquatonic-course-slots-container',
+    listElement: '#tmsm-aquatonic-course-booking-weekdays-list',
+    selectButtons: '.tmsm-aquatonic-course-booking-time-button',
+    addAppointmentButton: '#tmsm-aquatonic-course-booking-confirm',
     daysPage: 1,
 
     templateHelpers: {
@@ -243,9 +405,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     },
 
     events : {
-      'click .tmsm-aquos-spa-booking-time-button' : 'selectTime',
-      'click #tmsm-aquos-spa-booking-weekdays-previous': 'previous',
-      'click #tmsm-aquos-spa-booking-weekdays-next': 'next',
+      'click .tmsm-aquatonic-course-booking-time-button' : 'selectTime',
+      'click #tmsm-aquatonic-course-booking-weekdays-previous': 'previous',
+      'click #tmsm-aquatonic-course-booking-weekdays-next': 'next',
     },
 
     previous: function(event){
@@ -272,61 +434,56 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       this.collection.reset();
 
       if(this.daysPage === 1){
-        $('#tmsm-aquos-spa-booking-weekdays-previous').attr('disabled', true);
+        $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
         console.log('premiere page je cache previous');
       }
       else{
-        $('#tmsm-aquos-spa-booking-weekdays-previous').attr('disabled', false);
+        $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', false);
         console.log('autre page jaffiche previous');
       }
 
-      if((TmsmAquatonicCourseApp.calendar.daysrangeto / 7) < this.daysPage){
-        $('#tmsm-aquos-spa-booking-weekdays-next').attr('disabled', true);
+      if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < this.daysPage){
+        $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
       }
       else{
-        $('#tmsm-aquos-spa-booking-weekdays-next').attr('disabled', false);
+        $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', false);
       }
 
       var i = 0;
 
-      if(TmsmAquatonicCourseApp.productsList.selectedValue){
-        for (i = (parseInt(TmsmAquatonicCourseApp.calendar.daysrangefrom)+(this.daysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.calendar.daysrangefrom)+7+(this.daysPage-1) * 7); i++) {
 
-          this.collection.push( {
-            date_label: moment().add(i, 'days').format('dddd Do MMMM'),
-            date_label_secondline: moment().add(i, 'days').format('MMMM'),
-            date_label_firstline: moment().add(i, 'days').format('dddd Do'),
-            date_computed: moment().add(i, 'days').format('YYYY-MM-DD')
-          });
-        }
+      for (i = (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+(this.daysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+7+(this.daysPage-1) * 7); i++) {
 
-        console.log('WeekDayListView collection:');
-        console.log(this.collection);
-
-        console.log('WeekDayListView collection length: ' + this.collection.length);
-
-        this.collection.each( function( model ) {
-
-
-          //console.log('WeekDayListView each');
-          //console.log(model);
-          var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
-          $list.append( item.render().$el );
-
-          console.log('WeekDayListView fetch:');
-          TmsmAquatonicCourseApp.times.fetch({
-            data: {
-              productcategory: TmsmAquatonicCourseApp.productCategoriesList.selectedValue,
-              product: TmsmAquatonicCourseApp.productsList.selectedValue,
-              productvariation: TmsmAquatonicCourseApp.productVariationsList.selectedValue,
-              choice: TmsmAquatonicCourseApp.choicesList.selectedValue,
-              date: model.attributes.date_computed
-            }
-          });
-
-        }, this );
-
+        this.collection.push( {
+          date_label: moment().add(i, 'days').format('dddd Do MMMM'),
+          date_label_secondline: moment().add(i, 'days').format('MMMM'),
+          date_label_firstline: moment().add(i, 'days').format('dddd Do'),
+          date_computed: moment().add(i, 'days').format('YYYY-MM-DD')
+        });
       }
+
+      console.log('WeekDayListView collection:');
+      console.log(this.collection);
+
+      console.log('WeekDayListView collection length: ' + this.collection.length);
+
+      this.collection.each( function( model ) {
+
+
+        //console.log('WeekDayListView each');
+        //console.log(model);
+        var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
+        $list.append( item.render().$el );
+
+        console.log('WeekDayListView fetch:');
+        TmsmAquatonicCourseApp.times.fetch({
+          data: {
+            date: model.attributes.date_computed
+          }
+        });
+
+      }, this );
+
 
       return this;
     },
@@ -350,8 +507,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   TmsmAquatonicCourseApp.WeekDayListItemView = Backbone.View.extend( {
     tagName: 'li',
-    className: 'tmsm-aquos-spa-booking-weekday-item',
-    template: wp.template( 'tmsm-aquos-spa-booking-weekday' ),
+    className: 'tmsm-aquatonic-course-booking-weekday-item',
+    template: wp.template( 'tmsm-aquatonic-course-booking-weekday' ),
 
     initialize: function() {
       this.listenTo( this.model, 'change', this.render );
@@ -372,22 +529,18 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
    */
   TmsmAquatonicCourseApp.SelectedDataModel = Backbone.Model.extend( {
     defaults: {
-      productcategory: null,
-      product: null,
-      productvariation: null,
       date: null,
       hourminutes: null,
-      is_voucher: null
     },
 
   } );
 
 
   TmsmAquatonicCourseApp.SelectedDataView = Backbone.View.extend( {
-    el: '#tmsm-aquos-spa-booking-confirm-container',
-    cancelButton: '#tmsm-aquos-spa-booking-cancel',
-    confirmButton: '#tmsm-aquos-spa-booking-confirm',
-    errorElement: '#tmsm-aquos-spa-booking-confirm-error',
+    el: '#tmsm-aquatonic-course-booking-confirm-container',
+    cancelButton: '#tmsm-aquatonic-course-booking-cancel',
+    confirmButton: '#tmsm-aquatonic-course-booking-confirm',
+    errorElement: '#tmsm-aquatonic-course-booking-confirm-error',
 
     initialize: function() {
       console.log('SelectedDataView initialize');
@@ -398,8 +551,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     },
 
     events: {
-      'click #tmsm-aquos-spa-booking-cancel': 'cancel',
-      'click #tmsm-aquos-spa-booking-confirm': 'confirm'
+      'click #tmsm-aquatonic-course-booking-cancel': 'cancel',
+      'click #tmsm-aquatonic-course-booking-confirm': 'confirm'
     },
 
     cancel: function(event){
@@ -411,12 +564,6 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       TmsmAquatonicCourseApp.selectedData.clear().set({});
 
-      TmsmAquatonicCourseApp.animateTransition(TmsmAquatonicCourseApp.havevoucherList.element());
-
-      TmsmAquatonicCourseApp.havevoucherList.reset();
-      TmsmAquatonicCourseApp.productCategoriesList.reset();
-      TmsmAquatonicCourseApp.productsList.reset();
-      TmsmAquatonicCourseApp.productVariationsList.reset();
       TmsmAquatonicCourseApp.dateList.reset();
       TmsmAquatonicCourseApp.timesList.reset();
     },
@@ -429,7 +576,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       this.showLoading();
       var container = this;
 
-      wp.ajax.send('tmsm-aquos-spa-booking-addtocart', {
+      wp.ajax.send('tmsm-aquatonic-course-booking-addtocart', {
         success: function(data){
           console.log('wp.ajax.send success');
           console.log(data);
@@ -475,13 +622,6 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         this.hideConfirm();
       }
 
-      if(this.canCancel(this.model.attributes)){
-        this.showCancel();
-      }
-      else{
-        this.hideCancel();
-      }
-
 
     },
 
@@ -516,11 +656,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     },
 
     canConfirm: function(attributes) {
-      return (attributes.productcategory != null && attributes.product != null && attributes.date != null && attributes.hourminutes != null );
-    },
-
-    canCancel: function(attributes) {
-      return (attributes.is_voucher != null && attributes.productcategory != null );
+      return ( attributes.date != null && attributes.hourminutes != null );
     },
 
     render: function() {
@@ -546,6 +682,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   TmsmAquatonicCourseApp.init = function() {
     console.log('TmsmAquatonicCourseApp.init 01');
 
+
+    TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
+    TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
+    TmsmAquatonicCourseApp.timesList = new TmsmAquatonicCourseApp.TimesListView( { collection: TmsmAquatonicCourseApp.times } );
+    TmsmAquatonicCourseApp.timesList.render();
 
     TmsmAquatonicCourseApp.weekdays = new TmsmAquatonicCourseApp.WeekDayCollection();
     TmsmAquatonicCourseApp.weekdays.reset( TmsmAquatonicCourseApp.data.times );

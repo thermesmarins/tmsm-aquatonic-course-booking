@@ -126,11 +126,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'nonce'        => wp_create_nonce( 'tmsm-aquatonic-course-booking-nonce-action' ),
 				'rest_url' => get_rest_url(),
 				'canviewpriority' => current_user_can('edit_posts'),
+				'daysrangefrom' => floor($this->get_option('hoursbefore')/24),
+				'daysrangeto' => floor($this->get_option('hoursafter')/24),
+				'times' => [],
 			],
 			'i18n' => [
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
 				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
+
 			] ,
 
 		);
@@ -188,7 +192,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-weekday">
 			{{ data.date_label_firstline }} <span class="secondline">{{ data.date_label_secondline }}</span>
 			<ul class="tmsm-aquatonic-course-booking-weekday-times list-unstyled" data-date="{{ data.date_computed }}" >
-				<li>{{ tmsm_aquatonic_course_booking_params.i18n.loading }}</li>
+				<li>{{ TmsmAquatonicCourseApp.i18n.loading }}</li>
 			</ul>
 		</script>
 
@@ -203,9 +207,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-time">
 			<# if ( data.hourminutes != null) { #>
-			<a class="tmsm-aquatonic-course-booking-time-button <?php echo self::button_class_default(); ?> tmsm-aquatonic-course-booking-time" href="#" data-date="{{ data.date }}" data-hour="{{ data.hour }}" data-minutes="{{ data.minutes }}" data-hourminutes="{{ data.hourminutes }}" data-priority="{{ data.priority }}">{{ data.hourminutes }} <# if ( tmsm_aquatonic_course_booking_params.canviewpriority == "1" && data.priority == 1) { #> <!--*--><# } #></a> <a href="#" class="tmsm-aquatonic-course-booking-time-change-label"><?php echo __( 'Change time', 'tmsm-aquatonic-course-booking' ); ?></a>
+			<a class="tmsm-aquatonic-course-booking-time-button <?php echo self::button_class_default(); ?> tmsm-aquatonic-course-booking-time" href="#" data-date="{{ data.date }}" data-hour="{{ data.hour }}" data-minutes="{{ data.minutes }}" data-hourminutes="{{ data.hourminutes }}" data-priority="{{ data.priority }}">{{ data.hourminutes }} <# if ( TmsmAquatonicCourseApp.data.canviewpriority == "1" && data.priority == 1) { #> <!--*--><# } #></a> <a href="#" class="tmsm-aquatonic-course-booking-time-change-label"><?php echo __( 'Change time', 'tmsm-aquatonic-course-booking' ); ?></a>
 			<# } else { #>
-			{{  tmsm_aquatonic_course_booking_params.i18n.notimeslot }}
+			{{  TmsmAquatonicCourseApp.i18n.notimeslot }}
 			<# } #>
 
 		</script>
@@ -441,6 +445,91 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$buttonclass = 'alert';
 		}
 		return $buttonclass;
+	}
+
+
+	/**
+	 * Ajax For Times
+	 *
+	 * @since    1.0.0
+	 */
+	public function ajax_times() {
+
+		error_log('ajax_times');
+
+		$this->ajax_checksecurity();
+		$this->ajax_return( $this->_get_times() );
+
+	}
+
+	/**
+	 * Ajax check nonce security
+	 */
+	private function ajax_checksecurity(){
+		$security = sanitize_text_field( $_REQUEST['nonce'] );
+
+		$errors = array(); // Array to hold validation errors
+		$jsondata   = array(); // Array to pass back data
+
+		// Check security
+		if ( empty( $security ) || ! wp_verify_nonce( $security, 'tmsm-aquatonic-course-booking-nonce-action' ) ) {
+			$errors[] = __('Token security is not valid', 'tmsm-aquatonic-course-booking');
+			if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+				error_log('Token security is not valid');
+			}
+		}
+		else {
+			if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+				error_log( 'Token security is valid' );
+			}
+		}
+		if(check_ajax_referer( 'tmsm-aquatonic-course-booking-nonce-action', 'nonce' ) === false){
+			$errors[] = __('Ajax referer is not valid', 'tmsm-aquatonic-course-booking');
+			if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+				error_log('Ajax referer is not valid');
+			}
+		}
+		else{
+			if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+				error_log( 'Ajax referer is valid' );
+			}
+		}
+
+		if(!empty($errors)){
+			wp_send_json($jsondata);
+			wp_die();
+		}
+
+	}
+
+	/**
+	 * Send a response to ajax request, as JSON.
+	 *
+	 * @param mixed $response
+	 */
+	private function ajax_return( $response = true ) {
+		echo json_encode( $response );
+		exit;
+	}
+
+	/**
+	 * Get Times from Web Service
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return array
+	 */
+	private function _get_times() {
+
+		$times[] = [
+			'date' => '2020-12-20',
+			'hour' => '10',
+			'minutes' => '10',
+			'hourminutes' => '10:10',
+			'priority' => 11,
+		];
+
+		return $times;
 	}
 
 }
