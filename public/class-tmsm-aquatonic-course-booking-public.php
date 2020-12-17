@@ -130,10 +130,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'daysrangeto' => floor($this->get_option('hoursafter')/24),
 				'times' => [],
 			],
-			'form-fields' => [
-				'date-field' => '.tmsm-aquatonic-course-date input',
-				'hour-field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
-				'minutes-field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
+			'form_fields' => [
+				'date_field' => '.tmsm-aquatonic-course-date input',
+				'hour_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
+				'minutes_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
 			],
 			'i18n' => [
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
@@ -257,42 +257,47 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Calculate date start and end of course
 		error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
-		$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
-		$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
-		$course_end = $objdate->format( 'Y-m-d H:i:s' );
+		if(!empty($course_start)){
+			$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+			$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
+			$course_end = $objdate->format( 'Y-m-d H:i:s' );
+		}
 
-
-		$table = $wpdb->prefix . 'aquatonic_course_booking';
-		$data = array(
-			'firstname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
-			'lastname' => self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry),
-			'email' => self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry),
-			'phone' => self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry),
-			'birthdate' => $birthdate_computed,
-			'participants' => self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry),
-			'status' => 'active',
-			'date_created' => date('Y-m-d H:i:s'),
-			'course_start' => $course_start,
-			'course_end' => $course_end,
-			'author' => get_current_user_id(),
-		);
-
-		$format = array(
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%d',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%d',
+		if(!empty($course_start) && !empty($course_start)) {
+			$table = $wpdb->prefix . 'aquatonic_course_booking';
+			$data = array(
+				'firstname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
+				'lastname' => self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry),
+				'email' => self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry),
+				'phone' => self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry),
+				'birthdate' => $birthdate_computed,
+				'participants' => self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry),
+				'status' => 'active',
+				'date_created' => date('Y-m-d H:i:s'),
+				'course_start' => $course_start,
+				'course_end' => $course_end,
+				'author' => get_current_user_id(),
 			);
 
-		$wpdb->insert($table,$data,$format);
-		$my_id = $wpdb->insert_id;
+			$format = array(
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%d',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%d',
+			);
+
+			$wpdb->insert($table,$data,$format);
+			$my_id = $wpdb->insert_id;
+		}
+
+
 
 
 	}
@@ -470,13 +475,37 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	private function _get_times() {
 
+		$date                = sanitize_text_field( $_REQUEST['date'] );
+		$date_with_dash      = $date;
+
+		$times = [];
+
+
 		$times[] = [
 			'date' => '2020-12-20',
 			'hour' => '10',
 			'minutes' => '10',
 			'hourminutes' => '10:10',
-			'priority' => 11,
+			'priority' => 1,
 		];
+		$times[] = [
+			'date' => '2020-12-19',
+			'hour' => '17',
+			'minutes' => '20',
+			'hourminutes' => '17:20',
+			'priority' => 1,
+		];
+
+		if ( count( $times ) == 0 ) {
+			$errors[] = __( 'No time slot available for this day and this product', 'tmsm-aquos-spa-booking' );
+			$times[] = [
+				'date' => $date_with_dash,
+				'hour' => null,
+				'minutes' => null,
+				'hourminutes' => null,
+				'priority' => null,
+			];
+		}
 
 		return $times;
 	}

@@ -1,0 +1,19 @@
+#tmsm-aquatonic-course-booking-weekdays-list{
+    border-bottom: 0;
+    width: 100%;
+    text-align: center;
+    &:before, &:after{
+        content: " ";
+        display: table;
+    }
+    &:after{
+        clear: both;
+    }
+    > .tmsm-aquatonic-course-booking-weekday-item {
+        float: none;
+        margin-bottom: -1px;
+        position: relative;
+        display: table-cell;
+        width: 1%;
+    }
+}

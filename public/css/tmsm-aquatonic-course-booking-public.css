@@ -1,4 +1,21 @@
-/**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
- */
+#tmsm-aquatonic-course-booking-weekdays-list {
+  border-bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+#tmsm-aquatonic-course-booking-weekdays-list:before,
+#tmsm-aquatonic-course-booking-weekdays-list:after {
+  content: " ";
+  display: table;
+}
+#tmsm-aquatonic-course-booking-weekdays-list:after {
+  clear: both;
+}
+#tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item {
+  float: none;
+  margin-bottom: -1px;
+  position: relative;
+  display: table-cell;
+  width: 1%;
+}
+/*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */
