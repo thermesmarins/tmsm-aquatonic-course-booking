@@ -222,7 +222,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       event.preventDefault();
       TmsmAquatonicCourseApp.dateList.reset();
       TmsmAquatonicCourseApp.timesList.reset();
-      TmsmAquatonicCourseApp.animateTransition(TmsmAquatonicCourseApp.dateList.element());
+      //TmsmAquatonicCourseApp.animateTransition(TmsmAquatonicCourseApp.dateList.element());
     },
 
     reset: function (){
@@ -394,7 +394,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       $(event.target).addClass('btn-primary').addClass('disabled').removeClass('not-selected');
 
       console.warn($(this.addAppointmentButton));
-      TmsmAquatonicCourseApp.animateTransition($(this.addAppointmentButton));
+      //TmsmAquatonicCourseApp.animateTransition($(this.addAppointmentButton));
 
       TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
       TmsmAquatonicCourseApp.selectedData.set('date', date);
@@ -428,6 +428,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     defaults: {
       date: null,
       hourminutes: null,
+      hour: null,
+      minutes: null,
     },
 
   } );
@@ -473,36 +475,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       this.showLoading();
       var container = this;
 
-      wp.ajax.send('tmsm-aquatonic-course-booking-addtocart', {
-        success: function(data){
-          console.log('wp.ajax.send success');
-          console.log(data);
-          if(data.redirect){
-            console.log('redirect!');
-            window.location = data.redirect;
-          }
-          else{
-            console.log('no redirect...');
-            console.log(data.redirect);
-          }
-        },
-        error: function(data){
-          console.log('wp.ajax.send error');
-          console.log(data);
-          container.hideLoading();
-          console.log('wp.ajax.send error');
-          console.log(data);
-          if(data.errors){
-            container.showError();
-            $(container.errorElement).html( data.errors );
-          }
 
-        },
-        data: {
-          nonce: TmsmAquatonicCourseApp.nonce,
-          selecteddata: TmsmAquatonicCourseApp.selectedData.attributes,
-        }
-      });
 
 
 

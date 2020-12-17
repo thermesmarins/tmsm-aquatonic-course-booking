@@ -130,6 +130,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'daysrangeto' => floor($this->get_option('hoursafter')/24),
 				'times' => [],
 			],
+			'form-fields' => [
+				'date-field' => '.tmsm-aquatonic-course-date input',
+				'hour-field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
+				'minutes-field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
+			],
 			'i18n' => [
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
