@@ -52,6 +52,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+
 	}
 
 	/**
@@ -466,6 +467,116 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		exit;
 	}
 
+
+	/**
+	 * Returns TMSM Aquatonic Attendance Options
+	 *
+	 * @return mixed|void
+	 */
+	private function attendance_options(){
+		return get_option('tmsm-aquatonic-attendance-options');
+	}
+
+	/**
+	 * Returns Attendance Timeslots
+	 *
+	 * @return mixed|null
+	 */
+	private function attendance_timeslots(){
+		$attendance_options = self::attendance_options();
+		if( empty($attendance_options) ){
+			return null;
+		}
+		if( empty($attendance_options['timeslots'] ) ){
+			return null;
+		}
+
+		return $attendance_options['timeslots'];
+
+	}
+
+	/**
+	 * Returns Opening Times for the requested date
+	 *
+	 * @param string $date
+	 *
+	 * @return array|null
+	 */
+	private function attendance_forthedate( $date = ''){
+
+		$attendance_timeslots = self::attendance_timeslots();
+
+		if(empty($attendance_timeslots)){
+			return null;
+		}
+
+		if(empty($date)){
+			return null;
+		}
+
+		$date_object = DateTime::createFromFormat( 'Y-m-d', $date );
+		if(empty($date_object)){
+			return null;
+		}
+		$times = [];
+		$timeslots = $attendance_timeslots.PHP_EOL;
+		$timeslots_items = preg_split('/\r\n|\r|\n/', esc_attr($timeslots));
+		$open = false;
+		$capacity = 0;
+
+		foreach($timeslots_items as &$timeslots_item){
+
+			$tmp_timeslots_item = $timeslots_item;
+			$tmp_timeslots_item_array = explode('=', $tmp_timeslots_item);
+
+			if ( is_array( $tmp_timeslots_item_array ) && count($tmp_timeslots_item_array) === 3 ) {
+				$timeslots_item = [
+					'times'    => trim( $tmp_timeslots_item_array[1] ),
+					'capacity' => trim( $tmp_timeslots_item_array[2] ),
+				];
+				if ( (int) $tmp_timeslots_item_array[0] < 7 ) {
+					$timeslots_item['daynumber'] = trim( $tmp_timeslots_item_array[0] );
+				} else {
+					$timeslots_item['date'] = trim( $tmp_timeslots_item_array[0] );
+				}
+
+
+			}
+		}
+		$timeslots_item = null;
+
+		$date_dayoftheweek = $date_object->format( 'w' );
+		$date = $date_object->format( 'Y-m-d' );
+
+		foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
+
+			if ( isset( $timeslots_item_to_parse['date'] ) && $timeslots_item_to_parse['date'] == $date ) {
+				$times[] = explode(',', $timeslots_item_to_parse['times']);
+				break;
+			}
+			elseif ( isset( $timeslots_item_to_parse['daynumber'] ) && $timeslots_item_to_parse['daynumber'] == $date_dayoftheweek ) {
+				$times[] = explode(',', $timeslots_item_to_parse['times']);
+				foreach($times as $time){
+					$hoursminutes = explode('-', $time);
+					/*$before = trim($hoursminutes[0]);
+					$after = trim($hoursminutes[1]);
+					$current_time = current_time('H:i');
+					//$current_time = '13:00';
+
+					if(strtotime($before) <= strtotime($current_time) && strtotime($current_time) <= strtotime($after) ){
+						$open = true;
+						$capacity = $timeslots_item_to_parse['capacity'];
+					}*/
+				}
+
+			}
+		}
+
+		return $times;
+
+	}
+
+
 	/**
 	 * Get Times from Web Service
 	 *
@@ -479,6 +590,70 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$date_with_dash      = $date;
 
 		$times = [];
+
+		$notavailable = false;
+
+		$opening_periods = self::attendance_forthedate($date_with_dash);
+		if(empty($opening_periods)){
+			$notavailable = true;
+		}
+
+		$averagecourse = $this->get_option('courseaverage', 90);
+
+		$slotsize = $this->get_option('slotsize');
+		$slotminutes = 15;
+		if( $slotsize == 6){
+			$slotminutes = 10;
+		}
+		if( $slotsize == 3){
+			$slotminutes = 20;
+		}
+		if( $slotsize == 2){
+			$slotminutes = 30;
+		}
+
+		$slots_in_opening_hours = [];
+
+		error_log(print_r($opening_periods, true));
+
+		foreach($opening_periods as $opening_period){
+			foreach($opening_period as $opening_time){
+
+				$opening_details = explode('-', $opening_time);
+				$opening_start = $opening_details[0];
+				$opening_end = $opening_details[1];
+
+				$opening_start_object = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_start);
+				$opening_end_object = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_end);
+
+				$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
+				$period = new DatePeriod($opening_start_object, $interval, $opening_end_object);
+
+				foreach ($period as $slot_begin) {
+					$slot_end = clone $slot_begin;
+					$slot_end->modify('+'.$averagecourse. ' minutes');
+
+					// Slot cannot overtake closing hour
+					if($slot_end <= $opening_end_object){
+						$slots_in_opening_hours[] = $slot_begin->format("l Y-m-d H:i:s");
+						error_log($slot_begin->format("l Y-m-d H:i:s") . ' to '.$slot_end->format("l Y-m-d H:i:s"));
+					}
+				}
+
+
+				/*$slotseconds  = $slotminutes * 60;
+
+				while ($opening_start_object->getTimestamp() <= $opening_end_object->getTimestamp()) //Run loop
+				{
+					$ReturnArray[] = date ("G:i", $StartTime);
+					$opening_start_object->setTimestamp()
+					$StartTime += $slotseconds; //Endtime check
+				}
+				return $ReturnArray;*/
+			}
+		}
+
+
 
 
 		$times[] = [
@@ -496,8 +671,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			'priority' => 1,
 		];
 
-		if ( count( $times ) == 0 ) {
-			$errors[] = __( 'No time slot available for this day and this product', 'tmsm-aquos-spa-booking' );
+		if ( count( $times ) == 0 || $notavailable === true) {
+			$errors[] = __( 'No time slot available for this day', 'tmsm-aquatonic-course-booking' );
 			$times[] = [
 				'date' => $date_with_dash,
 				'hour' => null,
