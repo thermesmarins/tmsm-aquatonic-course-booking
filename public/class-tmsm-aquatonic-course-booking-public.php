@@ -52,6 +52,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		self::_get_times();
+
 
 	}
 
@@ -524,6 +526,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$open = false;
 		$capacity = 0;
 
+		error_log('$timeslots_items');
+		error_log(print_r($timeslots_items , true));
+
 		foreach($timeslots_items as &$timeslots_item){
 
 			$tmp_timeslots_item = $timeslots_item;
@@ -543,6 +548,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			}
 		}
+
+		error_log('$timeslots_items after first step');
+		error_log(print_r($timeslots_items , true));
+
 		$timeslots_item = null;
 
 		$date_dayoftheweek = $date_object->format( 'w' );
@@ -551,13 +560,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
 
 			if ( isset( $timeslots_item_to_parse['date'] ) && $timeslots_item_to_parse['date'] == $date ) {
-				$times[] = explode(',', $timeslots_item_to_parse['times']);
+				foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
+					$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
+				}
 				break;
 			}
 			elseif ( isset( $timeslots_item_to_parse['daynumber'] ) && $timeslots_item_to_parse['daynumber'] == $date_dayoftheweek ) {
-				$times[] = explode(',', $timeslots_item_to_parse['times']);
-				foreach($times as $time){
-					$hoursminutes = explode('-', $time);
+				foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
+					$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
+				}
+
+				//foreach($times as $time){
+					//$hoursminutes = explode('-', $time);
 					/*$before = trim($hoursminutes[0]);
 					$after = trim($hoursminutes[1]);
 					$current_time = current_time('H:i');
@@ -567,10 +581,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						$open = true;
 						$capacity = $timeslots_item_to_parse['capacity'];
 					}*/
-				}
+				//}
 
 			}
 		}
+		error_log('$times');
+		error_log(print_r($times , true));
 
 		return $times;
 
@@ -586,8 +602,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	private function _get_times() {
 
+		error_log('_get_times');
 		$date                = sanitize_text_field( $_REQUEST['date'] );
 		$date_with_dash      = $date;
+		error_log('$date:'.$date);
 
 		$times = [];
 
@@ -598,7 +616,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$notavailable = true;
 		}
 
-		$averagecourse = $this->get_option('courseaverage', 90);
+		$averagecourse = $this->get_option('courseaverage');
 
 		$slotsize = $this->get_option('slotsize');
 		$slotminutes = 15;
@@ -613,47 +631,91 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		$slots_in_opening_hours = [];
+		$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
 
+		error_log('$opening_periods');
 		error_log(print_r($opening_periods, true));
 
-		foreach($opening_periods as $opening_period){
-			foreach($opening_period as $opening_time){
+		// First pass to calculate start and end datetimes
+		foreach($opening_periods as &$opening_period){
 
-				$opening_details = explode('-', $opening_time);
+				$opening_details = explode('-', $opening_period['times']);
+				$opening_capacity = explode('-', $opening_period['capacity']);
 				$opening_start = $opening_details[0];
 				$opening_end = $opening_details[1];
 
-				$opening_start_object = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_start);
-				$opening_end_object = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_end);
+				$opening_period['start'] = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_start);
+				$opening_period['end'] = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_end);
 
-				$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
-				$period = new DatePeriod($opening_start_object, $interval, $opening_end_object);
-
-				foreach ($period as $slot_begin) {
-					$slot_end = clone $slot_begin;
-					$slot_end->modify('+'.$averagecourse. ' minutes');
-
-					// Slot cannot overtake closing hour
-					if($slot_end <= $opening_end_object){
-						$slots_in_opening_hours[] = $slot_begin->format("l Y-m-d H:i:s");
-						error_log($slot_begin->format("l Y-m-d H:i:s") . ' to '.$slot_end->format("l Y-m-d H:i:s"));
-					}
-				}
-
-
-				/*$slotseconds  = $slotminutes * 60;
-
-				while ($opening_start_object->getTimestamp() <= $opening_end_object->getTimestamp()) //Run loop
-				{
-					$ReturnArray[] = date ("G:i", $StartTime);
-					$opening_start_object->setTimestamp()
-					$StartTime += $slotseconds; //Endtime check
-				}
-				return $ReturnArray;*/
-			}
 		}
 
+		error_log('$opening_periods after first pass');
+		error_log(print_r($opening_periods, true));
 
+		unset($opening_period);
+
+		// Second pass to see if there are overlapping slots
+		foreach ( $opening_periods as $opening_period ) {
+			$period = new DatePeriod( $opening_period['start'], $interval, $opening_period['end'] );
+
+			error_log('$opening_period');
+			error_log(print_r($opening_period, true));
+
+			foreach ( $period as $slot_begin ) {
+				$slot_end = clone $slot_begin;
+				$slot_end->modify( '+' . $averagecourse . ' minutes' );
+
+				// Slot cannot overtake closing hour
+				if ( $slot_end <= $opening_period['end'] ) {
+					$slots_in_opening_hours[] = ['start' => $slot_begin->format( "Y-m-d H:i:s" ), 'capacity' => $opening_period['capacity']];
+
+					error_log( 'time is good: '.$slot_begin->format( "Y-m-d H:i:s" ) . ' to ' . $slot_end->format( "Y-m-d H:i:s" ) );
+				}
+
+				// We need to check every period to read their capacity
+				else{
+
+					foreach($opening_periods as $opening_period_to_check){
+						error_log('$opening_period_to_check');
+						error_log(print_r($opening_period_to_check, true));
+						if($opening_period_to_check == $opening_period){
+							error_log('period check is same');
+						}
+						else{
+							error_log('period check is different');
+							if($opening_period['end'] == $opening_period_to_check['start']){
+								error_log('period check start is same as period end');
+								if ( $slot_end <= $opening_period_to_check['end'] ) {
+									error_log('slot end is inferior to period check end');
+									error_log( 'slot overlaps next period: '.$slot_begin->format( "Y-m-d H:i:s" ) . ' to ' . $slot_end->format( "Y-m-d H:i:s" ) );
+									$slots_in_opening_hours[] = ['start' => $slot_begin->format( "Y-m-d H:i:s" ), 'capacity' => min($opening_period['capacity'], $opening_period_to_check['capacity'])];
+								}
+							}
+
+						}
+
+					}
+
+				}
+			}
+
+
+			/*$slotseconds  = $slotminutes * 60;
+
+			while ($opening_start_object->getTimestamp() <= $opening_end_object->getTimestamp()) //Run loop
+			{
+				$ReturnArray[] = date ("G:i", $StartTime);
+				$opening_start_object->setTimestamp()
+				$StartTime += $slotseconds; //Endtime check
+			}
+			return $ReturnArray;*/
+		}
+
+		usort($slots_in_opening_hours, function($a, $b) {
+			return strcmp($a['start'], $b['start']);
+		});
+		error_log('$slots_in_opening_hours');
+		error_log(print_r($slots_in_opening_hours , true));
 
 
 		$times[] = [

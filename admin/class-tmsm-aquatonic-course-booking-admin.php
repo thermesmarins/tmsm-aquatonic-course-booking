@@ -142,6 +142,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * @since    1.0.0
 	 */
 	public function options_page_display() {
+
 		include_once( 'partials/' . $this->plugin_name . '-admin-options-page.php' );
 	}
 
