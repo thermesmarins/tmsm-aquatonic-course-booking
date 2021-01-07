@@ -601,6 +601,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @return array
 	 */
 	private function _get_times() {
+		global $wpdb;
 
 		error_log('_get_times');
 		$date                = sanitize_text_field( $_REQUEST['date'] );
@@ -718,6 +719,41 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		error_log(print_r($slots_in_opening_hours , true));
 
 
+		// Calculate persons for each slot
+		$first_slot = null;
+		$last_slot = null;
+		if(!empty($slots_in_opening_hours[0])){
+			$errors[] = __( 'No first slot available to calculate all the slots', 'tmsm-aquatonic-course-booking' );
+			$first_slot = DateTime::createFromFormat( 'Y-m-d H:i:s', $slots_in_opening_hours[0]['start']);
+
+		}
+		if(!empty(end($slots_in_opening_hours))){
+			$errors[] = __( 'No end slot available to calculate all the slots', 'tmsm-aquatonic-course-booking' );
+			$last_slot = DateTime::createFromFormat( 'Y-m-d H:i:s', end($slots_in_opening_hours)['start']);
+			if(!empty($last_slot)){
+				$last_slot->modify( '+' . $averagecourse . ' minutes' );
+			}
+		}
+
+		$uses = [];
+		if(!empty($first_slot) && !empty($last_slot)){
+			$period = new DatePeriod( $first_slot, $interval, $last_slot );
+			foreach ( $period as $slot_begin ) {
+				error_log( 'slot: '.$slot_begin->format( "Y-m-d H:i:s" ) );
+				$uses[$slot_begin->format( "Y-m-d H:i:s" )] = self::get_participants_for_time($slot_begin);
+			}
+
+		}
+
+		error_log('$first_slot');
+		error_log(print_r($first_slot , true));
+		error_log('$last_slot');
+		error_log(print_r($last_slot , true));
+
+
+		error_log('$uses');
+		error_log(print_r($uses, true));
+
 		$times[] = [
 			'date' => '2020-12-20',
 			'hour' => '10',
@@ -747,5 +783,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $times;
 	}
 
+
+	/**
+	 * Get participants number for the time
+	 *
+	 * @param DateTime $datetime
+	 *
+	 * @return int
+	 */
+	private function get_participants_for_time( DateTime $datetime){
+		global $wpdb;
+
+		$uses_count = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(participants) FROM
+{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_start <= %s AND course_end >= %s", 'active', $datetime->format( "Y-m-d H:i:s" ), $datetime->format( "Y-m-d H:i:s" ) ) );
+		if(empty($uses_count)){
+			$uses_count = 0;
+		}
+		return $uses_count;
+
+	}
 
 }
