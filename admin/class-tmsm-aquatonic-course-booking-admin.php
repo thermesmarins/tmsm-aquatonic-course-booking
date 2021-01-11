@@ -142,6 +142,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * @since    1.0.0
 	 */
 	public function options_page_display() {
+		$tab = ( isset($_GET['tab']) ) ? sanitize_text_field($_GET['tab']) : 'dashboard';
+
+
+		global $wpdb;
+
+		$today = new  DateTime();
+		$tomorrow = clone $today;
+		$tomorrow->modify('+1 day');
+
+		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM
+{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_start >= %s AND course_end < %s ORDER BY course_start", 'active', $today->format( "Y-m-d" ).' 00:00:00', $tomorrow->format( "Y-m-d" ).' 00:00:00' ) );
 
 		include_once( 'partials/' . $this->plugin_name . '-admin-options-page.php' );
 	}
