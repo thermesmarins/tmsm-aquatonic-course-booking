@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2020-12-14 16:23+0100\n"
-"PO-Revision-Date: 2020-12-14 16:23+0100\n"
+"POT-Creation-Date: 2021-01-11 13:17+0100\n"
+"PO-Revision-Date: 2021-01-11 13:18+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -26,48 +26,48 @@ msgstr "Parcours Aquatonic"
 msgid "Settings"
 msgstr "Réglages"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:167
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:179
 msgid "Slot Size"
 msgstr "Taille des créneaux"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:172
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:184
 msgid "Number of slots per hour"
 msgstr "Nombre de créneaux par heure"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:185
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:197
 msgid "Course Average"
 msgstr "Moyenne de la durée d’un parcours"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:190
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:202
 msgid "Number of minutes of an average course"
 msgstr "Nombre de minutes moyen d’un parcours"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:197
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:209
 msgid "Booking Possible Before"
 msgstr "Réservation possible avant"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:202
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:214
 msgid "Number of hours before the possibility to book"
 msgstr "Nombre d’heures avant la possibilité de réserver"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:209
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:221
 msgid "Booking Possible After"
 msgstr "Réservation possible après"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:214
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:230
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:226
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:242
 msgid "Number of hours after the possibility to book"
 msgstr "Nombre d’heures après la date courante"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:225
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:237
 msgid "Gravity Form"
 msgstr "Gravity Form"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:247
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:259
 msgid "Times"
 msgstr "Créneaux horaires"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:254
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:266
 msgid "Form"
 msgstr "Formulaire"
 
@@ -83,57 +83,80 @@ msgstr "Spécifier de type de données à normaliser."
 msgid "Forgot data type"
 msgstr "Type de données oublié"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:122
-#: public/class-tmsm-aquatonic-course-booking-public.php:259
+#: public/class-tmsm-aquatonic-course-booking-public.php:142
+#: public/class-tmsm-aquatonic-course-booking-public.php:254
 msgctxt "birthdate date format for humans"
 msgid "mm/dd/yyyy"
 msgstr "jj/mm/aaaa"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:186
-msgid "Published"
-msgstr "Publié"
+#: public/class-tmsm-aquatonic-course-booking-public.php:143
+msgid "Loading"
+msgstr "Chargement"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:187
-msgid "Draft"
-msgstr "Brouillon"
+#: public/class-tmsm-aquatonic-course-booking-public.php:144
+msgid "No time slot found"
+msgstr "Aucune disponibilité"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:191
-msgid "Save"
-msgstr "Enregistrer"
+#: public/class-tmsm-aquatonic-course-booking-public.php:205
+msgid "Change time"
+msgstr "Changer l’heure"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:206
-msgid "Title"
-msgstr "Titre"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:207
-msgid "Publish Status"
-msgstr "Etat de publication"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:208
-msgid "Action"
-msgstr "Action"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:214
-msgid "Refresh"
-msgstr "Rafraîchir"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:215
-msgid "Previous"
-msgstr "Précédent"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:216
-msgid "Next"
-msgstr "Suivant"
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:256
+#: public/class-tmsm-aquatonic-course-booking-public.php:251
 msgctxt "birthdate date format for machines"
 msgid "m/d/Y"
 msgstr "d/m/Y"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:260
+#: public/class-tmsm-aquatonic-course-booking-public.php:255
 msgctxt "birthdate date format for machines"
 msgid "m/d/y"
 msgstr "d/m/y"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:433
+msgid "Token security is not valid"
+msgstr "Le jeton de sécurité n’est pas valide"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:444
+msgid "Ajax referer is not valid"
+msgstr "Le référant ajax n’est pas valide"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:741
+msgid "No first slot available to calculate all the slots"
+msgstr "Aucun créneau de départ pour calculer les créneaux"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:746
+msgid "No end slot available to calculate all the slots"
+msgstr "Aucun créneau de fin pour calculer les créneaux"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:832
+msgid "No time slot available for this day"
+msgstr ""
+
+#~ msgid "Published"
+#~ msgstr "Publié"
+
+#~ msgid "Draft"
+#~ msgstr "Brouillon"
+
+#~ msgid "Save"
+#~ msgstr "Enregistrer"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#~ msgid "Publish Status"
+#~ msgstr "Etat de publication"
+
+#~ msgid "Action"
+#~ msgstr "Action"
+
+#~ msgid "Refresh"
+#~ msgstr "Rafraîchir"
+
+#~ msgid "Previous"
+#~ msgstr "Précédent"
+
+#~ msgid "Next"
+#~ msgstr "Suivant"
 
 #~ msgid "TMSM Aquatonic Attendance Cron Schedule Exists"
 #~ msgstr "La planification de cron de TMSM Aquatonic Attendance existe"
@@ -227,9 +250,6 @@ msgstr "d/m/y"
 #~ msgid "TMSM Aquatonic Attendance cron is not scheduled on %s"
 #~ msgstr "Le cron de TMSM Aquatonic Attendance n’est pas planifié sur %s"
 
-#~ msgid "Loading"
-#~ msgstr "Chargement"
-
 #~ msgid "Web service is not available"
 #~ msgstr "Le service web n’est pas disponible"
 
@@ -239,12 +259,6 @@ msgstr "d/m/y"
 #, php-format
 #~ msgid "Error code %s: %s"
 #~ msgstr "Code erreur %s : %s"
-
-#~ msgid "Token security is not valid"
-#~ msgstr "Le jeton de sécurité n’est pas valide"
-
-#~ msgid "Ajax referer is not valid"
-#~ msgstr "Le référant ajax n’est pas valide"
 
 #~ msgid "Consumer key"
 #~ msgstr "Clé client"

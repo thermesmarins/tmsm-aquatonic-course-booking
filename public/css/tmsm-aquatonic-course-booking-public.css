@@ -1,3 +1,6 @@
+#tmsm-aquatonic-course-slots-container {
+  text-align: center;
+}
 #tmsm-aquatonic-course-booking-weekdays-list {
   border-bottom: 0;
   width: 100%;
@@ -15,7 +18,54 @@
   float: none;
   margin-bottom: -1px;
   position: relative;
-  display: table-cell;
-  width: 1%;
+  font-weight: bold;
+  padding-bottom: 20px;
+}
+@media (min-width: 768px) {
+  #tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item {
+    display: table-cell;
+    width: 1%;
+  }
+}
+@media (min-width: 768px) and (max-width: 992px) {
+  #tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item {
+    font-size: 80%;
+  }
+}
+@media (min-width: 768px) {
+  #tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item .secondline {
+    display: block;
+  }
+}
+#tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item .tmsm-aquatonic-course-booking-weekday-times {
+  padding-top: 10px;
+  font-weight: normal;
+}
+#tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item .tmsm-aquatonic-course-booking-weekday-times .tmsm-aquatonic-course-booking-time-button {
+  min-width: 50px;
+}
+@media (min-width: 992px) {
+  #tmsm-aquatonic-course-booking-weekdays-list > .tmsm-aquatonic-course-booking-weekday-item .tmsm-aquatonic-course-booking-weekday-times .tmsm-aquatonic-course-booking-time-button {
+    min-width: 100px;
+  }
+}
+#tmsm-aquatonic-course-booking-weekdays-list .tmsm-aquatonic-course-booking-time-change-label {
+  display: none;
+}
+#tmsm-aquatonic-course-booking-weekdays-list .tmsm-aquatonic-course-booking-time-item {
+  display: inline-block;
+  margin: 0 10px 10px 0;
+}
+@media (min-width: 768px) {
+  #tmsm-aquatonic-course-booking-weekdays-list .tmsm-aquatonic-course-booking-time-item {
+    display: block;
+  }
+}
+#tmsm-aquatonic-course-booking-weekdays-list #tmsm-aquos-spa-booking-weekdays-previous,
+#tmsm-aquatonic-course-booking-weekdays-list #tmsm-aquos-spa-booking-weekdays-next {
+  margin-bottom: 10px;
+}
+#tmsm-aquatonic-course-booking-weekdays-list #tmsm-aquos-spa-booking-weekdays-previous {
+  margin-right: 10px;
 }
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */

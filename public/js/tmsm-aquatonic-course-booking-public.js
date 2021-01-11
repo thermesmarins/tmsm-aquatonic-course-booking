@@ -527,7 +527,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       $( this.errorElement ).hide();
     },
     showConfirm: function(){
-      console.log('SelectedDataView showConfirm');
+      console.log('SelectedDataView showConfirm 02');
+      TmsmAquatonicCourseApp.animateTransition( $(TmsmAquatonicCourseApp.form_fields.submit_button));
       $( this.confirmButton ).show();
     },
     hideConfirm: function(){
@@ -562,6 +563,15 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     }
 
   } );
+
+  // Animate Display
+  TmsmAquatonicCourseApp.animateTransition = function(element){
+    console.log('animateTransition ' + element.attr('id'));
+    element.show();
+    $('html, body').animate({
+      scrollTop: element.offset().top
+    }, 400);
+  };
 
   /**
    * Set initial data into view and start recurring display updates.

@@ -137,6 +137,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'date_field' => '.tmsm-aquatonic-course-date input',
 				'hour_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
 				'minutes_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
+				'submit_button' => '.gform_button[type=submit]',
 			],
 			'i18n' => [
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
@@ -202,7 +203,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-time">
 			<# if ( data.hourminutes != null) { #>
-			<a class="tmsm-aquatonic-course-booking-time-button <?php echo self::button_class_default(); ?> tmsm-aquatonic-course-booking-time" href="#" data-date="{{ data.date }}" data-hour="{{ data.hour }}" data-minutes="{{ data.minutes }}" data-hourminutes="{{ data.hourminutes }}" data-priority="{{ data.priority }}">{{ data.hourminutes }} <# if ( TmsmAquatonicCourseApp.data.canviewpriority == "1" && data.priority == 1) { #> <!--*--><# } #></a> <a href="#" class="tmsm-aquatonic-course-booking-time-change-label"><?php echo __( 'Change time', 'tmsm-aquatonic-course-booking' ); ?></a>
+			<a class="tmsm-aquatonic-course-booking-time-button <?php echo self::button_class_default(); ?> tmsm-aquatonic-course-booking-time" href="#" data-date="{{ data.date }}" data-hour="{{ data.hour }}" data-minutes="{{ data.minutes }}" data-hourminutes="{{ data.hourminutes }}" data-priority="{{ data.priority }}" data-capacity="{{ data.capacity }}">{{ data.hourminutes }} <# if ( TmsmAquatonicCourseApp.data.canviewpriority == "1" && data.priority == 1) { #> <!--*--><# } #></a> <a href="#" class="tmsm-aquatonic-course-booking-time-change-label"><?php echo __( 'Change time', 'tmsm-aquatonic-course-booking' ); ?></a>
 			<# } else { #>
 			{{  TmsmAquatonicCourseApp.i18n.notimeslot }}
 			<# } #>
