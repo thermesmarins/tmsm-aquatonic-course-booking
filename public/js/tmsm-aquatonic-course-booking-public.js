@@ -1,12 +1,7 @@
 (function( $ ) {
 	'use strict';
 
-  $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
 
-	if($('.tmsm-aquatonic-course-participants').length > 0 ){
-	  var participants = $('.tmsm-aquatonic-course-participants input').val();
-    //$('#tmsm-aquatonic-course-slots-container').html('participants: '+participants);
-  }
 
   var wp = window.wp || {};
 
@@ -375,7 +370,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         console.log('WeekDayListView fetch:');
         TmsmAquatonicCourseApp.times.fetch({
           data: {
-            date: model.attributes.date_computed
+            date: model.attributes.date_computed,
+            participants: TmsmAquatonicCourseApp.participants,
           }
         });
 
@@ -572,6 +568,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   TmsmAquatonicCourseApp.init = function() {
     console.log('TmsmAquatonicCourseApp.init 01');
 
+    $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
+
+    if($('.tmsm-aquatonic-course-participants').length > 0 ){
+      TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
+    }
 
     TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
     TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
