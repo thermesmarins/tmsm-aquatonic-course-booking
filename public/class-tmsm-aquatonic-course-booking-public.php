@@ -823,7 +823,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'priority' => 1,
 			];*/
 
-			$times = $slots_available;
+			$times = array_values($slots_available);
 		}
 
 

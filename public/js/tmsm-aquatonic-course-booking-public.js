@@ -105,6 +105,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       hour: null,
       minute: null,
       priority: null,
+      capacity: null,
       hourminutes: null,
     }
   } );
