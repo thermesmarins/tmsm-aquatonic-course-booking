@@ -44,10 +44,172 @@ if ( $tab == 'settings' ) {
 	<?php
 }
 
+if($tab == 'dashboard'){
+
+	$now = new Datetime;
+
+	$second = $now->format("s");
+	if($second > 0){
+		$now->add(new DateInterval("PT".(60-$second)."S"));
+	}
+	$minute = $now->format("i");
+	$minute = $minute % 15;
+	if($minute != 0)
+	{
+		// Count difference
+		$diff = 15 - $minute;
+		// Add difference
+		$now->add(new DateInterval("PT".$diff."M"));
+		$now->modify('-15 minutes');
+	}
+
+	$options = get_option($this->plugin_name . '-options');
+	$averagecourse = $options['courseaverage'];
+
+	$slotsize = $options['slotsize'];
+	$slotminutes = 15;
+	if( $slotsize == 6){
+		$slotminutes = 10;
+	}
+	if( $slotsize == 3){
+		$slotminutes = 20;
+	}
+	if( $slotsize == 2){
+		$slotminutes = 30;
+	}
+
+	$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
+	$now_plus_courseaverage = clone $now;
+	$now_plus_courseaverage->modify( '+' . $averagecourse . ' minutes' );
+	$period = new DatePeriod( $now, $interval, $now_plus_courseaverage );
+
+	$plugin_public = new Tmsm_Aquatonic_Course_Booking_Public( $this->plugin_name, null );
+	$capacity_timeslots_forthedate = $plugin_public->capacity_timeslots_forthedate(date('Y-m-d'));
+	print_r($capacity_timeslots_forthedate);
+
+	$realtime = 50; //TODO
+	?>
+	<br>
+	<table class="wp-list-table widefat striped">
+		<thead>
+		<tr>
+			<th></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				$date = date_i18n( get_option( 'time_format' ), $period_item->getTimestamp() );
+
+				?>
+				<th scope="col"><?php echo $date; ?></th>
+				<?php
+			}
+			?>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Capacity', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				?>
+				<td><?php
+					if(isset($capacity_timeslots_forthedate[$period_item->format('Y-m-d H:i:s')])){
+						echo $capacity_timeslots_forthedate[$period_item->format('Y-m-d H:i:s')];
+					}
+					else{
+						$capacity_timeslots_forthedate[$period_item->format('Y-m-d H:i:s')] = 0;
+					}
+					?></td>
+				<?php
+			}
+			?>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Ongoing Bookings', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				?>
+				<td><?php
+					echo $plugin_public->get_participants_ongoing_forthetime($period_item);
+					?></td>
+				<?php
+			}
+			?>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Ending Bookings', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				?>
+				<td><?php
+					echo $plugin_public->get_participants_ending_forthetime($period_item);
+					?></td>
+				<?php
+			}
+			?>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Starting Bookings', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				?>
+				<td><?php
+					echo $plugin_public->get_participants_starting_forthetime($period_item);
+					?></td>
+				<?php
+			}
+			?>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Free', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<?php
+			foreach ( $period as $period_item ) {
+
+				?>
+				<td><?php
+
+					echo $capacity_timeslots_forthedate[$period_item->format('Y-m-d H:i:s')] - $realtime + $plugin_public->get_participants_ending_forthetime($period_item) - $plugin_public->get_participants_starting_forthetime($period_item);
+					echo ' ('.$capacity_timeslots_forthedate[$period_item->format('Y-m-d H:i:s')] . '-'.$realtime. '+'.$plugin_public->get_participants_ending_forthetime($period_item).'-'.$plugin_public->get_participants_starting_forthetime($period_item).')';
+
+					?></td>
+				<?php
+			}
+			?>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Can Start', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<td>TODO</td>
+			<td>TODO</td>
+			<td>TODO</td>
+			<td>TODO</td>
+			<td>TODO</td>
+			<td>TODO</td>
+		</tr>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<td>TODO</td>
+		</tr>
+
+		</tbody>
+
+		<!--<tfoot>
+		<tr>
+			<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' ); ?></th>
+			<td>40</td>
+		</tr>
+		</tfoot>-->
+	</table>
+<?php
+}
+
 if($tab == 'bookings'){
 	?>
-
-	<table class="many-items-table wp-list-table widefat">
+	<br>
+	<table class="wp-list-table widefat striped">
 		<thead>
 		<tr>
 			<th scope="col"><?php esc_html_e( 'Firstname', 'tmsm-aquatonic-course-booking' ); ?></th>
