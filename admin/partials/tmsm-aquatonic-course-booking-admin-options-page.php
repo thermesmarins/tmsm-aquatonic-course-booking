@@ -102,10 +102,10 @@ if($tab == 'dashboard'){
 				<?php
 				foreach ( $period as $period_item ) {
 
-					$date = date_i18n( get_option( 'time_format' ), $period_item->getTimestamp() );
+					$date = wp_date( get_option( 'time_format' ), $period_item->getTimestamp() );
 
 					?>
-					<th scope="col"><?php echo $date; ?></th>
+					<th scope="col"><?php echo $date. ' - '.$period_item->getTimestamp(); ?></th>
 					<?php
 				}
 				?>
