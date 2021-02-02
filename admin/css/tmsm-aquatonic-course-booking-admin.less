@@ -1,0 +1,74 @@
+@booking-starting: deepskyblue;
+@booking-ending: deeppink;
+@booking-ongoing: brown;
+@realtime: orange;
+
+
+.settings_page_tmsm-aquatonic-course-booking-settings{
+
+    .table-dashboard{
+        td{
+            font-size: 14px;
+        }
+    }
+
+    .realtime{
+        color: @realtime;
+    }
+    .booking-starting{
+        color: @booking-starting;
+        &.booking-starting-2{
+            color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 5%);
+        }
+        &.booking-starting-3{
+            color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 10%);
+        }
+        &.booking-starting-4{
+            color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 15%);
+        }
+        &.booking-starting-5{
+            color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 20%);
+        }
+        &.booking-starting-6{
+            color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 25%);
+        }
+    }
+    .booking-ending{
+        color: @booking-ending;
+        &.booking-ending-2{
+            color: darken(hsl(hue(@booking-ending), saturation(@booking-ending), lightness(@booking-ending)), 5%);
+        }
+        &.booking-ending-3{
+            color: darken(hsl(hue(@booking-ending), saturation(@booking-ending), lightness(@booking-ending)), 10%);
+        }
+        &.booking-ending-4{
+            color: darken(hsl(hue(@booking-ending), saturation(@booking-ending), lightness(@booking-ending)), 15%);
+        }
+        &.booking-ending-5{
+            color: darken(hsl(hue(@booking-ending), saturation(@booking-ending), lightness(@booking-ending)), 20%);
+        }
+        &.booking-ending-6{
+            color: darken(hsl(hue(@booking-ending), saturation(@booking-ending), lightness(@booking-ending)), 25%);
+        }
+
+    }
+    .booking-ongoing{
+        color: @booking-ongoing;
+        &.booking-ongoing-2{
+            color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 5%);
+        }
+        &.booking-ongoing-3{
+            color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 10%);
+        }
+        &.booking-ongoing-4{
+            color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 15%);
+        }
+        &.booking-ongoing-5{
+            color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 20%);
+        }
+        &.booking-ongoing-6{
+            color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 25%);
+        }
+    }
+
+}

@@ -1,4 +1,61 @@
-/**
- * All of the CSS for your admin-specific functionality should be
- * included in this file.
- */
+.settings_page_tmsm-aquatonic-course-booking-settings .table-dashboard td {
+  font-size: 14px;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .realtime {
+  color: orange;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting {
+  color: deepskyblue;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-2 {
+  color: hsl(195.05882353, 100%, 45%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-3 {
+  color: hsl(195.05882353, 100%, 40%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-4 {
+  color: hsl(195.05882353, 100%, 35%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-5 {
+  color: hsl(195.05882353, 100%, 30%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-6 {
+  color: hsl(195.05882353, 100%, 25%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending {
+  color: deeppink;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending.booking-ending-2 {
+  color: hsl(327.57446809, 100%, 48.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending.booking-ending-3 {
+  color: hsl(327.57446809, 100%, 43.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending.booking-ending-4 {
+  color: hsl(327.57446809, 100%, 38.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending.booking-ending-5 {
+  color: hsl(327.57446809, 100%, 33.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending.booking-ending-6 {
+  color: hsl(327.57446809, 100%, 28.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing {
+  color: brown;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-2 {
+  color: hsl(0, 59.42028986%, 35.58823529%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-3 {
+  color: hsl(0, 59.42028986%, 30.58823529%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-4 {
+  color: hsl(0, 59.42028986%, 25.58823529%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-5 {
+  color: hsl(0, 59.42028986%, 20.58823529%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-6 {
+  color: hsl(0, 59.42028986%, 15.58823529%);
+}
+/*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */
