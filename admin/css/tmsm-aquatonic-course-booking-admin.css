@@ -1,8 +1,46 @@
 .settings_page_tmsm-aquatonic-course-booking-settings .table-dashboard td {
   font-size: 14px;
 }
+.settings_page_tmsm-aquatonic-course-booking-settings span {
+  padding: 2px;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-1,
+.settings_page_tmsm-aquatonic-course-booking-settings .realtime,
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-starting,
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-ending,
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different,
+.settings_page_tmsm-aquatonic-course-booking-settings .free {
+  font-weight: bold;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .highlight {
+  background: #f2f2f2;
+  border: 1px solid #333;
+  cursor: none;
+  padding: 1px;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-1 {
+  color: #a5a800;
+}
 .settings_page_tmsm-aquatonic-course-booking-settings .realtime {
   color: orange;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free {
+  color: mediumpurple;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free.free-2 {
+  color: mediumaquamarine;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free.free-3 {
+  color: #de746d;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free.free-4 {
+  color: #dd9f32;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free.free-5 {
+  color: mediumturquoise;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .free.free-6 {
+  color: purple;
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-starting {
   color: deepskyblue;
@@ -21,6 +59,24 @@
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-6 {
   color: hsl(195.05882353, 100%, 25%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different {
+  color: #e8c4c4;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-2 {
+  color: hsl(0, 43.90243902%, 78.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-3 {
+  color: hsl(0, 43.90243902%, 73.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-4 {
+  color: hsl(0, 43.90243902%, 68.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-5 {
+  color: hsl(0, 43.90243902%, 63.92156863%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-6 {
+  color: hsl(0, 43.90243902%, 58.92156863%);
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ending {
   color: deeppink;

@@ -527,9 +527,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$open = false;
 		$capacity = 0;
 
+		//print_r('$timeslots_items');
+		//print_r($timeslots_items);
+
 		//error_log('$timeslots_items');
 		//error_log(print_r($timeslots_items , true));
 
+		// First pass to list all slots
 		foreach($timeslots_items as &$timeslots_item){
 
 			$tmp_timeslots_item = $timeslots_item;
@@ -550,6 +554,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 		}
 
+		//print_r('$timeslots_items after first step');
+		//print_r($timeslots_items);
+
 		//error_log('$timeslots_items after first step');
 		//error_log(print_r($timeslots_items , true));
 
@@ -558,34 +565,35 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$date_dayoftheweek = $date_object->format( 'w' );
 		$date = $date_object->format( 'Y-m-d' );
 
+		// Second pass for slots matching date
 		foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
 
 			if ( isset( $timeslots_item_to_parse['date'] ) && $timeslots_item_to_parse['date'] == $date ) {
+				$found_slots_for_date = true;
 				foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
 					$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
 				}
-				break;
-			}
-			elseif ( isset( $timeslots_item_to_parse['daynumber'] ) && $timeslots_item_to_parse['daynumber'] == $date_dayoftheweek ) {
-				foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
-					$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
-				}
-
-				//foreach($times as $time){
-					//$hoursminutes = explode('-', $time);
-					/*$before = trim($hoursminutes[0]);
-					$after = trim($hoursminutes[1]);
-					$current_time = current_time('H:i');
-					//$current_time = '13:00';
-
-					if(strtotime($before) <= strtotime($current_time) && strtotime($current_time) <= strtotime($after) ){
-						$open = true;
-						$capacity = $timeslots_item_to_parse['capacity'];
-					}*/
-				//}
-
 			}
 		}
+		//print_r('$times after second pass');
+		//print_r( $times );
+
+		if ( empty( $times ) ) {
+			// Third pass for slots matching day of the week
+			foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
+
+				if ( isset( $timeslots_item_to_parse['daynumber'] ) && $timeslots_item_to_parse['daynumber'] == $date_dayoftheweek ) {
+					foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
+						$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
+					}
+				}
+			}
+
+			//print_r('$times after third pass');
+			//print_r( $times );
+		}
+
+
 		//error_log('$times');
 		//error_log(print_r($times , true));
 
@@ -627,8 +635,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
 
+
 		//error_log('$opening_periods');
 		//error_log(print_r($opening_periods, true));
+
+		//print_r('$opening_periods');
+		//print_r($opening_periods);
 
 		// First pass to calculate start and end datetimes
 		foreach($opening_periods as &$opening_period){
@@ -643,6 +655,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		}
 
+		//print_r('$opening_periods after first pass');
+		//print_r($opening_periods);
+
 		//error_log('$opening_periods after first pass');
 		//error_log(print_r($opening_periods, true));
 
@@ -652,13 +667,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		foreach ( $opening_periods as $opening_period ) {
 			$period = new DatePeriod( $opening_period['start'], $interval, $opening_period['end'] );
 
-			error_log('$opening_period');
-			error_log(print_r($opening_period, true));
+			//print_r('$period');
+			//print_r($period);
+
+			//error_log('$opening_period');
+			//error_log(print_r($opening_period, true));
 
 			foreach ( $period as $slot_begin ) {
 				$slot_end = clone $slot_begin;
 				$slot_end->modify( '+' . $averagecourse . ' minutes' );
 
+				//echo "\n".$slot_begin->format( "Y-m-d H:i:s" ) . ' - '.$opening_period['capacity'];
 				$total_capacity[$slot_begin->format( "Y-m-d H:i:s" )] = $opening_period['capacity'];
 			}
 

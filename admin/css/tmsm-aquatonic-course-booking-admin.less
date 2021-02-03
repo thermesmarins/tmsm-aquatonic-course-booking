@@ -2,6 +2,8 @@
 @booking-ending: deeppink;
 @booking-ongoing: brown;
 @realtime: orange;
+@capacity-different: #e8c4c4;
+@capacity: #a5a800;
 
 
 .settings_page_tmsm-aquatonic-course-booking-settings{
@@ -12,9 +14,49 @@
         }
     }
 
+    span{
+        padding: 2px;
+
+    }
+    .capacity-1, .realtime, .booking-starting, .booking-ending, .capacity-different, .free{
+        font-weight: bold;
+    }
+
+    .highlight{
+        background: #f2f2f2;
+        border: 1px solid #333;
+        cursor: none;
+        padding: 1px;
+    }
+
+    .capacity-1{
+        color: @capacity;
+    }
+
     .realtime{
         color: @realtime;
     }
+
+    .free{
+        color: mediumpurple;
+        &.free-2{
+            color: mediumaquamarine;
+        }
+        &.free-3{
+            color: #de746d;
+        }
+        &.free-4{
+            color: #dd9f32;
+        }
+        &.free-5{
+            color: mediumturquoise;
+        }
+        &.free-6{
+            color: purple;
+        }
+
+    }
+
     .booking-starting{
         color: @booking-starting;
         &.booking-starting-2{
@@ -31,6 +73,24 @@
         }
         &.booking-starting-6{
             color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 25%);
+        }
+    }
+    .capacity-different{
+        color: @capacity-different;
+        &.capacity-different-2{
+            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 5%);
+        }
+        &.capacity-different-3{
+            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 10%);
+        }
+        &.capacity-different-4{
+            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 15%);
+        }
+        &.capacity-different-5{
+            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 20%);
+        }
+        &.capacity-different-6{
+            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 25%);
         }
     }
     .booking-ending{

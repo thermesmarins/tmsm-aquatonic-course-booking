@@ -53,6 +53,8 @@
 	if ( $tab == 'dashboard' ) {
 
 		$now = new Datetime;
+		$canstart = 200;
+		$canstart_counter = null;
 
 		$second = $now->format( "s" );
 		if ( $second > 0 ) {
@@ -89,12 +91,17 @@
 		$period = new DatePeriod( $now, $interval, $now_plus_courseaverage );
 
 		$plugin_public                 = new Tmsm_Aquatonic_Course_Booking_Public( $this->plugin_name, null );
+		//echo '<pre>';
 		$capacity_timeslots_forthedate = $plugin_public->capacity_timeslots_forthedate( date( 'Y-m-d' ) );
-		print_r( $capacity_timeslots_forthedate );
+		//print_r( $capacity_timeslots_forthedate );
+		//echo '</pre>';
 
 		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
 		$realtime = 50; // For tests only
+		// Mysql Query to change date of bookings:
+		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
 
+		// Display table only if realtime data exists
 		if ( $realtime === false ) {
 			echo '<div class="update-message notice inline notice-error notice-alt">' . __( 'Aquatonic Attendance is not available',
 					'tmsm-aquatonic-course-booking' ) . '</div>';
@@ -108,12 +115,15 @@
 					<?php
 					$counter = 0;
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						$date = wp_date( get_option( 'time_format' ), $period_item->getTimestamp() );
 
 						?>
-						<th scope="col"><?php echo $date; ?></th>
+						<th scope="col">
+							<?php echo $date; ?>
+						</th>
 						<?php
 					}
 					?>
@@ -126,15 +136,27 @@
 					<th scope="col"><?php esc_html_e( 'Capacity', 'tmsm-aquatonic-course-booking' ); ?></th>
 					<?php
 					$counter = 0;
+					$capacity_timeslots_forthedate_counter = [];
+					$capacity_timeslots_forthedate_difference = [];
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
 						<td><?php
 							if ( isset( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
-								echo $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
+								echo '<span class="capacity capacity-' . $counter .'">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]. '</span>';
 							} else {
 								$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
+							}
+							$capacity_timeslots_forthedate_counter[$counter] = $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
+
+							if($counter != 1 && $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $capacity_timeslots_forthedate_counter[$counter - 1]){
+								$difference = (($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]) >= 0 ? '+' : '-'). ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]);
+
+								echo ' (<span class="capacity-different capacity-different-' . $counter . '">'.$difference .'</span>)';
+								$capacity_timeslots_forthedate_difference[$counter] = $difference;
+
 							}
 							?></td>
 						<?php
@@ -148,6 +170,7 @@
 					<?php
 					$counter = 0;
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
@@ -165,6 +188,7 @@
 					<?php
 					$counter = 0;
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
@@ -182,6 +206,7 @@
 					<?php
 					$counter = 0;
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
@@ -198,27 +223,63 @@
 					<th scope="col"><?php esc_html_e( 'Free', 'tmsm-aquatonic-course-booking' ); ?></th>
 					<?php
 					$counter = 0;
+					$capacity_timeslots_forthedate_free = [];
 					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
 						<td><?php
 
+							// First "Free" column
 							if($counter === 1){
-								echo $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
-								     + $plugin_public->get_participants_ending_forthetime( $period_item )
-								     - $plugin_public->get_participants_starting_forthetime( $period_item );
-								echo ' (' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '-' . '<span class="realtime">'
+								$capacity_timeslots_forthedate_free[$counter] = ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
+								                                                 + $plugin_public->get_participants_ending_forthetime( $period_item )
+								                                                 - $plugin_public->get_participants_starting_forthetime( $period_item ) );
+								echo '<span class="free free-'. $counter .'">'
+								     . $capacity_timeslots_forthedate_free[$counter]
+								     . '</span>'
+								;
+
+								echo ' (' . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
 								     . $realtime . '</span>' . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>' . ')';
 							}
+							// Other "Free" columns
 							else{
 								//TODO reprendre le chiffre LIBRE de la colonne précédente
-								echo $plugin_public->get_participants_ending_forthetime( $period_item )
-								     - $plugin_public->get_participants_starting_forthetime( $period_item );
-								echo ' (' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
-								     . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>' . ')';
+								/*echo $plugin_public->get_participants_ending_forthetime( $period_item )
+								     - $plugin_public->get_participants_starting_forthetime( $period_item )
+								     + ($capacity_timeslots_forthedate_difference[ $counter ]);
+								;*/
+
+								$capacity_timeslots_forthedate_free[$counter] = ( $capacity_timeslots_forthedate_free[ ( $counter - 1 ) ]
+								                                                  + $plugin_public->get_participants_ending_forthetime( $period_item )
+								                                                  - $plugin_public->get_participants_starting_forthetime( $period_item )
+								                                                  + $capacity_timeslots_forthedate_difference[ $counter ]
+								);
+								echo '<span class="free free-' . $counter . '">'
+								     . $capacity_timeslots_forthedate_free[$counter] . '</span>';
+
+								echo ' ('
+								     . '<span class="free free-'. ( $counter - 1 ) .'">'
+								     . $capacity_timeslots_forthedate_free[( $counter - 1 )]
+								     . '</span>'
+								     . '+'
+								     . '<span class="booking-ending booking-ending-' . $counter . '">'
+								     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
+								     . '<span class="booking-starting booking-starting-' . $counter . '">'
+								     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+								     . ($capacity_timeslots_forthedate_difference[ $counter ] ? '<span class="capacity-different capacity-different-' . $counter . '">'
+								     . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
+								     . ')';
 							}
+
+							if($capacity_timeslots_forthedate_free[$counter] < $canstart){
+								$canstart_counter = $counter;
+							}
+
+							$canstart = min($canstart,  $capacity_timeslots_forthedate_free[$counter]);
 
 
 							?></td>
@@ -230,18 +291,13 @@
 				<!-- Can Start -->
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Can Start', 'tmsm-aquatonic-course-booking' ); ?></th>
-					<td>TODO</td>
-					<td>TODO</td>
-					<td>TODO</td>
-					<td>TODO</td>
-					<td>TODO</td>
-					<td>TODO</td>
+					<td colspan="5"><span class="free free-<?php echo $canstart_counter;?>"><?php echo $canstart ;?></span> <?php esc_html_e( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' ); ?></td>
 				</tr>
 
 				<!-- Real Time -->
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' ); ?></th>
-					<td><?php echo '<span class="realtime">' . $realtime . '</span>'; ?></td>
+					<td colspan="5"><?php echo '<span class="realtime">' . $realtime . '</span>'; ?></td>
 				</tr>
 
 				</tbody>
