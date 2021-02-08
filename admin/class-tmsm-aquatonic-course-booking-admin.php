@@ -239,6 +239,20 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+
+		add_settings_field(
+			'timeslots',
+			esc_html__( 'Timeslots', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_textarea' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'id' => 'timeslots',
+				'description' => esc_html__( 'Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day Number is: 0 for Sunday, 1 for Monday, etc. Also for special dates: Date=09:00-21:00=0 where Date is in format YYYY-MM-DD.', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		// Select frontend form
 		foreach (GFAPI::get_forms() as $form){
 			$forms[] = ['value' => $form['id'], 'label' => $form['title']];
 		}
@@ -517,6 +531,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'courseaverage', 'text', '90' );
 		$options[] = array( 'hoursbefore', 'text', '' );
 		$options[] = array( 'hoursafter', 'text', '' );
+		$options[] = array( 'timeslots', 'textarea', '' );
 
 		$options[] = array( 'gform_id', 'text', '' );
 

@@ -486,6 +486,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @return mixed|null
 	 */
 	private function capacity_periods_settings(){
+
+
+		return $this->get_option('timeslots');
+		/*
 		$attendance_options = self::attendance_options();
 		if( empty($attendance_options) ){
 			return null;
@@ -494,7 +498,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			return null;
 		}
 
-		return $attendance_options['timeslots'];
+		return $attendance_options['timeslots'];*/
 
 	}
 
