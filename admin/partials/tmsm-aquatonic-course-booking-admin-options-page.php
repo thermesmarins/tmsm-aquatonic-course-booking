@@ -100,6 +100,7 @@
 		$realtime = 50; // For tests only
 		// Mysql Query to change date of bookings:
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
+		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
 
 		// Display table only if realtime data exists
 		if ( $realtime === false ) {
@@ -122,7 +123,8 @@
 
 						?>
 						<th scope="col">
-							<?php echo $date; ?>
+							<?php
+							echo $date; ?>
 						</th>
 						<?php
 					}
@@ -339,9 +341,9 @@
 					<td><?php echo sanitize_text_field( $booking->email ); ?></td>
 					<td><?php echo sanitize_text_field( $booking->participants ); ?></td>
 					<td><?php
-						$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking->course_start );
-						echo sanitize_text_field( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), $objdate->format( 'Y-m-d' ),
-							$objdate->format( 'H:i' ) ) ); ?></td>
+						$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking->course_start, wp_timezone() );
+						echo wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
+						?></td>
 					<td><?php echo sanitize_text_field( $booking->status ); ?></td>
 				</tr>
 			<?php } ?>

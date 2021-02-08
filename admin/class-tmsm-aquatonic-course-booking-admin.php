@@ -523,4 +523,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		return $options;
 	}
+
+	/*
+	 * Refresh every 5 minutes the dashboard page
+	 */
+	public function dashboard_refresh(){
+		global $pagenow;
+		$screen = get_current_screen();
+		if( $pagenow === 'options-general.php' && $screen && $screen->id === 'settings_page_tmsm-aquatonic-course-booking-settings' && empty($_REQUEST['tab']) ){
+			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=?page=jetpack_modules">';
+		}
+	}
 }
