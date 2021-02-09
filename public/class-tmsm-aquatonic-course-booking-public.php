@@ -794,11 +794,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 				$allow_begin = new DateTime('now', wp_timezone());
 				$allow_begin->modify('+'.(60*$this->get_option('hoursbefore')) . ' minutes');
+				$allow_end = new DateTime('now', wp_timezone());
+				$allow_end->modify('+'.(60*$this->get_option('hoursafter')) . ' minutes');
 
-				if($slot_begin_object < $allow_begin){
+				if ( $slot_begin_object < $allow_begin || $slot_begin_object > $allow_end ) {
 					continue;
 				}
-
 
 				$period = new DatePeriod( $slot_begin_object, $interval, $slot_end_object );
 
