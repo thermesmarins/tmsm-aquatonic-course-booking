@@ -564,4 +564,36 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 {$wpdb->prefix}aquatonic_course_booking SET status='noshow' WHERE status = %s AND course_start < %s", 'active', $nowminus15minutes->format( "Y-m-d H:i:s" ) ) );
 
 	}
+
+	/**
+	 * Check ajax calls nonce
+	 *
+	 * @return bool
+	 */
+	function verify_ajax() {
+
+		// vars
+		$nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
+
+		// bail early if not nonce
+		if( !$nonce || !wp_verify_nonce($nonce, 'tmsm_aquatonic_course_booking_nonce') ) {
+			return false;
+		}
+
+		// return
+		return true;
+	}
+
+
+	/**
+	 * Action Booking Change Status (Ajax)
+	 */
+	public function booking_change_status(){
+		error_log('booking_change_status');
+
+		// validate
+		if( ! $this->verify_ajax() ) die();
+
+		error_log('booking_change_status passed verify_ajax');
+	}
 }
