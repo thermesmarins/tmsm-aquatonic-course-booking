@@ -791,11 +791,21 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$slot_begin_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $slot_begin);
 				$slot_end_object = clone $slot_begin_object;
 				$slot_end_object->modify( '+' . $averagecourse . ' minutes' );
+
+				$allow_begin = new DateTime();
+				//$allow_begin->modify('+'.$this->get_option('hoursbefore') . 'hours');
+				//$allow_begin->modify('+0 hours');
+
+				if($slot_begin_object < $allow_begin){
+					continue;
+				}
+
+
 				$period = new DatePeriod( $slot_begin_object, $interval, $slot_end_object );
 
 				error_log('calculate capacity for '.$slot_begin_object->format( "Y-m-d H:i:s" ));
 
-				$min_capacity = 100;
+				$min_capacity = 1000;
 				foreach ( $period as $period_begin ) {
 					$period_begin_uses           = $uses[ $period_begin->format( "Y-m-d H:i:s" ) ] ?? 0;
 					$period_begin_total_capacity = $capacity_forthedate_timeslots[ $period_begin->format( "Y-m-d H:i:s" ) ] ?? 0;
