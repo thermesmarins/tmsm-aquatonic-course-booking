@@ -793,13 +793,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$slot_end_object->modify( '+' . $averagecourse . ' minutes' );
 
 				$allow_begin = new DateTime('now', wp_timezone());
-				$allow_begin->modify('+'.(60*$this->get_option('hoursbefore')) . ' minutes');
-				$allow_end = new DateTime('now', wp_timezone());
-				$allow_end->modify('+'.(60*$this->get_option('hoursafter')) . ' minutes');
+				$allow_begin_customer = new DateTime('now', wp_timezone());
+				$allow_begin_customer->modify('+'.(60*$this->get_option('hoursbefore')) . ' minutes');
+				$allow_end_customer = new DateTime('now', wp_timezone());
+				$allow_end_customer->modify('+'.(60*$this->get_option('hoursafter')) . ' minutes');
 
-				if ( $slot_begin_object < $allow_begin || $slot_begin_object > $allow_end ) {
-					continue;
+				// Is a customer
+				if( $this->user_has_role(wp_get_current_user(), 'customer') || ! wp_get_current_user() ) {
+					if ( $slot_begin_object < $allow_begin_customer || $slot_begin_object > $allow_end_customer ) {
+						continue;
+					}
 				}
+				// Is not a customer
+				else{
+					if($slot_begin_object < $allow_begin ) {
+						continue;
+					}
+				}
+
 
 				$period = new DatePeriod( $slot_begin_object, $interval, $slot_end_object );
 
@@ -923,6 +934,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
+	/**
+	 * Checks if a user has a role.
+	 *
+	 * @param int|\WP_User $user The user.
+	 * @param string       $role The role.
+	 * @return bool
+	 */
+	function user_has_role( $user, $role ) {
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $user );
+		}
+
+		if ( ! $user || ! $user->exists() ) {
+			return false;
+		}
+
+		return in_array( $role, $user->roles, true );
+	}
 
 
 }

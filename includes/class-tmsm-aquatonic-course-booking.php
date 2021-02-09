@@ -99,6 +99,9 @@ class Tmsm_Aquatonic_Course_Booking {
 	 */
 	private function load_dependencies() {
 
+		// Include Pluggable to be able to use wp_get_current_user() function
+		include_once(ABSPATH . 'wp-includes/pluggable.php');
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
