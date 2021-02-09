@@ -5,7 +5,7 @@
  * This file is used to markup the admin-facing aspects of the plugin.
  *
  * @param $tab      string options page
- * @param $bookings array bookings
+ * @param $bookings_of_the_day array bookings
  *
  * @since      1.0.0
  *
@@ -334,7 +334,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $bookings as $booking ) { ?>
+			<?php foreach ( $bookings_of_the_day as $booking ) { ?>
 				<tr>
 					<td><?php echo sanitize_text_field( $booking->firstname ); ?></td>
 					<td><?php echo sanitize_text_field( $booking->lastname ); ?></td>

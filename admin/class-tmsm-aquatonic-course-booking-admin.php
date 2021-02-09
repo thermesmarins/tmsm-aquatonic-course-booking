@@ -151,8 +151,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$tomorrow = clone $today;
 		$tomorrow->modify('+1 day');
 
-		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM
-{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_start >= %s AND course_end < %s ORDER BY course_start", 'active', $today->format( "Y-m-d" ).' 00:00:00', $tomorrow->format( "Y-m-d" ).' 00:00:00' ) );
+		$bookings_of_the_day = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM
+{$wpdb->prefix}aquatonic_course_booking WHERE course_start >= %s AND course_end < %s ORDER BY course_start", $today->format( "Y-m-d" ).' 00:00:00', $tomorrow->format( "Y-m-d" ).' 00:00:00' ) );
 
 		include_once( 'partials/' . $this->plugin_name . '-admin-options-page.php' );
 	}
@@ -555,8 +555,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * Mark Bookings as Now How
 	 */
 	public function bookings_mark_as_noshow(){
+		error_log('bookings_mark_as_noshow 01');
 
-		error_log('bookings_mark_as_noshow');
+		global $wpdb;
+
+		$nowplus15minutes = new  DateTime('now', wp_timezone());
+		$nowplus15minutes->modify('+15 minutes');
+
+		$mark_as_noshow_query = $wpdb->query( $wpdb->prepare( "UPDATE
+{$wpdb->prefix}aquatonic_course_booking SET status='noshow' WHERE status = %s AND course_start < %s", 'active', $nowplus15minutes->format( "Y-m-d H:i:s" ) ) );
 
 	}
 }

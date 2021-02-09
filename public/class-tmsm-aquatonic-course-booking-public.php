@@ -704,7 +704,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$date = date('Y-m-d');
 		$participants = 0;
 
-		error_log('_get_times');
 		if(!empty($_REQUEST['date'])){
 			$date                = sanitize_text_field( $_REQUEST['date'] );
 		}
