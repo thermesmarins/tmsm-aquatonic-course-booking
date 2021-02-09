@@ -23,14 +23,12 @@
 class Tmsm_Aquatonic_Course_Booking_Deactivator {
 
 	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
+	 * Deactivates plugins
 	 *
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		wp_clear_scheduled_hook('tmsm_aquatonic_course_noshow_cronaction');
 	}
 
 }

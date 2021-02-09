@@ -549,4 +549,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=?page=jetpack_modules">';
 		}
 	}
+
+
+	/**
+	 * Mark Bookings as Now How
+	 */
+	public function bookings_mark_as_noshow(){
+
+		error_log('bookings_mark_as_noshow');
+
+	}
 }

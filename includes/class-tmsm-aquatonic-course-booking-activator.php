@@ -23,15 +23,26 @@
 class Tmsm_Aquatonic_Course_Booking_Activator {
 
 	/**
-	 * Install custom table
+	 * Activates the plugin
+	 *
+	 * @since    1.0.0
+	 */
+	public static function activate() {
+
+		self::create_database_schema();
+		self::create_cron_event();
+
+	}
+
+	/**
+	 * Creates the database schema
 	 *
 	 * @link https://mac-blog.org.ua/wordpress-custom-database-table-example-full/
 	 * @link https://premium.wpmudev.org/blog/creating-database-tables-for-plugins/
 	 *
 	 * @since    1.0.0
 	 */
-	public static function activate() {
-
+	private static function create_database_schema() {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'aquatonic_course_booking'; // do not forget about tables prefix
@@ -68,6 +79,19 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 		// save current database version for later use (on upgrade)
 		add_option('tmsm-aquatonic-course-booking-db-version', TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
 
+	}
+
+
+	/**
+	 * Creates the schedule event
+	 *
+	 * @since    1.0.0
+	 */
+	private static function create_cron_event() {
+
+		if ( ! wp_next_scheduled( 'tmsm_aquatonic_course_noshow_cronaction' ) ) {
+			wp_schedule_event( time(), 'tmsm_aquatonic_course_refresh_schedule', 'tmsm_aquatonic_course_noshow_cronaction' );
+		}
 	}
 
 }

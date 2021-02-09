@@ -76,6 +76,7 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->create_cron_schedule();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
@@ -174,6 +175,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'dashboard_refresh' );
 
+		// Mark as noshow bookings automatically
+		$this->loader->add_action( 'tmsm_aquatonic_course_noshow_cronaction', $plugin_admin, 'bookings_mark_as_noshow', 10 );
+
 	}
 
 	/**
@@ -198,6 +202,22 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 
+	}
+
+	/**
+	 * Creates cron schedule
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function create_cron_schedule() {
+		add_filter('cron_schedules', function($schedules) {
+			$schedules['tmsm_aquatonic_course_refresh_schedule'] = array(
+				'interval' => MINUTE_IN_SECONDS * 5,
+				'display'  => __( 'Every 5 minutes', 'tmsm-aquatonic-course-booking' ),
+			);
+			return $schedules;
+		}, 99);
 	}
 
 	/**
