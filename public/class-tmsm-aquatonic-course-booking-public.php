@@ -254,7 +254,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
 			error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
-			error_log(print_r($objdate, true));
+			//error_log(print_r($objdate, true));
 			$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
 			error_log('birthdate_computed: '. $birthdate_computed);
 		}
@@ -759,10 +759,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 
 
-			error_log('$first_slot');
-			error_log(print_r($first_slot , true));
-			error_log('$last_slot');
-			error_log(print_r($last_slot , true));
+			//error_log('$first_slot');
+			//error_log(print_r($first_slot , true));
+			//error_log('$last_slot');
+			//error_log(print_r($last_slot , true));
 
 
 			// Get all slots between first and last, then get participants for each one
@@ -886,7 +886,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		global $wpdb;
 
 		$uses_count = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(participants) FROM
-{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_start <= %s AND course_end > %s", 'active', $datetime->format( "Y-m-d H:i:s" ), $datetime->format( "Y-m-d H:i:s" ) ) );
+{$wpdb->prefix}aquatonic_course_booking WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s", 'active', 'arrived', $datetime->format( "Y-m-d H:i:s" ), $datetime->format( "Y-m-d H:i:s" ) ) );
 		if(empty($uses_count)){
 			$uses_count = 0;
 		}
@@ -905,7 +905,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		global $wpdb;
 
 		$uses_count = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(participants) FROM
-{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_end = %s", 'active', $datetime->format( "Y-m-d H:i:s" ) ) );
+{$wpdb->prefix}aquatonic_course_booking WHERE ( status = %s OR status = %s ) AND course_end = %s", 'active', 'arrived', $datetime->format( "Y-m-d H:i:s" ) ) );
 		if(empty($uses_count)){
 			$uses_count = 0;
 		}
@@ -925,7 +925,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		global $wpdb;
 
 		$uses_count = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(participants) FROM
-{$wpdb->prefix}aquatonic_course_booking WHERE status = %s AND course_start = %s", 'active', $datetime->format( "Y-m-d H:i:s" ) ) );
+{$wpdb->prefix}aquatonic_course_booking WHERE ( status = %s OR status = %s ) AND course_start = %s", 'active', 'arrived', $datetime->format( "Y-m-d H:i:s" ) ) );
 		if(empty($uses_count)){
 			$uses_count = 0;
 		}

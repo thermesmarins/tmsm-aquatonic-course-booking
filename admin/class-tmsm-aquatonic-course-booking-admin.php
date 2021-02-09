@@ -555,15 +555,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * Mark Bookings as Now How
 	 */
 	public function bookings_mark_as_noshow(){
-		error_log('bookings_mark_as_noshow 01');
-
 		global $wpdb;
 
-		$nowplus15minutes = new  DateTime('now', wp_timezone());
-		$nowplus15minutes->modify('+15 minutes');
+		$nowminus15minutes = new  DateTime('now', wp_timezone());
+		$nowminus15minutes->modify('-15 minutes');
 
 		$mark_as_noshow_query = $wpdb->query( $wpdb->prepare( "UPDATE
-{$wpdb->prefix}aquatonic_course_booking SET status='noshow' WHERE status = %s AND course_start < %s", 'active', $nowplus15minutes->format( "Y-m-d H:i:s" ) ) );
+{$wpdb->prefix}aquatonic_course_booking SET status='noshow' WHERE status = %s AND course_start < %s", 'active', $nowminus15minutes->format( "Y-m-d H:i:s" ) ) );
 
 	}
 }
