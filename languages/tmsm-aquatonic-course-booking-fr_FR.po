@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-02-03 16:25+0100\n"
-"PO-Revision-Date: 2021-02-03 16:26+0100\n"
+"POT-Creation-Date: 2021-02-10 15:12+0100\n"
+"PO-Revision-Date: 2021-02-10 15:13+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -56,21 +56,64 @@ msgid "Booking Possible After"
 msgstr "Réservation possible après"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:237
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:253
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:267
 msgid "Number of hours after the possibility to book"
 msgstr "Nombre d’heures après la date courante"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:248
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:245
+msgid "Timeslots"
+msgstr "Créneaux horaires"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:251
+msgid ""
+"Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day "
+"Number is: 0 for Sunday, 1 for Monday, etc. Also for special dates: "
+"Date=09:00-21:00=0 where Date is in format YYYY-MM-DD."
+msgstr ""
+"Format : Nombre du jour=09:00-14:00,15:30-17:30=65 séparé par des sauts de "
+"ligne. Nombre du jour est : 0 pour dimanche, 1 pour lundi, etc. Aussi pour "
+"les jours spéciaux : Date=09:00-21:00=0 où Date est au format AAAA-MM-JJ."
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:262
 msgid "Gravity Form"
 msgstr "Gravity Form"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:270
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:284
 msgid "Times"
 msgstr "Créneaux horaires"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:277
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:291
 msgid "Form"
 msgstr "Formulaire"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:622
+msgid "Active"
+msgstr "Active"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:623
+msgid "Mark as active"
+msgstr "Marquer comme active"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:627
+msgid "Arrived"
+msgstr "Arrivé"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:628
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:634
+msgid "Mark as arrived"
+msgstr "Marquer comme arrivé"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:633
+msgid "Cancelled"
+msgstr "Annulé"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:638
+msgid "No-show"
+msgstr "No-show"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:639
+msgid "Mark as no-show"
+msgstr "Marquer comme no-show"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:26
 msgid "Dashboard"
@@ -84,73 +127,77 @@ msgstr "Réservations du jour"
 msgid "Save options"
 msgstr "Enregistrer les options"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:106
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:113
 msgid "Aquatonic Attendance is not available"
 msgstr "Le cron TMSM Aquatonic Attendance n’est pas disponible"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:136
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:144
 msgid "Capacity"
 msgstr "Capacité"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:169
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:177
 msgid "Ongoing Bookings"
 msgstr "Réservations en cours"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:187
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:195
 msgid "Ending Bookings"
 msgstr "Réservations qui terminent"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:205
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:213
 msgid "Starting Bookings"
 msgstr "Réservations qui débutent"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:223
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:231
 msgid "Free"
 msgstr "Libre"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:293
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:296
 msgid "Can Start"
 msgstr "Peut commencer"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:294
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:297
 msgid "(Minimum Value of Free Row)"
 msgstr "(Valeur minimum de la ligne « Libre »)"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:304
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:317
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:302
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:310
 msgid "Real Time"
 msgstr "Temps réél"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:336
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:329
 msgid "Firstname"
 msgstr "Prénom"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:337
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:330
 msgid "Lastname"
 msgstr "Nom"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:338
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:331
 msgid "Email"
 msgstr "Email"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:339
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:332
 msgid "Participants"
 msgstr "Participants"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:340
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:333
 msgid "Start"
 msgstr "Début"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:341
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:334
 msgid "Status"
 msgstr "État de publication"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:353
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:335
+msgid "Actions"
+msgstr "Actions"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:347
 #, php-format
 msgid "%s at %s"
 msgstr "%s à %s"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:362
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:371
 msgid "New Booking"
 msgstr "Nouvelle réservation"
 
@@ -161,6 +208,10 @@ msgstr "Spécifier de type de données à normaliser."
 #: includes/class-tmsm-aquatonic-course-booking-sanitize.php:198
 msgid "Forgot data type"
 msgstr "Type de données oublié"
+
+#: includes/class-tmsm-aquatonic-course-booking.php:221
+msgid "Every 5 minutes"
+msgstr "Toutes les 5 minutes"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:143
 #: public/class-tmsm-aquatonic-course-booking-public.php:255
@@ -198,15 +249,15 @@ msgstr "Le jeton de sécurité n’est pas valide"
 msgid "Ajax referer is not valid"
 msgstr "Le référant ajax n’est pas valide"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:749
+#: public/class-tmsm-aquatonic-course-booking-public.php:752
 msgid "No first slot available to calculate all the slots"
 msgstr "Aucun créneau de départ pour calculer les créneaux"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:754
+#: public/class-tmsm-aquatonic-course-booking-public.php:757
 msgid "No end slot available to calculate all the slots"
 msgstr "Aucun créneau de fin pour calculer les créneaux"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:840
+#: public/class-tmsm-aquatonic-course-booking-public.php:864
 msgid "No time slot available for this day"
 msgstr "Aucun créneau disponible pour ce jour"
 
@@ -221,9 +272,6 @@ msgstr "Aucun créneau disponible pour ce jour"
 
 #~ msgid "Title"
 #~ msgstr "Titre"
-
-#~ msgid "Action"
-#~ msgstr "Action"
 
 #~ msgid "Refresh"
 #~ msgstr "Rafraîchir"
@@ -278,21 +326,11 @@ msgstr "Aucun créneau disponible pour ce jour"
 #~ msgid "Html accepted."
 #~ msgstr "Html accepté."
 
-#~ msgid ""
-#~ "Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day "
-#~ "Number is: 0 for Sunday, 1 for Monday, etc."
-#~ msgstr ""
-#~ "Format : Nombre du jour=09:00-14:00,15:30-17:30=65 séparé par des sauts "
-#~ "de ligne. Nombre du jour est : 0 pour dimanche, 1 pour lundi, etc."
-
 #~ msgid "Web Service"
 #~ msgstr "Service web"
 
 #~ msgid "Tiers"
 #~ msgstr "Paliers"
-
-#~ msgid "Time Slots"
-#~ msgstr "Créneaux horaires"
 
 #~ msgid "Performance"
 #~ msgstr "Performance"
@@ -309,9 +347,6 @@ msgstr "Aucun créneau disponible pour ce jour"
 
 #~ msgid "Disable and enable again the plugin"
 #~ msgstr "Désactiver puis activer l’extension"
-
-#~ msgid "Every 15 minutes"
-#~ msgstr "Toutes les 15 minutes"
 
 #~ msgid "Live Attendance"
 #~ msgstr "Affluence en direct"
