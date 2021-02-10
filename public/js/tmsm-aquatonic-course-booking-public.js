@@ -107,6 +107,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       priority: null,
       capacity: null,
       hourminutes: null,
+      index: null,
     }
   } );
 
@@ -241,6 +242,10 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   TmsmAquatonicCourseApp.TimesListItemView = Backbone.View.extend( {
     tagName: 'li',
+    attributes: function() {
+      return {
+        'data-index': this.model.get('index'),
+      }},
     className: 'tmsm-aquatonic-course-booking-time-item',
     template: wp.template( 'tmsm-aquatonic-course-booking-time' ),
 

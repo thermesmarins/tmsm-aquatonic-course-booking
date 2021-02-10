@@ -786,6 +786,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$all_slots = $capacity_forthedate_timeslots;
 			$slots_available = [];
 			// Get all available slots and calculate the remaining availability with participants number during all the duration of the slot
+			$index = 1;
 			foreach ($all_slots as $slot_begin => $capacity ){
 				$slot_begin_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $slot_begin, wp_timezone());
 				$slot_end_object = clone $slot_begin_object;
@@ -828,11 +829,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'minutes' => $slot_begin_object->format('i'),
 						'hourminutes' => $slot_begin_object->format('H:i'),
 						'capacity' => $min_capacity,
+						'index' => $index,
 					];
 				}
 
 				if($slots_available[$slot_begin]['capacity'] <= 0){
 					unset($slots_available[$slot_begin]);
+				}
+				else{
+					$index ++;
 				}
 			}
 
