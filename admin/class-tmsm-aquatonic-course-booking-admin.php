@@ -570,17 +570,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 *
 	 * @return bool
 	 */
-	function verify_ajax() {
+	function verify_ajax($action) {
 
-		// vars
-		$nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
+		$nonce = isset($_REQUEST['tmsm_aquatonic_course_booking_nonce']) ? $_REQUEST['tmsm_aquatonic_course_booking_nonce'] : '';
 
-		// bail early if not nonce
-		if( !$nonce || !wp_verify_nonce($nonce, 'tmsm_aquatonic_course_booking_nonce') ) {
+		// Bail early if not nonce
+		if( !$nonce || !wp_verify_nonce($nonce, $action) ) {
 			return false;
 		}
 
-		// return
 		return true;
 	}
 
@@ -589,11 +587,72 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * Action Booking Change Status (Ajax)
 	 */
 	public function booking_change_status(){
+		global $wpdb;
+
 		error_log('booking_change_status');
 
+		if( ! check_admin_referer( 'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' )) die();
+
 		// validate
-		if( ! $this->verify_ajax() ) die();
+		if( ! $this->verify_ajax('tmsm_aquatonic_course_booking_change_status') ) die();
 
 		error_log('booking_change_status passed verify_ajax');
+
+		$booking_id = sanitize_text_field($_REQUEST['booking_id']);
+		$status = sanitize_text_field($_REQUEST['status']);
+
+		// Update booking with new status
+		if( $this->booking_is_valid_status($status) ){
+			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
+		}
+
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'options-general.php?page=tmsm-aquatonic-course-booking-settings' ) );
+		exit;
+	}
+
+
+	/**
+	 * Returns booking statuses
+	 *
+	 * @return array
+	 */
+	static function booking_statuses(){
+		$statuses = [
+			'active' => [
+				'name' => __( 'Active', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Mark as active', 'tmsm-aquatonic-course-booking' ),
+				'iconclass' => 'order-status status-on-hold status-active',
+			],
+			'arrived' => [
+				'name' => __( 'Arrived', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Mark as arrived', 'tmsm-aquatonic-course-booking' ),
+				'iconclass' => 'order-status status-processing status-arrived',
+				'actionclass' => 'button wc-action-button wc-action-button-processing processing',
+			],
+			'cancelled' => [
+				'name' => __( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Mark as arrived', 'tmsm-aquatonic-course-booking' ),
+				'iconclass' => 'order-status status-failed status-cancelled',
+			],
+			'noshow' => [
+				'name' => __( 'No-show', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Mark as no-show', 'tmsm-aquatonic-course-booking' ),
+				'iconclass' => 'order-status status-pending status-noshow',
+			],
+		];
+		return $statuses;
+	}
+
+	/**
+	 * Returns if status is valid
+	 *
+	 * @param string $status
+	 *
+	 * @return bool
+	 */
+	public function booking_is_valid_status(string $status){
+
+		return array_key_exists($status, $this->booking_statuses());
+
 	}
 }

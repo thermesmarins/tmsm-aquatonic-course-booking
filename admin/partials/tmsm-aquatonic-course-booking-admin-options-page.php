@@ -97,10 +97,16 @@
 		//echo '</pre>';
 
 		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
+
+		// TEST BEGIN >>>>
 		$realtime = 50; // For tests only
+		global $wpdb;
+		$bookings_change_date_to_today = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking  SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" ) );
 		// Mysql Query to change date of bookings:
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
+		// TESTS END <<<<<<<<<<<<<<<<<
+
 
 		// Display table only if realtime data exists
 		if ( $realtime === false ) {
@@ -319,7 +325,7 @@
 		<br>
 		<table class="wp-list-table widefat striped">
 			<thead>
-			<tr>
+			<tr >
 				<th scope="col"><?php esc_html_e( 'Firstname', 'tmsm-aquatonic-course-booking' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Lastname', 'tmsm-aquatonic-course-booking' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Email', 'tmsm-aquatonic-course-booking' ); ?></th>
@@ -331,7 +337,7 @@
 			</thead>
 			<tbody>
 			<?php foreach ( $bookings_of_the_day as $booking ) { ?>
-				<tr id="booking-<?php echo esc_attr($booking->booking_id)?>">
+				<tr class="booking-row" id="booking-<?php echo esc_attr($booking->booking_id)?>">
 					<td><?php echo sanitize_text_field( $booking->firstname ); ?></td>
 					<td><?php echo sanitize_text_field( $booking->lastname ); ?></td>
 					<td><?php echo sanitize_text_field( $booking->email ); ?></td>
@@ -340,15 +346,20 @@
 						$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking->course_start, wp_timezone() );
 						echo wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
 						?></td>
-					<td class="status"><?php echo sanitize_text_field( $booking->status ); ?></td>
-					<td class="actions">
-						<?php if(in_array($booking->status, ['active', 'noshow'])  ){
+					<td class="status"><?php
+						$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
+						echo '<mark class="' . $statuses[$booking->status]['iconclass'] . '"><span>' . $statuses[$booking->status]['name'] .' </span></mark>';
+						?></td>
+					<td class="column-wc_actions actions">
+						<?php
+
+
+						if(in_array($booking->status, ['active', 'noshow'])  ){
 							$link = wp_nonce_url( admin_url( 'admin-ajax.php?action=tmsm_aquatonic_course_booking_change_status&status=arrived&booking_id='
 							                                 . $booking->booking_id ),
 								'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' );
 							?>
-						<a class="button wc-action-button wc-action-button-arrived" href="<?php echo $link; ?>" aria-label="En cours"><?php esc_html_e( 'Mark as arrived',
-								'tmsm-aquatonic-course-booking' ); ?></a>
+						<a class="<?php echo $statuses['arrived']['actionclass'];?>" href="<?php echo $link; ?>"><?php  echo $statuses['arrived']['markas']; ?></a>
 						<?php } ?>
 					</td>
 				</tr>

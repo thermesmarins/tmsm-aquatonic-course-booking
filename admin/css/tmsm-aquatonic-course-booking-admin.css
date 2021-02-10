@@ -114,4 +114,11 @@
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-6 {
   color: hsl(0, 59.42028986%, 15.58823529%);
 }
+.settings_page_tmsm-aquatonic-course-booking-settings .widefat .column-wc_actions a.processing::after {
+  content: "\e015";
+  line-height: 2.2em;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .booking-row:hover {
+  background-color: #F2F2F2;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */
