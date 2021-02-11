@@ -160,7 +160,7 @@
 							$capacity_timeslots_forthedate_counter[$counter] = $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
 
 							if($counter != 1 && $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $capacity_timeslots_forthedate_counter[$counter - 1]){
-								$difference = (($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]) >= 0 ? '+' : '-'). ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]);
+								$difference = (($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]) >= 0 ? '+' : ''). ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]);
 
 								echo ' (<span class="capacity-different capacity-different-' . $counter . '">'.$difference .'</span>)';
 								$capacity_timeslots_forthedate_difference[$counter] = $difference;
