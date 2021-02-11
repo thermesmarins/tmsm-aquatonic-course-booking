@@ -350,6 +350,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       event.preventDefault();
       this.daysPage = this.daysPage - 1;
+      this.timesPage = 1;
+      $('#tmsm-aquatonic-course-booking-next-times').hide();
+
       this.render();
     },
 
@@ -358,6 +361,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       event.preventDefault();
       this.daysPage = this.daysPage + 1;
+      this.timesPage = 1;
+      $('#tmsm-aquatonic-course-booking-next-times').hide();
 
       this.render();
     },
@@ -402,7 +407,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
 
       TmsmAquatonicCourseApp.times_indexmax = 1;
-      $('#tmsm-aquatonic-course-booking-next-times').show()
+      $('#tmsm-aquatonic-course-booking-next-times').hide();
 
       for (i = (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+(this.daysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+7+(this.daysPage-1) * 7); i++) {
 
