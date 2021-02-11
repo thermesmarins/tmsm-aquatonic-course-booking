@@ -57,15 +57,16 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 		// otherwise dbDelta will not work
 		$sql = "CREATE TABLE " . $table_name . " (
         booking_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        token VARCHAR(50) NOT NULL DEFAULT '',
         firstname VARCHAR(50) NOT NULL,
         lastname VARCHAR(50) NOT NULL,
         email VARCHAR(100) NOT NULL,
         phone VARCHAR(50) NOT NULL,
         birthdate DATE DEFAULT NULL,
         participants TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-        course_start DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-        course_end DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-        date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+        course_start DATETIME NULL DEFAULT NULL,
+        course_end DATETIME NULL DEFAULT NULL,
+        date_created DATETIME NULL DEFAULT NULL,
         author BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
         status VARCHAR(10) NOT NULL DEFAULT 'active',
         PRIMARY KEY (booking_id)
