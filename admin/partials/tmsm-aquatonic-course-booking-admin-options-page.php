@@ -182,8 +182,20 @@
 						$counter ++;
 
 						?>
-						<td><?php
-							echo '<span class="booking-ongoing booking-ongoing-' . $counter .'">' .$plugin_public->get_participants_ongoing_forthetime( $period_item ) . '</span>';
+						<td class="tooltip-row"><?php
+							echo '<span class="tooltip-trigger booking-ongoing booking-ongoing-' . $counter .'">' .$plugin_public->get_participants_ongoing_forthetime( $period_item ) . '</span>';
+
+							$bookings_inside = '';
+							foreach($bookings_of_the_day as $booking){
+								if( in_array($booking->status, ['active', 'arrived']) && $booking->course_start <= $period_item->format('Y-m-d H:i:s') && $period_item->format('Y-m-d H:i:s') <= $booking->course_end ){
+									$bookings_inside.= ''.$booking->firstname . ' '. $booking->lastname. ' x'.$booking->participants.'<br>';
+								}
+							}
+							if(!empty($bookings_inside)){
+								$bookings_inside = '<div class="tooltip-content">'.$bookings_inside.'</div';
+							}
+							echo $bookings_inside;
+
 							?></td>
 						<?php
 					}
@@ -200,8 +212,20 @@
 						$counter ++;
 
 						?>
-						<td><?php
-							echo '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>';
+						<td class="tooltip-row"><?php
+							echo '<span class="tooltip-trigger booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>';
+
+							$bookings_inside = '';
+							foreach($bookings_of_the_day as $booking){
+								if( in_array($booking->status, ['active', 'arrived']) && $period_item->format('Y-m-d H:i:s') == $booking->course_end ){
+									$bookings_inside.= ''.$booking->firstname . ' '. $booking->lastname. ' x'.$booking->participants.'<br>';
+								}
+							}
+							if(!empty($bookings_inside)){
+								$bookings_inside = '<div class="tooltip-content">'.$bookings_inside.'</div';
+							}
+							echo $bookings_inside;
+
 							?></td>
 						<?php
 					}
@@ -218,8 +242,19 @@
 						$counter ++;
 
 						?>
-						<td><?php
-							echo '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>';
+						<td class="tooltip-row"><?php
+							echo '<span class="tooltip-trigger booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>';
+
+							$bookings_inside = '';
+							foreach($bookings_of_the_day as $booking){
+								if( in_array($booking->status, ['active', 'arrived']) && $booking->course_start == $period_item->format('Y-m-d H:i:s') ){
+									$bookings_inside.= ''.$booking->firstname . ' '. $booking->lastname. ' x'.$booking->participants.'<br>';
+								}
+							}
+							if(!empty($bookings_inside)){
+								$bookings_inside = '<div class="tooltip-content">'.$bookings_inside.'</div';
+							}
+							echo $bookings_inside;
 							?></td>
 						<?php
 					}

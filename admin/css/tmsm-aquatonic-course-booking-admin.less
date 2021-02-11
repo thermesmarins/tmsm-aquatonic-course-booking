@@ -142,5 +142,30 @@
         }
     }
 
+    .tooltip-row{
+        position: relative;
+    }
+
+    .tooltip-trigger{
+        &:hover + .tooltip-content
+        {
+            display: block;
+        }
+    }
+    .tooltip-content{
+        z-index: 100;
+        position: absolute;
+        left: 31px;
+        top: 5px;
+        width: 130px;
+        background-color: #F2F2F2;
+        border: 3px solid #ccc;
+        border-radius: 3px;
+        padding: 5px;
+        display: none;
+        &.tooltip-active{
+            display: block;
+        }
+    }
 }
 

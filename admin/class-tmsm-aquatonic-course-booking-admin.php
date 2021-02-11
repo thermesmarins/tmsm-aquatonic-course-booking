@@ -546,7 +546,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		global $pagenow;
 		$screen = get_current_screen();
 		if( $pagenow === 'options-general.php' && $screen && $screen->id === 'settings_page_tmsm-aquatonic-course-booking-settings' && empty($_REQUEST['tab']) ){
-			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=options-general.php">';
+			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=options-general.php?page=tmsm-aquatonic-course-booking-settings">';
 		}
 	}
 

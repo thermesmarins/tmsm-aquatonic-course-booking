@@ -121,4 +121,25 @@
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-row:hover {
   background-color: #F2F2F2;
 }
+.settings_page_tmsm-aquatonic-course-booking-settings .tooltip-row {
+  position: relative;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .tooltip-trigger:hover + .tooltip-content {
+  display: block;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .tooltip-content {
+  z-index: 100;
+  position: absolute;
+  left: 31px;
+  top: 5px;
+  width: 130px;
+  background-color: #F2F2F2;
+  border: 3px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
+  display: none;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .tooltip-content.tooltip-active {
+  display: block;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */
