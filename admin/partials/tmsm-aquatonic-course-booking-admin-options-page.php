@@ -101,7 +101,7 @@
 		// TEST BEGIN >>>>
 		$realtime = 50; // For tests only
 		global $wpdb;
-		$bookings_change_date_to_today = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking  SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" ) );
+		$bookings_change_date_to_today = $wpdb->query("UPDATE {$wpdb->prefix}aquatonic_course_booking  SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" );
 		// Mysql Query to change date of bookings:
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
@@ -294,7 +294,7 @@
 								$capacity_timeslots_forthedate_free[$counter] = ( $capacity_timeslots_forthedate_free[ ( $counter - 1 ) ]
 								                                                  + $plugin_public->get_participants_ending_forthetime( $period_item )
 								                                                  - $plugin_public->get_participants_starting_forthetime( $period_item )
-								                                                  + $capacity_timeslots_forthedate_difference[ $counter ]
+								                                                  + ($capacity_timeslots_forthedate_difference[ $counter ] ?? 0)
 								);
 								echo '<span class="free free-' . $counter . '">'
 								     . $capacity_timeslots_forthedate_free[$counter] . '</span>';
@@ -308,7 +308,7 @@
 								     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter . '">'
 								     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
-								     . ($capacity_timeslots_forthedate_difference[ $counter ] ? '<span class="capacity-different capacity-different-' . $counter . '">'
+								     . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] ) ? '<span class="capacity-different capacity-different-' . $counter . '">'
 								     . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
 								     . ')';
 							}
