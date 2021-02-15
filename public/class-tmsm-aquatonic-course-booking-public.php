@@ -227,8 +227,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		//error_log(print_r($form, true));
 
 		$entry_id = $entry['id'];
-		$token = $entry_id.'-'. wp_generate_password(24);
 
+		// Generate token and save it as entry meta
+		$token = $entry_id.'-'. wp_generate_password(24);
+		gform_update_meta( $entry_id, '_booking_token', $token );
+
+		// Get entry data
 		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
 		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
 
@@ -271,6 +275,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$course_end = $objdate->format( 'Y-m-d H:i:s' );
 		}
 
+		// Format data
 		if(!empty($course_start) && !empty($course_start)) {
 			$table = $wpdb->prefix . 'aquatonic_course_booking';
 			$data = array(
@@ -303,10 +308,39 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'%s',
 			);
 
+			// Insert data into custom table
 			$wpdb->insert($table,$data,$format);
 			$my_id = $wpdb->insert_id;
+
+
 		}
 
+	}
+
+	/**
+	 * Allow the text to be filtered so custom merge tags can be replaced.
+	 *
+	 * @param string      $text       The text in which merge tags are being processed.
+	 * @param false|array $form       The Form object if available or false.
+	 * @param false|array $entry      The Entry object if available or false.
+	 * @param bool        $url_encode Indicates if the urlencode function should be applied.
+	 * @param bool        $esc_html   Indicates if the esc_html function should be applied.
+	 * @param bool        $nl2br      Indicates if the nl2br function should be applied.
+	 * @param string      $format     The format requested for the location the merge is being used. Possible values: html, text or url.
+	 *
+	 * @return string
+	 */
+	public function booking_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
+
+		$custom_merge_tag = '{booking_token}';
+		$entry_id = $entry['id'];
+
+		if ( strpos( $text, $custom_merge_tag ) !== false ) {
+			$booking_token = gform_get_meta( $entry_id, '_booking_token' );
+			$text          = str_replace( $custom_merge_tag, $booking_token, $text );
+		}
+
+		return $text;
 	}
 
 	/**

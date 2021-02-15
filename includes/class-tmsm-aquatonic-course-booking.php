@@ -202,11 +202,14 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time' );
 
 		$this->loader->add_action( 'gform_after_submission_8', $plugin_public, 'booking_submission', 10, 2 );
+		$this->loader->add_filter( 'gform_replace_merge_tags', $plugin_public, 'booking_merge_tags', 10, 7 );
 
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 
 	}
+
+
 
 	/**
 	 * Creates cron schedule
