@@ -226,6 +226,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		//error_log(print_r($entry, true));
 		//error_log(print_r($form, true));
 
+		$entry_id = $entry['id'];
+		$token = $entry_id.'-'. wp_generate_password(24);
 
 		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
 		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
@@ -246,6 +248,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		error_log('field participants: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
 		error_log('field course_start: '. $course_start);
 		error_log('field hourminutes: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
+
+
 
 		// Convert birthdate
 		if(!empty($birthdate)){
@@ -281,6 +285,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'course_start' => $course_start,
 				'course_end' => $course_end,
 				'author' => get_current_user_id(),
+				'token' => $token,
 			);
 
 			$format = array(
@@ -295,14 +300,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'%s',
 				'%s',
 				'%d',
+				'%s',
 			);
 
 			$wpdb->insert($table,$data,$format);
 			$my_id = $wpdb->insert_id;
 		}
-
-
-
 
 	}
 
