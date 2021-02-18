@@ -397,6 +397,76 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Gravity Forms: Pre Render Form Booking
+	 *
+	 * @param array $form
+	 *
+	 * @return array
+	 */
+	public function gform_pre_render_booking($form){
+
+		if($form['cssClass'] === 'tmsm-aquatonic-course-form-cancel'){
+
+			$field_token = null;
+			$field_summary = null;
+			foreach($form['fields'] as $field){
+				if($field->inputName === 'booking_token'){
+					$field_token = $field;
+				}
+				if($field->cssClass === 'tmsm-aquatonic-course-summary'){
+					$field_summary = $field;
+				}
+
+			}
+
+			if(!empty($field_token) && !empty($field_summary)){
+				$token = sanitize_text_field( rgget( $field_token->inputName ) );
+				if(!empty($token)){
+					$booking = self::find_booking_with_token($token);
+					if(!empty($booking)){
+
+
+						$booking_status = $booking['status'];
+						$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+						$booking_start = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $booking_start_object->getTimestamp() );
+						$booking_participants = $booking['participants'];
+						if($booking_status === 'cancelled'){
+							$content = __( 'This booking was already cancelled', 'tmsm-aquatonic-course-booking' );
+						}
+						else{
+							$content = sprintf(__('Do you want to cancel the following booking? Booking on %s for %d participants', 'tmsm-aquatonic-course-booking'), sanitize_text_field($booking_start), sanitize_text_field($booking_participants) );
+						}
+
+						$field_summary->content = $content;
+
+
+					}
+				}
+
+
+
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Find booking with Token
+	 *
+	 * @param string $token
+	 *
+	 * @return array
+	 */
+	public function find_booking_with_token(string $token){
+		global $wpdb;
+
+		$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE token = %s", $token ), ARRAY_A );
+
+		return $booking;
+	}
+
+	/**
 	 * Find the field value with a class in a field list from a Gravity Form
 	 *
 	 * @param $find_class
@@ -414,8 +484,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Find the field id with a class in a field list from a Gravity Form
 	 *
-	 * @param $find_class
-	 * @param $fields
+	 * @param string $find_class
+	 * @param array $fields
 	 *
 	 * @return string
 	 */

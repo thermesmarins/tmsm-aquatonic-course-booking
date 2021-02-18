@@ -684,7 +684,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   $( document ).ready( function() {
 
-    if($('.tmsm-aquatonic-course-form_wrapper').length > 0){
+    if($('.tmsm-aquatonic-course-form-add_wrapper').length > 0){
       TmsmAquatonicCourseApp.init();
     }
 

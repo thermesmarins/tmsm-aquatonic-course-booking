@@ -258,14 +258,25 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		add_settings_field(
-			'gform_id',
-			esc_html__( 'Gravity Form', 'tmsm-aquatonic-course-booking' ),
+			'gform_add_id',
+			esc_html__( 'Gravity Form for adding a booking', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_select' ),
 			$this->plugin_name,
 			$this->plugin_name . '-form',
 			array(
-				'description' 	=> __( 'Number of hours after the possibility to book', 'tmsm-aquatonic-course-booking' ),
-				'id' => 'gform_id',
+				'id' => 'gform_add_id',
+				'selections' => $forms,
+			)
+		);
+
+		add_settings_field(
+			'gform_cancel_id',
+			esc_html__( 'Gravity Form for cancelling a booking', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_select' ),
+			$this->plugin_name,
+			$this->plugin_name . '-form',
+			array(
+				'id' => 'gform_cancel_id',
 				'selections' => $forms,
 			)
 		);
@@ -533,7 +544,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'hoursafter', 'text', '' );
 		$options[] = array( 'timeslots', 'textarea', '' );
 
-		$options[] = array( 'gform_id', 'text', '' );
+		$options[] = array( 'gform_add_id', 'text', '' );
+		$options[] = array( 'gform_cancel_id', 'text', '' );
 
 
 		return $options;

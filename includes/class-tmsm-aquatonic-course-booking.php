@@ -204,12 +204,17 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Gravity Forms Hooks only for the selected form
 		$options = get_option($this->plugin_name . '-options');
 		if(!empty($options)){
-			$form_id = $options['gform_id'];
+			$form_add_id = $options['gform_add_id'];
+			$form_cancel_id = $options['gform_cancel_id'];
 			if(!empty($form_id)){
-				//$this->loader->add_filter( 'gform_entry_post_save_'.$form_id, $plugin_public, 'gform_entry_post_save_booking', 20, 2 );
-				$this->loader->add_action( 'gform_after_submission_'.$form_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
+				//$this->loader->add_filter( 'gform_entry_post_save_'.$form_add_id, $plugin_public, 'gform_entry_post_save_booking', 20, 2 );
+				$this->loader->add_action( 'gform_after_submission_'.$form_add_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
+			}
+			if(!empty($form_cancel_id)){
+				$this->loader->add_filter( 'gform_pre_render_'.$form_cancel_id, $plugin_public, 'gform_pre_render_booking', 20, 1 );
 			}
 		}
+
 		$this->loader->add_filter( 'gform_replace_merge_tags', $plugin_public, 'gform_replace_merge_tags_booking', 20, 7 );
 
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
