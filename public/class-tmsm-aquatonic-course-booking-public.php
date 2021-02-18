@@ -213,6 +213,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 
+	/**
+	 * Fired after an entry is created
+	 *
+	 * @param array $entry The Entry object
+	 * @param array $form The Form object
+	 */
+	function gform_entry_post_save_booking( $entry, $form ) {
+		error_log('gform_entry_post_save_booking');
+
+		if(!empty($entry)){
+			$entry_id = $entry['id'];
+			$booking_token = self::generate_token_for_gform_entry( $entry_id );
+		}
+	}
 
 
 	/**
@@ -221,37 +235,43 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @param $entry
 	 * @param $form
 	 */
-	function booking_submission( $entry, $form ) {
+	function gform_after_submission_booking( $entry, $form ) {
 		global $wpdb;
+
+		error_log('gform_after_submission_booking');
 		//error_log(print_r($entry, true));
 		//error_log(print_r($form, true));
 
 		$entry_id = $entry['id'];
 
-		// Generate token and save it as entry meta
-		$token = $entry_id.'-'. wp_generate_password(24);
-		gform_update_meta( $entry_id, '_booking_token', $token );
+		// Get token
+		$token = null;
+		if(!empty($entry_id)){
+			$token = self::generate_token_for_gform_entry( $entry_id );
+		}
 
 		// Get entry data
 		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
 		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
 
-		error_log('field firstname: '. self::field_id_from_class('tmsm-aquatonic-course-firstname', $form['fields']));
-		error_log('field lastname: '. self::field_id_from_class('tmsm-aquatonic-course-lastname', $form['fields']));
-		error_log('value birthdate: '. $birthdate);
-		error_log('field email: '. self::field_id_from_class('tmsm-aquatonic-course-email', $form['fields']));
-		error_log('field phone: '. self::field_id_from_class('tmsm-aquatonic-course-phone', $form['fields']));
-		error_log('field participants: '. self::field_id_from_class('tmsm-aquatonic-course-participants', $form['fields']));
-		error_log('field date: '. self::field_id_from_class('tmsm-aquatonic-course-date', $form['fields']));
-		error_log('field hourminutes: '. self::field_id_from_class('tmsm-aquatonic-course-hourminutes', $form['fields']));
+		error_log('field firstname ID: '. self::field_id_from_class('tmsm-aquatonic-course-firstname', $form['fields']));
+		error_log('field lastname ID: '. self::field_id_from_class('tmsm-aquatonic-course-lastname', $form['fields']));
+		error_log('field email ID: '. self::field_id_from_class('tmsm-aquatonic-course-email', $form['fields']));
+		error_log('field phone ID: '. self::field_id_from_class('tmsm-aquatonic-course-phone', $form['fields']));
+		error_log('field participants ID: '. self::field_id_from_class('tmsm-aquatonic-course-participants', $form['fields']));
+		error_log('field date ID: '. self::field_id_from_class('tmsm-aquatonic-course-date', $form['fields']));
+		error_log('field hourminutes ID: '. self::field_id_from_class('tmsm-aquatonic-course-hourminutes', $form['fields']));
 
-		error_log('field firstname: '. self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry));
-		error_log('field lastname: '. self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry));
-		error_log('field email: '. self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry));
-		error_log('field phone: '. self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry));
-		error_log('field participants: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
-		error_log('field course_start: '. $course_start);
-		error_log('field hourminutes: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
+		error_log('field firstname value: '. self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry));
+		error_log('field lastname value: '. self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry));
+		error_log('value birthdate value: '. $birthdate);
+		error_log('field email value: '. self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry));
+		error_log('field phone value: '. self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry));
+		error_log('field participants value: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
+		error_log('field date value: '. self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry));
+		error_log('field hourminutes value: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
+		error_log('field course_start value: '. $course_start);
+		error_log('token: '. $token);
 
 
 
@@ -330,17 +350,50 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
-	public function booking_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
+	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
 		$custom_merge_tag = '{booking_token}';
-		$entry_id = $entry['id'];
 
-		if ( strpos( $text, $custom_merge_tag ) !== false ) {
-			$booking_token = gform_get_meta( $entry_id, '_booking_token' );
-			$text          = str_replace( $custom_merge_tag, $booking_token, $text );
+		// added for GF 1.9.x
+		if ( strpos( $text, $custom_merge_tag ) === false || empty( $entry ) || empty( $form ) ) {
+			return $text;
 		}
 
+		$entry_id = $entry['id'];
+		$token = self::generate_token_for_gform_entry( $entry_id );
+		$text          = str_replace( $custom_merge_tag, $token, $text );
+
+		/*error_log('gform_replace_merge_tags_booking');
+		error_log('$entry:');
+		error_log(print_r($entry, true));
+		error_log('$text:');
+		error_log(print_r($text, true));*/
+
+
 		return $text;
+	}
+
+
+	/**
+	 * Generate token for Gravity Forms Entry
+	 *
+	 * @param int $entry_id
+	 *
+	 * @return string
+	 */
+	private function generate_token_for_gform_entry( int $entry_id ){
+
+		// Check if token exists for entry
+		$token = gform_get_meta( $entry_id, '_booking_token' );
+
+		// Create token for entry if token doesn't exist
+		if(empty($token)){
+			error_log('gform_update_meta _booking_token');
+			$token = $entry_id.'-'. wp_generate_password(24);
+			gform_update_meta( $entry_id, '_booking_token', $token );
+		}
+
+		return $token;
 	}
 
 	/**
