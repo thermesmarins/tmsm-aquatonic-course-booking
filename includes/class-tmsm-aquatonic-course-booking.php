@@ -211,7 +211,8 @@ class Tmsm_Aquatonic_Course_Booking {
 				$this->loader->add_action( 'gform_after_submission_'.$form_add_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
 			}
 			if(!empty($form_cancel_id)){
-				$this->loader->add_filter( 'gform_pre_render_'.$form_cancel_id, $plugin_public, 'gform_pre_render_booking', 20, 1 );
+				$this->loader->add_filter( 'gform_pre_render_'.$form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
+				$this->loader->add_action( 'gform_after_submission_'.$form_cancel_id, $plugin_public, 'gform_after_submission_cancel', 20, 2 );
 			}
 		}
 

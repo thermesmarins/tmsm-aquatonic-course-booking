@@ -330,8 +330,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			// Insert data into custom table
 			$wpdb->insert($table,$data,$format);
-			$my_id = $wpdb->insert_id;
-
 
 		}
 
@@ -403,7 +401,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return array
 	 */
-	public function gform_pre_render_booking($form){
+	public function gform_pre_render_cancel($form){
 
 		if($form['cssClass'] === 'tmsm-aquatonic-course-form-cancel'){
 
@@ -451,6 +449,44 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $form;
 	}
 
+
+	/**
+	 * Booking Cancellation
+	 *
+	 * @param $entry
+	 * @param $form
+	 */
+	function gform_after_submission_cancel( $entry, $form ) {
+		global $wpdb;
+
+		error_log('gform_after_submission_cancel');
+		//error_log(print_r($entry, true));
+		//error_log(print_r($form, true));
+
+		$entry_id = $entry['id'];
+
+		// Get entry data
+		$token = sanitize_text_field(self::field_value_from_inputname('booking_token', $form['fields'], $entry));
+
+		$table = $wpdb->prefix . 'aquatonic_course_booking';
+
+		$data = array(
+			'status' => 'cancelled',
+		);
+
+		$format = array(
+			'%s',
+		);
+
+		$where = ['token' => $token];
+
+		// Update data into custom table
+		$wpdb->update($table, $data, $where, $format);
+
+
+	}
+
+
 	/**
 	 * Find booking with Token
 	 *
@@ -482,6 +518,21 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Find the field value with an inputname in a field list from a Gravity Form
+	 *
+	 * @param $find_inputname
+	 * @param $fields
+	 * @param $entry
+	 *
+	 * @return string
+	 */
+	static function field_value_from_inputname($find_inputname, $fields, $entry){
+
+		return rgar($entry, self::field_id_from_inputname($find_inputname, $fields));
+
+	}
+
+	/**
 	 * Find the field id with a class in a field list from a Gravity Form
 	 *
 	 * @param string $find_class
@@ -503,6 +554,36 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					foreach($field['inputs'] as $field_input){
 						$class = $field_input['name'];
 						if($class === $find_class){
+							return $field_input['id'];
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Find the field id with an inputname in a field list from a Gravity Form
+	 *
+	 * @param string $find_inputname
+	 * @param array $fields
+	 *
+	 * @return string
+	 */
+	static function field_id_from_inputname($find_inputname, $fields){
+
+		foreach($fields as $field){
+
+			$class = $field['inputName'];
+			if($class === $find_inputname){
+				return $field['id'];
+
+			}
+			else{
+				if(!empty($field['inputs'])){
+					foreach($field['inputs'] as $field_input){
+						$class = $field_input['name'];
+						if($class === $find_inputname){
 							return $field_input['id'];
 						}
 					}
