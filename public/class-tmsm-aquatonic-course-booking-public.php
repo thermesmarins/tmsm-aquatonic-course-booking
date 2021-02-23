@@ -362,10 +362,61 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			);
 
 			// Insert data into custom table
-			$wpdb->insert($table,$data,$format);
+			$wpdb->insert($table, $data, $format);
 
 		}
 
+	}
+
+
+	/**
+	 * Dialog Insight
+	 *
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	private function dialoginsight_add_booking($data){
+
+		error_log('dialoginsight_add_booking');
+
+		$options = get_option('gravityformsaddon_tmsm-gravityforms-dialoginsight_settings');
+		$keyId = $options['keyId'] ?? null;
+		$apiKey = $options['apiKey'] ?? null;
+
+		$settings_webserviceurl = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
+
+		$fields = [
+			'AuthKey' => [
+				'idKey' => '111',
+				'Key'   => 'abcdefghijklmnopkrstuvwxyz',
+			],
+			'idProject' => 2222,
+			'Clause' => [
+				'$type' => 'FieldClause',
+				'Field' => [
+					'Name' => 'f_EMail',
+				],
+				'TypeOperator' => 'Equal',
+				'ComparisonValue' => 'aaa@bbb.ccc',
+
+			],
+			'Tag' => null,
+		];
+
+		// Connect with cURL
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_URL, $settings_webserviceurl );
+		curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+		$result = curl_exec( $ch );
+		$errors = [];
+		$result_array = [];
+
+
+
+		return true;
 	}
 
 	/**
