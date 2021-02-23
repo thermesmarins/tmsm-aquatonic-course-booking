@@ -198,15 +198,15 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_weekday' );
-		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time' );
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_weekday_select' );
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time_select' );
 
 		// Gravity Forms Hooks only for the selected form
 		$options = get_option($this->plugin_name . '-options');
 		if(!empty($options)){
 			$form_add_id = $options['gform_add_id'];
 			$form_cancel_id = $options['gform_cancel_id'];
-			if(!empty($form_id)){
+			if(!empty($form_add_id)){
 				//$this->loader->add_filter( 'gform_entry_post_save_'.$form_add_id, $plugin_public, 'gform_entry_post_save_booking', 20, 2 );
 				$this->loader->add_action( 'gform_after_submission_'.$form_add_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
 			}

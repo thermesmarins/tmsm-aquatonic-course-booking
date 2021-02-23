@@ -182,7 +182,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Weekday Template
 	 */
-	public function template_weekday(){
+	public function template_weekday_select(){
+		?>
+
+		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-weekday">
+			{{ data.date_label_firstline }} <span class="secondline">{{ data.date_label_secondline }}</span>
+			<select class="tmsm-aquatonic-course-booking-weekday-times list-unstyled" data-date="{{ data.date_computed }}" >
+				<option>{{ TmsmAquatonicCourseApp.i18n.loading }}</option>
+			</select>
+		</script>
+
+		<?php
+	}
+
+	/**
+	 * Weekday Template
+	 */
+	public function template_weekday_list(){
 		?>
 
 		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-weekday">
@@ -198,7 +214,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Time Template
 	 */
-	public function template_time(){
+	public function template_time_select(){
+		?>
+
+		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-time">
+			<# if ( data.hourminutes != null) { #>
+				{{ data.hourminutes }}
+			<# } else { #>
+				{{  TmsmAquatonicCourseApp.i18n.notimeslot }}
+			<# } #>
+
+		</script>
+		<?php
+	}
+
+	/**
+	 * Time Template
+	 */
+	public function template_time_list(){
 		?>
 
 		<script type="text/html" id="tmpl-tmsm-aquatonic-course-booking-time">

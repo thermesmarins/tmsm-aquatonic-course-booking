@@ -178,7 +178,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         else{
           console.log('tmsm-aquatonic-course-booking-weekday-times not added for '+model.attributes.date);
         }
-        //
+
         //$( '.tmsm-aquatonic-course-booking-weekday-times[data-date=\''+model.attributes.date+'\']').append(item.render().$el);
 
         $list.append( item.render().$el );
@@ -208,6 +208,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
     },
 
+    selectTimeWithSelect: function(event){
+      console.log('selectTimeWithSelect');
+    },
     cancelTime: function(event){
       event.preventDefault();
       $( this.selectButtons ).show().removeClass('disabled').removeClass('selected').addClass('not-selected');
@@ -242,11 +245,15 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
 
   TmsmAquatonicCourseApp.TimesListItemView = Backbone.View.extend( {
-    tagName: 'li',
+    tagName: 'option',
     attributes: function() {
       TmsmAquatonicCourseApp.times_indexmax = Math.max(TmsmAquatonicCourseApp.times_indexmax, this.model.get('index'));
       return {
         'data-index': this.model.get('index'),
+        'data-hourminutes': this.model.attributes.hourminutes,
+        'data-date': this.model.attributes.date,
+        'data-hour': this.model.attributes.hour,
+        'data-minutes': this.model.attributes.minutes,
       }},
     className: 'tmsm-aquatonic-course-booking-time-item',
     template: wp.template( 'tmsm-aquatonic-course-booking-time' ),
@@ -308,11 +315,16 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
     events : {
       'click .tmsm-aquatonic-course-booking-time-button' : 'selectTime',
+      'change .tmsm-aquatonic-course-booking-weekday-times' : 'selectTimeWithSelect',
       'click #tmsm-aquatonic-course-booking-weekdays-previous': 'previous_week',
       'click #tmsm-aquatonic-course-booking-weekdays-next': 'next_week',
       'click #tmsm-aquatonic-course-booking-next-times': 'next_times',
     },
     refreshNextTimesButton: function(event){
+
+      return; // Disable the function
+
+
       var object = this;
       console.log('refreshNextTimesButton');
       console.log('TmsmAquatonicCourseApp.times_indexmax: ' + TmsmAquatonicCourseApp.times_indexmax);
@@ -444,6 +456,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
             console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
 
+            $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
+
             object.refreshNextTimesButton();
 
 
@@ -456,6 +470,21 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
 
       return this;
+    },
+
+    selectTimeWithSelect: function(event){
+      console.log('selectTimeWithSelect');
+      console.log('event.target.selectedIndex:'+event.target.selectedIndex);
+      event.preventDefault();
+      var date = $(event.target.options[event.target.selectedIndex]).data('date');
+      var hour = $(event.target.options[event.target.selectedIndex]).data('hour');
+      var minutes = $(event.target.options[event.target.selectedIndex]).data('minutes');
+      this.selectedValue =  $(event.target.options[event.target.selectedIndex]).data('hourminutes');
+      console.log('WeekDayListView selectedValue: '+ this.selectedValue);
+      TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
+      TmsmAquatonicCourseApp.selectedData.set('hour', hour);
+      TmsmAquatonicCourseApp.selectedData.set('minutes', minutes);
+      TmsmAquatonicCourseApp.selectedData.set('date', date);
     },
 
     selectTime: function(event){
