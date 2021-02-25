@@ -387,14 +387,16 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$contact = self::dialoginsight_get_contact( $email, $form_id );
 		$auth    = self::dialoginsight_auth( $form_id );
+
 		if ( empty( $contact ) ) {
 			error_log( 'Contact doesnt exist' );
 		}
 
+		// Contact exists and Auth OK
 		if ( ! empty( $contact ) && ! empty( $auth ) ) {
 			$dialoginsight_contactid = $contact['idContact'];
 
-			$dialoginsight_webserviceurl   = '	https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
+			$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
 			$dialoginsight_databasetableid = 2248;
 
 			$fields = [
@@ -403,24 +405,26 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					'Key'   => $auth['apiKey'],
 				],
 				'idTable'      => $dialoginsight_databasetableid,
-				'Records'      => [
-					'ID'   => [
-						'key_idReservation' => $data['token'],
-					],
-					'Data' => [
-						'idContact'       => $dialoginsight_contactid,
-						'idReservation'   => $data['token'],
-						'nombre_personne' => $data['participants'],
-						'dateCreation'    => $data['date_created'],
-						'dateArrivee'     => $data['course_start'],
-						'dateFin'         => $data['course_end'],
-						'statut'          => $data['status'],
-						'source'          => substr( get_option( 'blogname' ), 0, 25 ),
+				'Records' => [
+					[
+						'ID'   => [
+							'key_idReservation' => $data['token'],
+						],
+						'Data' => [
+							'idContact'       => $dialoginsight_contactid,
+							'idReservation'   => $data['token'],
+							'nombre_personne' => $data['participants'],
+							'dateCreation'    => $data['date_created'],
+							'dateArrivee'     => $data['course_start'],
+							'dateFin'         => $data['course_end'],
+							'statut'          => $data['status'],
+							'source'          => substr( get_option( 'blogname' ), 0, 25 ),
+						],
 					],
 				],
 				'MergeOptions' => [
 					'AllowInsert'            => true,
-					'AllowUpdate'            => false,
+					'AllowUpdate'            => true,
 					'SkipDuplicateRecords'   => false,
 					'SkipUnmatchedRecords'   => false,
 					'ReturnRecordsOnSuccess' => false,
@@ -428,6 +432,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					'FieldOptions'           => null,
 				],
 			];
+
+
 
 			// Connect with cURL
 			$ch = curl_init();
@@ -437,6 +443,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
 			$result = curl_exec( $ch );
 			$errors = [];
+			error_log( 'Dialog Insight Add Record to Bookings Table fields:' );
+			error_log( print_r( $fields, true ) );
+			error_log( 'Dialog Insight Add Record to Bookings Table fields as JSON:' );
+			error_log( json_encode( $fields ) );
 
 			error_log( 'Dialog Insight Add Record to Bookings Table for token ' . $data['token'] );
 
@@ -444,7 +454,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$result_array = json_decode( $result, true );
 				error_log( print_r( $result_array, true ) );
 			} else {
-				error_log( 'No response' );
+				error_log( 'Dialog Insight Add Record to Bookings Table : No response' );
 			}
 		}
 
@@ -784,20 +794,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
-	static function field_id_from_class($find_class, $fields){
+	static function field_id_from_class( $find_class, $fields ) {
 
-		foreach($fields as $field){
+		foreach ( $fields as $field ) {
 
 			$class = $field['cssClass'];
-			if($class === $find_class){
+			if ( strpos( $class, $find_class ) !== false ) {
 				return $field['id'];
 
-			}
-			else{
-				if(!empty($field['inputs'])){
-					foreach($field['inputs'] as $field_input){
+			} else {
+				if ( ! empty( $field['inputs'] ) ) {
+					foreach ( $field['inputs'] as $field_input ) {
 						$class = $field_input['name'];
-						if($class === $find_class){
+						if ( strpos( $class, $find_class ) !== false ) {
 							return $field_input['id'];
 						}
 					}
