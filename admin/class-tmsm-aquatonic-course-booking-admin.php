@@ -281,8 +281,40 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
-	}
+		add_settings_field(
+			'dialoginsight_idkey',
+			esc_html__( 'Dialog Insight Key ID', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_idkey',
+			)
+		);
 
+		add_settings_field(
+			'dialoginsight_apikey',
+			esc_html__( 'Dialog Insight API Key', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_apikey',
+			)
+		);
+
+		add_settings_field(
+			'dialoginsight_idproject',
+			esc_html__( 'Dialog Insight Project ID', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_idproject',
+			)
+		);
+
+	}
 
 	/**
 	 * Registers settings sections with WordPress
@@ -301,6 +333,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-form',
 			esc_html__( 'Form', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'section_form' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->plugin_name . '-dialoginsight',
+			esc_html__( 'Dialog Insight', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_dialoginsight' ),
 			$this->plugin_name
 		);
 
@@ -547,6 +586,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'gform_add_id', 'text', '' );
 		$options[] = array( 'gform_cancel_id', 'text', '' );
 
+		$options[] = array( 'dialoginsight_idkey', 'text', '' );
+		$options[] = array( 'dialoginsight_apikey', 'text', '' );
+		$options[] = array( 'dialoginsight_idproject', 'text', '' );
 
 		return $options;
 	}
