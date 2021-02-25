@@ -149,7 +149,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		);
 		wp_localize_script( $this->plugin_name, 'TmsmAquatonicCourseApp', $translation_array );
 
-
 	}
 
 
@@ -364,59 +363,220 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			// Insert data into custom table
 			$wpdb->insert($table, $data, $format);
 
+			// Add booking to Dialog Insight
+			self::dialoginsight_add_booking($data, $form);
+
 		}
 
 	}
 
 
 	/**
-	 * Dialog Insight
+	 * Dialog Insight: insert booking data with API call
 	 *
-	 * @param array $data
+	 * @param array $data The booking submission data
+	 * @param array $form The Gravity Forms data
 	 *
 	 * @return bool
 	 */
-	private function dialoginsight_add_booking($data){
+	private function dialoginsight_add_booking( $data, $form ) {
 
-		error_log('dialoginsight_add_booking');
+		error_log( 'dialoginsight_add_booking' );
+		$form_id = $form['id'];
+		$email   = $data['email'];
 
-		$options = get_option('gravityformsaddon_tmsm-gravityforms-dialoginsight_settings');
-		$keyId = $options['keyId'] ?? null;
-		$apiKey = $options['apiKey'] ?? null;
+		$contact = self::dialoginsight_get_contact( $email, $form_id );
+		$auth    = self::dialoginsight_auth( $form_id );
+		if ( empty( $contact ) ) {
+			error_log( 'Contact doesnt exist' );
+		}
 
-		$settings_webserviceurl = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
+		if ( ! empty( $contact ) && ! empty( $auth ) ) {
+			$dialoginsight_contactid = $contact['idContact'];
 
-		$fields = [
-			'AuthKey' => [
-				'idKey' => '111',
-				'Key'   => 'abcdefghijklmnopkrstuvwxyz',
-			],
-			'idProject' => 2222,
-			'Clause' => [
-				'$type' => 'FieldClause',
-				'Field' => [
-					'Name' => 'f_EMail',
+			$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
+			$dialoginsight_databasetableid = 2248;
+
+			$fields = [
+				'AuthKey'      => [
+					'idKey' => $auth['keyId'],
+					'Key'   => $auth['apiKey'],
 				],
-				'TypeOperator' => 'Equal',
-				'ComparisonValue' => 'aaa@bbb.ccc',
+				'idTable'      => $dialoginsight_databasetableid,
+				'Records'      => [
+					'ID'   => [
+						'key_idReservation' => $data['token'],
+					],
+					'Data' => [
+						'idContact'       => $dialoginsight_contactid,
+						'idReservation'   => $data['token'],
+						'nombre_personne' => $data['participants'],
+						'dateCreation'    => $data['date_created'],
+						'dateArrivee'     => $data['course_start'],
+						'dateFin'         => $data['course_end'],
+						'statut'          => $data['status'],
+						'source'          => substr( get_option( 'blogname' ), 0, 25 ),
+					],
+				],
+				'MergeOptions' => [
+					'AllowInsert'            => true,
+					'AllowUpdate'            => false,
+					'SkipDuplicateRecords'   => false,
+					'SkipUnmatchedRecords'   => false,
+					'ReturnRecordsOnSuccess' => false,
+					'ReturnRecordsOnError'   => false,
+					'FieldOptions'           => null,
+				],
+			];
 
-			],
-			'Tag' => null,
+			// Connect with cURL
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
+			$result = curl_exec( $ch );
+			$errors = [];
+
+			error_log( 'Dialog Insight Add Record to Bookings Table for token ' . $data['token'] );
+
+			if ( ! empty( $result ) ) {
+				$result_array = json_decode( $result, true );
+				error_log( print_r( $result_array, true ) );
+			} else {
+				error_log( 'No response' );
+			}
+		}
+
+	}
+
+	/**
+	 * Dialog Insight: Get contact with API call
+	 *
+	 * @param string $email The booking submission data
+	 * @param int    $form  The Gravity Forms ID
+	 *
+	 * @return array
+	 */
+	private function dialoginsight_get_contact( $email, $form_id ) {
+
+		error_log( 'dialoginsight_get_contact' );
+
+		$auth         = self::dialoginsight_auth( $form_id );
+		$result_array = [];
+		$contact      = [];
+
+		if ( ! empty( $auth ) ) {
+			$dialoginsight_webserviceurl = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
+
+			$fields = [
+				'AuthKey'   => [
+					'idKey' => $auth['keyId'],
+					'Key'   => $auth['apiKey'],
+				],
+				'idProject' => $auth['idProject'],
+				'Clause'    => [
+					'$type'           => 'FieldClause',
+					'Field'           => [
+						'Name' => 'f_EMail',
+					],
+					'TypeOperator'    => 'Equal',
+					'ComparisonValue' => $email,
+
+				],
+				'Tag'       => null,
+			];
+
+			// Connect with cURL
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
+			$result = curl_exec( $ch );
+			$errors = [];
+
+			error_log( 'Dialog Insight Get Contact Response for ' . $email );
+
+			if ( ! empty( $result ) ) {
+				$result_array = json_decode( $result, true );
+				error_log( print_r( $result_array, true ) );
+				$contact = $result_array['Records'][0] ?? [];
+
+			} else {
+				error_log( 'No response' );
+			}
+		}
+
+		return $contact;
+	}
+
+	/**
+	 * Dialog Insight: Auth (keyId, apiKey, idProject)
+	 *
+	 * @param int $form The Gravity Forms ID
+	 *
+	 * @return false|array
+	 */
+	private function dialoginsight_auth( $form_id ) {
+
+		error_log( 'dialoginsight_auth' );
+
+		// Get Dialog Insight Options
+		$options = get_option( 'gravityformsaddon_tmsm-gravityforms-dialoginsight_settings' );
+		$keyId   = $options['keyId'] ?? null;
+		$apiKey  = $options['apiKey'] ?? null;
+
+		if ( empty( $keyId ) || empty( $apiKey ) ) {
+			error_log( 'Dialog Insight keyId or apiKey are undefined' );
+		}
+
+		$dialoginsight_feeds = [];
+		$idProject           = null;
+
+		// Get the Dialog Insight Feeds
+		if ( ! class_exists( 'GFDialogInsight' ) ) {
+			error_log( 'class GFDialogInsight doesnt exist' );
+		} else {
+			$dialoginsight_addon = new GFDialogInsight();
+			$dialoginsight_feeds = $dialoginsight_addon->get_feeds( $form_id );
+			//error_log(print_r($dialoginsight_feeds, true));
+		}
+
+		if ( empty( $dialoginsight_feeds ) ) {
+			error_log( 'No feeds for form ' . $form_id );
+		}
+
+		// Browse the Dialog Insight Feeds
+		foreach ( $dialoginsight_feeds as $dialoginsight_feed ) {
+			//error_log(print_r($dialoginsight_feed, true));
+			$meta = $dialoginsight_feed['meta'] ?? [];
+			//error_log(print_r($meta, true));
+			$idProject = $meta['dialoginsightProject'] ?? null;
+		}
+
+		if ( empty( $idProject ) ) {
+			error_log( 'Dialog Insight idProject is undefined' );
+		}
+
+		// Result with 3 params
+		$result = [
+			'keyId'     => $keyId,
+			'apiKey'    => $apiKey,
+			'idProject' => $idProject,
 		];
 
-		// Connect with cURL
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_URL, $settings_webserviceurl );
-		curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-		$result = curl_exec( $ch );
-		$errors = [];
-		$result_array = [];
+		// 3 params need to be defined in order to have a good auth result
+		if ( empty( $keyId ) || empty( $apiKey ) || empty( $keyId ) ) {
+			error_log( 'Not all 3 params are defined' );
+			$result = false;
+		}
 
+		error_log( 'result:' );
+		error_log( print_r( $result, true ) );
 
+		return $result;
 
-		return true;
 	}
 
 	/**
