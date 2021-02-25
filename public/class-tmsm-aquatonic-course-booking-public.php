@@ -364,7 +364,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$wpdb->insert($table, $data, $format);
 
 			// Add booking to Dialog Insight
-			self::dialoginsight_add_booking($data, $form);
+			self::dialoginsight_add_booking($data);
 
 		}
 
@@ -379,13 +379,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return bool
 	 */
-	private function dialoginsight_add_booking( $data, $form ) {
+	private function dialoginsight_add_booking( $data ) {
 
 		error_log( 'dialoginsight_add_booking' );
-		$form_id = $form['id'];
 		$email   = $data['email'];
 
-		$contact = self::dialoginsight_get_contact( $email, $form_id );
+		$contact = self::dialoginsight_get_contact( $email );
 
 		if ( empty( $contact ) ) {
 			error_log( 'Contact doesnt exist' );
@@ -400,10 +399,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			$fields = [
 				'AuthKey'      => [
-					'idKey' => get_option('dialoginsight_idkey'),
-					'Key'   => get_option('dialoginsight_apikey'),
+					'idKey' =>  $this->get_option('dialoginsight_idkey'),
+					'Key'   =>  $this->get_option('dialoginsight_apikey'),
 				],
-				'idTable'      => $dialoginsight_databasetableid,
+				'idTable'      => $this->get_option('dialoginsight_relationaltableid'),
 				'Records' => [
 					[
 						'ID'   => [
@@ -423,7 +422,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				],
 				'MergeOptions' => [
 					'AllowInsert'            => true,
-					'AllowUpdate'            => true,
+					'AllowUpdate'            => false,
 					'SkipDuplicateRecords'   => false,
 					'SkipUnmatchedRecords'   => false,
 					'ReturnRecordsOnSuccess' => false,
@@ -458,14 +457,69 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Dialog Insight: update booking data with API call
+	 *
+	 * @param array $data The booking submission data
+	 *
+	 * @return bool
+	 */
+	private function dialoginsight_update_booking( $data ) {
+
+		error_log( 'dialoginsight_update_booking' );
+
+		$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
+
+		$fields = [
+			'AuthKey'      => [
+				'idKey' =>  $this->get_option('dialoginsight_idkey'),
+				'Key'   =>  $this->get_option('dialoginsight_apikey'),
+			],
+			'idTable'      =>  $this->get_option('dialoginsight_relationaltableid'),
+			'Records' => [
+				[
+					'ID'   => [
+						'key_idReservation' => $data['token'],
+					],
+					'Data' => [
+						'statut'          => $data['status'],
+					],
+				],
+			],
+			'MergeOptions' => [
+				'AllowInsert'            => false,
+				'AllowUpdate'            => true,
+				'SkipDuplicateRecords'   => false,
+				'SkipUnmatchedRecords'   => false,
+				'ReturnRecordsOnSuccess' => false,
+				'ReturnRecordsOnError'   => false,
+				'FieldOptions'           => null,
+			],
+		];
+
+		// Connect with cURL
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
+		$result = curl_exec( $ch );
+		$errors = [];
+
+		if ( ! empty( $result ) ) {
+			$result_array = json_decode( $result, true );
+			error_log( print_r( $result_array, true ) );
+		}
+
+	}
+
+	/**
 	 * Dialog Insight: Get contact with API call
 	 *
 	 * @param string $email The booking submission data
-	 * @param int    $form  The Gravity Forms ID
 	 *
 	 * @return array
 	 */
-	private function dialoginsight_get_contact( $email, $form_id ) {
+	private function dialoginsight_get_contact( $email ) {
 
 		error_log( 'dialoginsight_get_contact' );
 
@@ -476,10 +530,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$fields = [
 			'AuthKey'   => [
-				'idKey' => get_option('dialoginsight_idkey'),
-				'Key'   => get_option('dialoginsight_apikey'),
+				'idKey' => $this->get_option('dialoginsight_idkey'),
+				'Key'   => $this->get_option('dialoginsight_apikey'),
 			],
-			'idProject' => get_option('dialoginsight_idproject'),
+			'idProject' => $this->get_option('dialoginsight_idproject'),
 			'Clause'    => [
 				'$type'           => 'FieldClause',
 				'Field'           => [
@@ -651,19 +705,27 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$table = $wpdb->prefix . 'aquatonic_course_booking';
 
-		$data = array(
+		$data = [
 			'status' => 'cancelled',
-		);
+		];
 
-		$format = array(
+		$format = [
 			'%s',
-		);
+		];
 
-		$where = ['token' => $token];
+		$where = [
+			'token' => $token
+		];
 
 		// Update data into custom table
-		$wpdb->update($table, $data, $where, $format);
+		$wpdb->update( $table, $data, $where, $format );
 
+		$data = [
+			'token'  => $token,
+			'status' => 'cancelled',
+		];
+
+		self::dialoginsight_update_booking( $data );
 
 	}
 

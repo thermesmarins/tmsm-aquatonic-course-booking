@@ -314,6 +314,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		add_settings_field(
+			'dialoginsight_relationaltableid',
+			esc_html__( 'Dialog Insight Relational Table ID', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_relationaltableid',
+				'description' => esc_html__( 'Relational Table for Course Bookings', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
 	}
 
 	/**
@@ -589,6 +601,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'dialoginsight_idkey', 'text', '' );
 		$options[] = array( 'dialoginsight_apikey', 'text', '' );
 		$options[] = array( 'dialoginsight_idproject', 'text', '' );
+		$options[] = array( 'dialoginsight_relationaltableid', 'text', '' );
 
 		return $options;
 	}
