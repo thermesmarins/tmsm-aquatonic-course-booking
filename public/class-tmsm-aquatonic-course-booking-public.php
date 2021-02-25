@@ -394,7 +394,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		if ( ! empty( $contact ) && ! empty( $auth ) ) {
 			$dialoginsight_contactid = $contact['idContact'];
 
-			$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
+			$dialoginsight_webserviceurl   = '	https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
 			$dialoginsight_databasetableid = 2248;
 
 			$fields = [
