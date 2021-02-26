@@ -1,2 +1,2 @@
-### 1.0.0: October 2nd, 2020
-* Plugin boilerplate
+### 1.0.0: February 26th, 2021
+* First version
