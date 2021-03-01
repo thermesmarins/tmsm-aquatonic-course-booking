@@ -256,7 +256,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		if(!empty($entry)){
 			$entry_id = $entry['id'];
-			$booking_token = self::generate_token_for_gform_entry( $entry_id );
+			$booking_token = self::gform_entry_generate_token( $entry_id );
 		}
 	}
 
@@ -279,7 +279,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		// Get token
 		$token = null;
 		if(!empty($entry_id)){
-			$token = self::generate_token_for_gform_entry( $entry_id );
+			$token = self::gform_entry_generate_token( $entry_id );
 		}
 
 		// Get entry data
@@ -593,15 +593,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		$entry_id = $entry['id'];
-		$token = self::generate_token_for_gform_entry( $entry_id );
-		$text          = str_replace( $custom_merge_tag, $token, $text );
-
-		/*error_log('gform_replace_merge_tags_booking');
-		error_log('$entry:');
-		error_log(print_r($entry, true));
-		error_log('$text:');
-		error_log(print_r($text, true));*/
-
+		$token    = self::gform_entry_generate_token( $entry_id );
+		$text     = str_replace( $custom_merge_tag, urlencode( $token ), $text );
 
 		return $text;
 	}
@@ -614,7 +607,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
-	private function generate_token_for_gform_entry( int $entry_id ){
+	private function gform_entry_generate_token( int $entry_id ){
 
 		// Check if token exists for entry
 		$token = gform_get_meta( $entry_id, '_booking_token' );
@@ -653,7 +646,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 
 			if(!empty($field_token) && !empty($field_summary)){
-				$token = sanitize_text_field( rgget( $field_token->inputName ) );
+				$token = ( rgget( $field_token->inputName ) );
+				$field_summary->content = '';
 				if(!empty($token)){
 					$booking = self::find_booking_with_token($token);
 					if(!empty($booking)){
@@ -670,13 +664,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$content = sprintf(__('Do you want to cancel the following booking? Booking on %s for %d participants', 'tmsm-aquatonic-course-booking'), sanitize_text_field($booking_start), sanitize_text_field($booking_participants) );
 						}
 
-						$field_summary->content = $content;
+
 
 
 					}
+					else{
+						$content = __( 'This booking was not found', 'tmsm-aquatonic-course-booking' );
+					}
 				}
-
-
+				else{
+					$content = __( 'The booking token was not found', 'tmsm-aquatonic-course-booking' );
+				}
+				$field_summary->content .= $content;
 
 			}
 		}
