@@ -662,9 +662,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return true;
 	}
 
-
 	/**
 	 * Action Booking Change Status (Ajax)
+	 *
+	 * @throws Exception
 	 */
 	public function booking_change_status(){
 		global $wpdb;
@@ -686,10 +687,19 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
 
 
-			// Dialog Insight: Mark contact as customer if arrived TODO
+			// Dialog Insight: Mark contact as customer if arrived
 			if($status === 'arrived'){
+				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
+
+				// Update booking in Dialog Insight
+				$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+				$booking_dialoginsight->token = $booking['token'];
+				$booking_dialoginsight->status = 'arrived';
+				$booking_dialoginsight->update();
 
 			}
+
+
 		}
 
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'options-general.php?page=tmsm-aquatonic-course-booking-settings' ) );

@@ -120,29 +120,32 @@ class Dialog_Insight_Booking {
 
 		error_log( 'dialoginsight_update_booking' );
 
-		$request = [
-			'Records' => [
-				[
-					'ID'   => [
-						'key_idReservation' => $this->token,
-					],
-					'Data' => [
-						'statut'          => $this->status,
+		if( !empty($this->token) && !empty($this->status)){
+			$request = [
+				'Records' => [
+					[
+						'ID'   => [
+							'key_idReservation' => $this->token,
+						],
+						'Data' => [
+							'statut'          => $this->status,
+						],
 					],
 				],
-			],
-			'MergeOptions' => [
-				'AllowInsert'            => false,
-				'AllowUpdate'            => true,
-				'SkipDuplicateRecords'   => false,
-				'SkipUnmatchedRecords'   => false,
-				'ReturnRecordsOnSuccess' => false,
-				'ReturnRecordsOnError'   => false,
-				'FieldOptions'           => null,
-			],
-		];
+				'MergeOptions' => [
+					'AllowInsert'            => false,
+					'AllowUpdate'            => true,
+					'SkipDuplicateRecords'   => false,
+					'SkipUnmatchedRecords'   => false,
+					'ReturnRecordsOnSuccess' => false,
+					'ReturnRecordsOnError'   => false,
+					'FieldOptions'           => null,
+				],
+			];
 
-		$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
+			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
+		}
+
 	}
 
 }
