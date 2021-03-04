@@ -1,5 +1,6 @@
 * Dialog Insight API refactoring
 * Dialog Insight: mark booking as arrived
+* Include jQuery Countdown for backend counter
 
 ### 1.0.1: March 1st, 2021
 * Encode token in URL

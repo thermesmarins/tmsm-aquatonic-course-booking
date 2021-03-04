@@ -998,11 +998,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * Get Times from Web Service
 	 *
 	 * @since    1.0.0
-	 *
 	 * @return array
+	 * @throws Exception
 	 */
 	private function _get_times() {
 		global $wpdb;
+
+		$user = wp_get_current_user();
 
 		$times = [];
 		$date = date('Y-m-d');
@@ -1096,14 +1098,14 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$slot_end_object = clone $slot_begin_object;
 				$slot_end_object->modify( '+' . $averagecourse . ' minutes' );
 
-				$allow_begin = new DateTime('now', wp_timezone());
-				$allow_begin_customer = new DateTime('now', wp_timezone());
-				$allow_begin_customer->modify('+'.(60*$this->get_option('hoursbefore')) . ' minutes');
-				$allow_end_customer = new DateTime('now', wp_timezone());
-				$allow_end_customer->modify('+'.(60*$this->get_option('hoursafter')) . ' minutes');
+				$allow_begin          = new DateTime( 'now', wp_timezone() );
+				$allow_begin_customer = new DateTime( 'now', wp_timezone() );
+				$allow_begin_customer->modify( '+' . ( 60 * $this->get_option( 'hoursbefore' ) ) . ' minutes' );
+				$allow_end_customer = new DateTime( 'now', wp_timezone() );
+				$allow_end_customer->modify( '+' . ( 60 * $this->get_option( 'hoursafter' ) ) . ' minutes' );
 
 				// Is a customer
-				if( $this->user_has_role(wp_get_current_user(), 'customer') || ! wp_get_current_user() ) {
+				if( $this->user_has_role(wp_get_current_user(), 'customer') || !$user || is_wp_error( $user ) || !$user->ID ) {
 					if ( $slot_begin_object < $allow_begin_customer || $slot_begin_object > $allow_end_customer ) {
 						continue;
 					}

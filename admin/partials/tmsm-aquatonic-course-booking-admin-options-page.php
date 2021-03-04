@@ -53,8 +53,10 @@
 
 	if ( $tab == 'dashboard' ) {
 
+
+
 		$now = new Datetime;
-		$canstart = 200;
+		$canstart = 200; // Fake number of persons that can start, high on purpose
 		$canstart_counter = null;
 
 		$second = $now->format( "s" );
@@ -332,13 +334,24 @@
 				<!-- Can Start -->
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Can Start', 'tmsm-aquatonic-course-booking' ); ?></th>
-					<td colspan="5"><span class="free free-<?php echo $canstart_counter;?>"><?php echo $canstart ;?></span> <?php esc_html_e( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' ); ?></td>
+					<td colspan="6"><span class="free free-<?php echo $canstart_counter;?>"><?php echo $canstart ;?></span> <?php esc_html_e( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' ); ?></td>
 				</tr>
 
 				<!-- Real Time -->
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' ); ?></th>
-					<td colspan="5"><?php echo '<span class="realtime">' . $realtime . '</span>'; ?></td>
+					<td><?php echo '<span class="realtime">' . $realtime . '</span>'; ?></td>
+					<td colspan="5">
+							<p>
+								<?php
+								$cronevent = wp_next_scheduled( 'tmsm_aquatonic_course_noshow_cronaction' );
+								$date = wp_date( get_option( 'time_format' ), $cronevent );
+								echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), $date, '<b class="refresh" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
+
+								?>
+							</p>
+
+					</td>
 				</tr>
 
 				</tbody>
@@ -352,10 +365,12 @@
 			</table>
 			<?php
 
-		}
-		?>
 
-		<?php
+
+		}
+
+
+
 	}
 
 	if ( $tab == 'bookings' ) {

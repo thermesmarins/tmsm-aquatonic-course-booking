@@ -21,6 +21,22 @@
     });
   });
 
+  /*
+   * Refresh counter
+   */
+  var refreshCounter = $('#refresh-counter');
+  var remainingTimeMillisecond = refreshCounter.attr('data-time') * 1000; //multiply by 1000 because javascript timestamps are in ms
+  var currentTime = new Date();
+  var endDate = new Date(remainingTimeMillisecond);
+  refreshCounter.countdown(endDate, {elapse: true}).on('update.countdown', function(event) {
+    var $this = $(this).html(event.strftime(''
+      + '<span>%M</span> min '
+      + '<span>%S</span> sec'));
+    if (event.elapsed) {
+      console.log('elapsed');
+      document.location.reload();
+    }
+  });
 
   /**
    * Dashboard: Highlight same values in the dashboard table
