@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Provide a admin area view for the plugin
  *
@@ -106,6 +107,8 @@
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
 		// TESTS END <<<<<<<<<<<<<<<<<
+
+
 
 
 		// Display table only if realtime data exists

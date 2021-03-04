@@ -144,7 +144,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function options_page_display() {
 		$tab = ( isset($_GET['tab']) ) ? sanitize_text_field($_GET['tab']) : 'dashboard';
 
-
 		global $wpdb;
 
 		$today = new  DateTime();
@@ -641,6 +640,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$mark_as_noshow_query = $wpdb->query( $wpdb->prepare( "UPDATE
 {$wpdb->prefix}aquatonic_course_booking SET status='noshow' WHERE status = %s AND course_start < %s", 'active', $nowminus15minutes->format( "Y-m-d H:i:s" ) ) );
 
+
+
+
 	}
 
 	/**
@@ -682,6 +684,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		// Update booking with new status
 		if( $this->booking_is_valid_status($status) ){
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
+
+
+			// Dialog Insight: Mark contact as customer if arrived TODO
+			if($status === 'arrived'){
+
+			}
 		}
 
 		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'options-general.php?page=tmsm-aquatonic-course-booking-settings' ) );

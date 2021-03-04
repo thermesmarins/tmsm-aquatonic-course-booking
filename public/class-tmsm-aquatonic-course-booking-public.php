@@ -283,6 +283,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		// Get entry data
+		$birthdate_computed = null;
 		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
 		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
 
@@ -327,6 +328,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$course_end = $objdate->format( 'Y-m-d H:i:s' );
 		}
 
+		$now = new DateTime('now', wp_timezone());
+
 		// Format data
 		if(!empty($course_start) && !empty($course_start)) {
 			$table = $wpdb->prefix . 'aquatonic_course_booking';
@@ -338,7 +341,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'birthdate' => $birthdate_computed,
 				'participants' => self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry),
 				'status' => 'active',
-				'date_created' => date('Y-m-d H:i:s'),
+				'date_created' => $now->format('Y-m-d H:i:s'),
 				'course_start' => $course_start,
 				'course_end' => $course_end,
 				'author' => get_current_user_id(),
@@ -364,211 +367,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$wpdb->insert($table, $data, $format);
 
 			// Add booking to Dialog Insight
-			self::dialoginsight_add_booking($data);
+			$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+			$booking->email = $data['email'];
+			$booking->participants = $data['participants'];
+			$booking->status = $data['status'];
+			$booking->token = $data['token'];
+			$booking->date_created = $data['date_created'];
+			$booking->course_start = $data['course_start'];
+			$booking->course_end = $data['course_end'];
+			$booking->source = substr( get_option( 'blogname' ), 0, 25 );
+			$booking->add();
 
 		}
 
 	}
 
 
-	/**
-	 * Dialog Insight: insert booking data with API call
-	 *
-	 * @param array $data The booking submission data
-	 * @param array $form The Gravity Forms data
-	 *
-	 * @return bool
-	 */
-	private function dialoginsight_add_booking( $data ) {
 
-		error_log( 'dialoginsight_add_booking' );
-		$email   = $data['email'];
-
-		$contact = self::dialoginsight_get_contact( $email );
-
-		if ( empty( $contact ) ) {
-			error_log( 'Contact doesnt exist' );
-		}
-
-		// Contact exists and Auth OK
-		if ( ! empty( $contact ) ) {
-			$dialoginsight_contactid = $contact['idContact'];
-
-			$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
-			$dialoginsight_databasetableid = 2248;
-
-			$fields = [
-				'AuthKey'      => [
-					'idKey' =>  $this->get_option('dialoginsight_idkey'),
-					'Key'   =>  $this->get_option('dialoginsight_apikey'),
-				],
-				'idTable'      => $this->get_option('dialoginsight_relationaltableid'),
-				'Records' => [
-					[
-						'ID'   => [
-							'key_idReservation' => $data['token'],
-						],
-						'Data' => [
-							'idContact'       => $dialoginsight_contactid,
-							'idReservation'   => $data['token'],
-							'nombre_personne' => $data['participants'],
-							'dateCreation'    => $data['date_created'],
-							'dateArrivee'     => $data['course_start'],
-							'dateFin'         => $data['course_end'],
-							'statut'          => $data['status'],
-							'source'          => substr( get_option( 'blogname' ), 0, 25 ),
-						],
-					],
-				],
-				'MergeOptions' => [
-					'AllowInsert'            => true,
-					'AllowUpdate'            => false,
-					'SkipDuplicateRecords'   => false,
-					'SkipUnmatchedRecords'   => false,
-					'ReturnRecordsOnSuccess' => false,
-					'ReturnRecordsOnError'   => false,
-					'FieldOptions'           => null,
-				],
-			];
-
-			// Connect with cURL
-			$ch = curl_init();
-			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
-			$result = curl_exec( $ch );
-			$errors = [];
-			error_log( 'Dialog Insight Add Record to Bookings Table fields:' );
-			error_log( print_r( $fields, true ) );
-			error_log( 'Dialog Insight Add Record to Bookings Table fields as JSON:' );
-			error_log( json_encode( $fields ) );
-
-			error_log( 'Dialog Insight Add Record to Bookings Table for token ' . $data['token'] );
-
-			if ( ! empty( $result ) ) {
-				$result_array = json_decode( $result, true );
-				error_log( print_r( $result_array, true ) );
-			} else {
-				error_log( 'Dialog Insight Add Record to Bookings Table : No response' );
-			}
-		}
-
-	}
-
-	/**
-	 * Dialog Insight: update booking data with API call
-	 *
-	 * @param array $data The booking submission data
-	 *
-	 * @return bool
-	 */
-	private function dialoginsight_update_booking( $data ) {
-
-		error_log( 'dialoginsight_update_booking' );
-
-		$dialoginsight_webserviceurl   = 'https://app.mydialoginsight.com/webservices/ofc4/relationaltables.ashx?method=Merge';
-
-		$fields = [
-			'AuthKey'      => [
-				'idKey' =>  $this->get_option('dialoginsight_idkey'),
-				'Key'   =>  $this->get_option('dialoginsight_apikey'),
-			],
-			'idTable'      =>  $this->get_option('dialoginsight_relationaltableid'),
-			'Records' => [
-				[
-					'ID'   => [
-						'key_idReservation' => $data['token'],
-					],
-					'Data' => [
-						'statut'          => $data['status'],
-					],
-				],
-			],
-			'MergeOptions' => [
-				'AllowInsert'            => false,
-				'AllowUpdate'            => true,
-				'SkipDuplicateRecords'   => false,
-				'SkipUnmatchedRecords'   => false,
-				'ReturnRecordsOnSuccess' => false,
-				'ReturnRecordsOnError'   => false,
-				'FieldOptions'           => null,
-			],
-		];
-
-		// Connect with cURL
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
-		$result = curl_exec( $ch );
-		$errors = [];
-
-		if ( ! empty( $result ) ) {
-			$result_array = json_decode( $result, true );
-			error_log( print_r( $result_array, true ) );
-		}
-
-	}
-
-	/**
-	 * Dialog Insight: Get contact with API call
-	 *
-	 * @param string $email The booking submission data
-	 *
-	 * @return array
-	 */
-	private function dialoginsight_get_contact( $email ) {
-
-		error_log( 'dialoginsight_get_contact' );
-
-		$result_array = [];
-		$contact      = [];
-
-		$dialoginsight_webserviceurl = 'https://app.mydialoginsight.com/webservices/ofc4/contacts.ashx?method=Get';
-
-		$fields = [
-			'AuthKey'   => [
-				'idKey' => $this->get_option('dialoginsight_idkey'),
-				'Key'   => $this->get_option('dialoginsight_apikey'),
-			],
-			'idProject' => $this->get_option('dialoginsight_idproject'),
-			'Clause'    => [
-				'$type'           => 'FieldClause',
-				'Field'           => [
-					'Name' => 'f_EMail',
-				],
-				'TypeOperator'    => 'Equal',
-				'ComparisonValue' => $email,
-
-			],
-			'Tag'       => null,
-		];
-
-		// Connect with cURL
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_URL, $dialoginsight_webserviceurl );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) );
-		$result = curl_exec( $ch );
-		$errors = [];
-
-		error_log( 'Dialog Insight Get Contact Response for ' . $email );
-
-		if ( ! empty( $result ) ) {
-			$result_array = json_decode( $result, true );
-			error_log( print_r( $result_array, true ) );
-			$contact = $result_array['Records'][0] ?? [];
-
-		} else {
-			error_log( 'No response' );
-		}
-
-
-		return $contact;
-	}
 
 	/**
 	 * Allow the text to be filtered so custom merge tags can be replaced.
@@ -689,6 +504,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @param $entry
 	 * @param $form
+	 *
+	 * @throws Exception
 	 */
 	function gform_after_submission_cancel( $entry, $form ) {
 		global $wpdb;
@@ -700,7 +517,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$entry_id = $entry['id'];
 
 		// Get entry data
-		$token = sanitize_text_field(self::field_value_from_inputname('booking_token', $form['fields'], $entry));
+		$token = sanitize_text_field( self::field_value_from_inputname( 'booking_token', $form['fields'], $entry ) );
 
 		$table = $wpdb->prefix . 'aquatonic_course_booking';
 
@@ -724,7 +541,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			'status' => 'cancelled',
 		];
 
-		self::dialoginsight_update_booking( $data );
+
+		// Update booking in Dialog Insight
+		$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+		$booking->token = $token;
+		$booking->status = 'cancelled';
+		$booking->update();
 
 	}
 
@@ -1196,8 +1018,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		if(!empty($date) && $participants > 0){
-			error_log('$date:'.$date);
-			error_log('$participants:'.$participants);
+			//error_log('$date:'.$date);
+			//error_log('$participants:'.$participants);
 
 			$averagecourse = $this->get_option('courseaverage');
 
@@ -1223,8 +1045,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			//	return strcmp($a['start'], $b['start']);
 			//});
 			ksort($capacity_forthedate_timeslots);
-			error_log('$capacity_forthedate_timeslots');
-			error_log(print_r($capacity_forthedate_timeslots , true));
+			//error_log('$capacity_forthedate_timeslots');
+			//error_log(print_r($capacity_forthedate_timeslots , true));
 
 
 			// Get first and last slot of all the slots
@@ -1252,7 +1074,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			if(!empty($first_slot) && !empty($last_slot)){
 				$period = new DatePeriod( $first_slot, $interval, $last_slot );
 				foreach ( $period as $slot_begin ) {
-					error_log( 'slot: '.$slot_begin->format( "Y-m-d H:i:s" ) );
+					//error_log( 'slot: '.$slot_begin->format( "Y-m-d H:i:s" ) );
 
 					$uses[$slot_begin->format( "Y-m-d H:i:s" )] = self::get_participants_ongoing_forthetime($slot_begin);
 
@@ -1262,8 +1084,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 
 
-			error_log('$uses');
-			error_log(print_r($uses, true));
+			//error_log('$uses');
+			//error_log(print_r($uses, true));
 
 			$all_slots = $capacity_forthedate_timeslots;
 			$slots_available = [];
@@ -1296,7 +1118,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 				$period = new DatePeriod( $slot_begin_object, $interval, $slot_end_object );
 
-				error_log('calculate capacity for '.$slot_begin_object->format( "Y-m-d H:i:s" ));
+				//error_log('calculate capacity for '.$slot_begin_object->format( "Y-m-d H:i:s" ));
 
 				$min_capacity = 1000;
 				foreach ( $period as $period_begin ) {
@@ -1323,8 +1145,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				}
 			}
 
-			error_log('$slots_available');
-			error_log(print_r($slots_available , true));
+			//error_log('$slots_available');
+			//error_log(print_r($slots_available , true));
 
 
 			/*$times[] = [

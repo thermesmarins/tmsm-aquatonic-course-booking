@@ -131,6 +131,13 @@ class Tmsm_Aquatonic_Course_Booking {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tmsm-aquatonic-course-booking-sanitize.php';
 
+		/**
+		 * The classes for Dialog Insight (booking & contact)
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-dialog-insight-api.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-dialog-insight-booking.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-dialog-insight-contact.php';
+
 		$this->loader = new Tmsm_Aquatonic_Course_Booking_Loader();
 
 	}
@@ -280,5 +287,6 @@ class Tmsm_Aquatonic_Course_Booking {
 	public function get_version() {
 		return $this->version;
 	}
+
 
 }
