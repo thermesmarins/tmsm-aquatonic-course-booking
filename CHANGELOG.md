@@ -4,6 +4,7 @@
 * Attendance counter: minutes until next refresh of the cron event
 * Attendance counter: refresh button to force run of cron event
 * Check Dialog Insight API connection on saving settings
+* Check Gravity Forms settings (classes, input names, feeds) on saving
 
 ### 1.0.1: March 1st, 2021
 * Encode token in URL

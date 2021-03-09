@@ -40,6 +40,9 @@
 	</h2>
 
 	<?php
+
+	$options       = get_option( $this->plugin_name . '-options' );
+
 	if ( $tab == 'settings' ) {
 		?>
 		<form method="post" action="options.php"><?php
@@ -54,7 +57,13 @@
 				settings_errors('dialoginsight_api');
 			}
 
+			// Testing the Gravity Forms Add form
+			Tmsm_Aquatonic_Course_Booking_Admin::gform_check_add_form($options['gform_add_id']);
 
+			// Testing the Gravity Forms Cancel form
+			Tmsm_Aquatonic_Course_Booking_Admin::gform_check_cancel_form($options['gform_cancel_id']);
+
+			// Display options
 			settings_fields( $this->plugin_name . '-options' );
 			do_settings_sections( $this->plugin_name );
 			submit_button( __( 'Save options', 'tmsm-aquatonic-course-booking' ) );
@@ -85,7 +94,7 @@
 			$now->modify( '-15 minutes' );
 		}
 
-		$options       = get_option( $this->plugin_name . '-options' );
+
 		$averagecourse = $options['courseaverage'];
 
 		$slotsize    = $options['slotsize'];

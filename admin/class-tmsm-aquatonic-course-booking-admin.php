@@ -359,6 +359,154 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		);
 	}
 
+
+	/**
+	 * Check the Gravity Forms Add form
+	 *
+	 * @param int $gform_id
+	 */
+	static function gform_check_add_form( int $gform_id){
+
+		$wp_error = new WP_Error();
+		if(!empty($gform_id)){
+			$form = GFAPI::get_form( $gform_id );
+			if(empty($form)){
+				$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The form was not found', 'tmsm-aquatonic-course-booking'));
+			}
+			else{
+
+				$feeds = GFAPI::get_feeds(null, $gform_id, 'tmsm-gravityforms-dialoginsight', true	);
+				if(empty($feeds)){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The Dialog Insight feed is missing', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if($form['cssClass'] !== 'tmsm-aquatonic-course-form-add' ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The form layout needs the `tmsm-aquatonic-course-form-add` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				$name = false;
+				$email = false;
+				$phone = false;
+				$birthdate = false;
+				$participants = false;
+				$times = false;
+				foreach($form['fields'] as $field){
+
+					if($field['cssClass'] === 'tmsm-aquatonic-course-name'){
+						$name = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-email'){
+						$email = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-birthdate'){
+						$birthdate = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-phone'){
+						$phone = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-participants'){
+						$participants = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-times'){
+						$times = true;
+					}
+
+				}
+
+				if( ! $name ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $name ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $birthdate ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The birthdate field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $phone ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The phone field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $participants ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The participants field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $times ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The times field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
+				}
+			}
+
+
+
+
+		}
+
+
+
+
+		if ( isset( $wp_error ) && is_wp_error( $wp_error ) && $wp_error->has_errors()){
+			add_settings_error( 'gform_add', 'gform_add_errors',
+				sprintf(__( 'Gravity Forms Add Form setup has failed: %s', 'tmsm-aquatonic-course-booking' ), join(',', $wp_error->get_error_messages())), 'error' );
+			settings_errors('gform_add');
+		}
+
+	}
+	/**
+	 * Check the Gravity Forms Cancel form
+	 *
+	 * @param int $gform_id
+	 */
+	static function gform_check_cancel_form( int $gform_id){
+
+		$wp_error = new WP_Error();
+		if(!empty($gform_id)){
+			$form = GFAPI::get_form( $gform_id );
+
+			if(empty($form)){
+				$wp_error->add('tmsm-aquatonic-course-booking-gform-cancel', __('The form was not found', 'tmsm-aquatonic-course-booking'));
+			}
+			else{
+
+				if($form['cssClass'] !== 'tmsm-aquatonic-course-form-cancel' ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-cancel', __('The form layout needs the `tmsm-aquatonic-course-form-cancel` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				$token = false;
+				$summary = false;
+				foreach($form['fields'] as $field){
+
+					if($field['inputName'] === 'booking_token'){
+						$token = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-summary'){
+						$summary = true;
+					}
+
+				}
+
+				if( ! $token ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $summary ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+			}
+
+
+		}
+
+		if ( isset( $wp_error ) && is_wp_error( $wp_error ) && $wp_error->has_errors()){
+			add_settings_error( 'gform_cancel', 'gform_cancel_errors',
+				sprintf(__( 'Gravity Forms Cancel Form setup has failed: %s', 'tmsm-aquatonic-course-booking' ), join(',', $wp_error->get_error_messages())), 'error' );
+			settings_errors('gform_cancel');
+		}
+
+	}
+
 	/**
 	 * Sanitize fields
 	 *
@@ -384,6 +532,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	private function set_options() {
 		$this->options = get_option( $this->plugin_name . '-options' );
+	}
+
+	/**
+	 * Gets the class variable $options
+	 */
+	public function get_options() {
+		return get_option( $this->plugin_name . '-options' );
 	}
 
 	/**
@@ -425,7 +580,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// TODO check if GF Add has all classes
 		// TODO check if GF Cancel has all classes
-		// TODO check DI API connection
 
 		return $valid;
 	}
