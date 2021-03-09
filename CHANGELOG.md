@@ -1,3 +1,4 @@
+### 1.1.0: March 9th, 2021
 * Dialog Insight API refactoring
 * Dialog Insight: mark booking as arrived
 * Attendance counter: include jQuery Countdown library
