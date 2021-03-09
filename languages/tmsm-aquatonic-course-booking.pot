@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-03-04 14:56+0100\n"
+"POT-Creation-Date: 2021-03-04 16:17+0100\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -182,55 +182,59 @@ msgstr ""
 msgid "Can Start"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:337
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:338
 msgid "(Minimum Value of Free Row)"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:342
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:350
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:343
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:370
 msgid "Real Time"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:365
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:350
 #, php-format
 msgid "Next Refresh at %s in %s"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:380
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:356
+msgid "Force refresh attendance"
+msgstr ""
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:391
 msgid "Firstname"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:381
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:392
 msgid "Lastname"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:382
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:393
 msgid "Email"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:383
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:394
 msgid "Participants"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:384
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:395
 msgid "Start"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:385
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:396
 msgid "Status"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:386
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:397
 msgid "Actions"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:398
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:409
 #: public/class-tmsm-aquatonic-course-booking-public.php:473
 #, php-format
 msgid "%s at %s"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:422
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:433
 msgid "New Booking"
 msgstr ""
 

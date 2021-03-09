@@ -1,6 +1,8 @@
 * Dialog Insight API refactoring
 * Dialog Insight: mark booking as arrived
-* Include jQuery Countdown for backend counter
+* Attendance counter: include jQuery Countdown library
+* Attendance counter: minutes until next refresh of the cron event
+* Attendance counter: refresh button to force run of cron event
 
 ### 1.0.1: March 1st, 2021
 * Encode token in URL

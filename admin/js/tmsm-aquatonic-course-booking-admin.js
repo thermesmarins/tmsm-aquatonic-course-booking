@@ -28,12 +28,13 @@
   var remainingTimeMillisecond = refreshCounter.attr('data-time') * 1000; //multiply by 1000 because javascript timestamps are in ms
   var currentTime = new Date();
   var endDate = new Date(remainingTimeMillisecond);
+  var executeAfterElapsed = false;
   refreshCounter.countdown(endDate, {elapse: true}).on('update.countdown', function(event) {
     var $this = $(this).html(event.strftime(''
       + '<span>%M</span> min '
       + '<span>%S</span> sec'));
-    if (event.elapsed) {
-      console.log('elapsed');
+    if (event.elapsed && executeAfterElapsed === false) {
+      executeAfterElapsed = true;
       document.location.reload();
     }
   });
