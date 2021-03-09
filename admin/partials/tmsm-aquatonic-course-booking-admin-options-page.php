@@ -43,6 +43,18 @@
 	if ( $tab == 'settings' ) {
 		?>
 		<form method="post" action="options.php"><?php
+
+			// Testing Dialog Insight API
+			try {
+				$project = \Dialog_Insight_API::request( [], 'projects', 'Get' );
+			} catch (Exception $exception) {
+				//echo 'Exception reçue : ',  $exception->getMessage(), "\n";
+				add_settings_error( 'dialoginsight_api', 'dialoginsight_errors',
+					sprintf(__( 'Dialog Insight API connection failed with error code: %s', 'tmsm-aquatonic-course-booking' ), $exception->getMessage()), 'error' );
+				settings_errors('dialoginsight_api');
+			}
+
+
 			settings_fields( $this->plugin_name . '-options' );
 			do_settings_sections( $this->plugin_name );
 			submit_button( __( 'Save options', 'tmsm-aquatonic-course-booking' ) );

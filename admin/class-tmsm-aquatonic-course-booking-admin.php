@@ -391,10 +391,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 *
 	 * @since 		1.0.0
 	 * @param 		array 		$input 			array of submitted plugin options
-	 * @return 		array 						array of validated plugin options
+	 * @return 		array
+	 * @throws Exception
 	 */
 	public function validate_options( $input ) {
-		//wp_die( print_r( $input ) );
+
 		$valid 		= array();
 		$options 	= $this->get_options_list();
 		foreach ( $options as $option ) {
@@ -404,6 +405,28 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$valid[$option[0]] = $this->sanitizer( $type, $input[$name] );
 
 		}
+
+
+		if ( empty( $input['gform_add_id'] ) || empty( $input['gform_cancel_id'] ) ) {
+			add_settings_error( 'gform_add_id', 'gform_errors', __( 'Gravity Forms all need to be defined', 'tmsm-aquatonic-course-booking' ),
+				'error' );
+		}
+
+		if ( empty( $input['courseaverage'] ) || empty( $input['hoursafter'] ) || empty( $input['timeslots'] ) ) {
+			add_settings_error( 'courseaverage', 'timeslots_errors', __( 'Timeslots fields all need to be defined', 'tmsm-aquatonic-course-booking' ),
+				'error' );
+		}
+
+		if ( empty( $input['dialoginsight_idkey'] ) || empty( $input['dialoginsight_apikey'] ) || empty( $input['dialoginsight_idproject'] )
+		     || empty( $input['dialoginsight_relationaltableid'] ) ) {
+			add_settings_error( 'dialoginsight_idkey', 'dialoginsight_errors',
+				__( 'Dialog Insight fields all need to be defined', 'tmsm-aquatonic-course-booking' ), 'error' );
+		}
+
+		// TODO check if GF Add has all classes
+		// TODO check if GF Cancel has all classes
+		// TODO check DI API connection
+
 		return $valid;
 	}
 

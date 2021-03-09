@@ -113,19 +113,18 @@ class Dialog_Insight_API {
 	public static function request( $request, $api = null, $method = null) {
 
 		$headers         = self::get_headers();
-		$idempotency_key = '';
 
-		if ( $api === 'relationaltables'){
-			$request['idTable'] = self::get_option('dialoginsight_relationaltableid');
+		if ( $api === 'relationaltables' ) {
+			$request['idTable'] = self::get_option( 'dialoginsight_relationaltableid' );
 		}
 
-		if ( $api === 'contacts'){
-			$request['idProject'] = self::get_option('dialoginsight_idproject');
+		if ( $api === 'contacts' || $api === 'projects' ) {
+			$request['idProject'] = self::get_option( 'dialoginsight_idproject' );
 		}
 
 		$request['AuthKey'] = [
-			'idKey' => self::get_option('dialoginsight_idkey'),
-			'Key'   => self::get_option('dialoginsight_apikey'),
+			'idKey' => self::get_option( 'dialoginsight_idkey' ),
+			'Key'   => self::get_option( 'dialoginsight_apikey' ),
 		];
 
 		//error_log( 'request after:' );
@@ -142,22 +141,15 @@ class Dialog_Insight_API {
 		);
 
 
-
 		if ( is_wp_error( $response ) || empty( $response['body'] ) ) {
-			error_log( 'Dialog Insight error response:' );
-			error_log( print_r( $response, true ) );
-			/*WC_Stripe_Logger::log(
-				'Error Response: ' . print_r( $response, true ) . PHP_EOL . PHP_EOL . 'Failed request: ' . print_r(
-					array(
-						'api'             => $api,
-						'request'         => $request,
-						'idempotency_key' => $idempotency_key,
-					),
-					true
-				)
-			);*/
 
-			throw new Exception( print_r( $response, true ), wp_remote_retrieve_response_code($response) );
+			throw new Exception( print_r( $response, true ), wp_remote_retrieve_response_code( $response ) );
+		} else {
+			$response_decode = json_decode( $response['body'] );
+			if ( ! empty( $response_decode->ErrorCode ) ) {
+				throw new Exception( $response_decode->ErrorCode, wp_remote_retrieve_response_code( $response ) );
+			}
+
 		}
 
 		return json_decode( $response['body'] );
