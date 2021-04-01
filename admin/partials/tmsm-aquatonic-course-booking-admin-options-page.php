@@ -370,7 +370,7 @@
 								$date = wp_date( get_option( 'time_format' ), $cronevent );
 								echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), $date, '<b class="refresh" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
 
-									if( $_GET['force-refresh-attendance'] == 1 ){
+									if( !empty($_GET['force-refresh-attendance']) && $_GET['force-refresh-attendance'] == 1 ){
 										do_action( 'tmsm_aquatonic_attendance_cronaction' );
 									}
 									?>

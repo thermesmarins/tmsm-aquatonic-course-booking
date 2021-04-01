@@ -824,16 +824,27 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function booking_change_status(){
 		global $wpdb;
 
+
 		error_log('booking_change_status');
 
-		if( ! check_admin_referer( 'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' )) die();
+		$code = sanitize_text_field($_REQUEST['code']);
+		if(! empty($code)){
+			error_log('code:' . $code);
 
-		// validate
-		if( ! $this->verify_ajax('tmsm_aquatonic_course_booking_change_status') ) die();
+			// TODO get booking id with code
+		}
+		else{
+			if( ! check_admin_referer( 'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' )) die();
 
-		error_log('booking_change_status passed verify_ajax');
+			// validate
+			if( ! $this->verify_ajax('tmsm_aquatonic_course_booking_change_status') ) die();
+			error_log('booking_change_status passed verify_ajax');
 
-		$booking_id = sanitize_text_field($_REQUEST['booking_id']);
+			$booking_id = sanitize_text_field($_REQUEST['booking_id']);
+		}
+
+
+
 		$status = sanitize_text_field($_REQUEST['status']);
 
 		// Update booking with new status
