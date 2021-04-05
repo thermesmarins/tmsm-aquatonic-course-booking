@@ -842,6 +842,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				wp_send_json_error( array( 'message' => esc_html__( 'Booking not found', 'tmsm-aquatonic-course-booking' ) ) );
 			}
 
+			$booking_id = $booking['booking_id'];
+
 			// Booking is already arrived
 			if($booking['status'] === 'arrived' && $status === 'arrived'){
 				wp_send_json_error( array( 'message' => esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ) ) );
@@ -872,7 +874,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		// Update booking with new status
-		if( $this->booking_is_valid_status($status) ){
+		if( $this->booking_is_valid_status($status) && !empty($booking_id) ){
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
 
 			// Dialog Insight: Mark contact as customer if arrived
