@@ -1,3 +1,4 @@
+### 1.1.1: April 5th, 2021
 * Add barcode field to course sql table
 * Barcode scan JSOn returns error messages
 
