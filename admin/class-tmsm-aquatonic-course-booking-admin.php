@@ -831,6 +831,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if(! empty($code)){
 			error_log('code:' . $code);
 
+			$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $code ), ARRAY_A );
+
 			// TODO get booking id with code
 		}
 		else{
