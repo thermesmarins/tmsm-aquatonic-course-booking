@@ -57,7 +57,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 		$sql = "CREATE TABLE " . $table_name . " (
         booking_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
         token VARCHAR(50) NOT NULL DEFAULT '',
-        barcode VARCHAR(20) NOT NULL DEFAULT '',
+        barcode VARCHAR(25) NOT NULL DEFAULT '',
         firstname VARCHAR(50) NOT NULL,
         lastname VARCHAR(50) NOT NULL,
         email VARCHAR(100) NOT NULL,
