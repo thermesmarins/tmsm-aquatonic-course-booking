@@ -824,35 +824,56 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function booking_change_status(){
 		global $wpdb;
 
+		$barcode = sanitize_text_field($_REQUEST['barcode']);
+		$status = sanitize_text_field($_REQUEST['status']);
 
-		error_log('booking_change_status');
+		$redirect_to_admin = true;
 
-		$code = sanitize_text_field($_REQUEST['code']);
-		if(! empty($code)){
-			error_log('code:' . $code);
+		if(! empty($barcode)){
+			$redirect_to_admin = false;
+		}
 
-			$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $code ), ARRAY_A );
+		if( $redirect_to_admin === false){
 
-			// TODO get booking id with code
+			$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE barcode = %s ", $barcode ), ARRAY_A );
+
+			// Booking doesnt exist
+			if( empty($booking)) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Booking not found', 'tmsm-aquatonic-course-booking' ) ) );
+			}
+
+			// Booking is already arrived
+			if($booking['status'] === 'arrived' && $status === 'arrived'){
+				wp_send_json_error( array( 'message' => esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ) ) );
+			}
+
+			// Booking is cancelled
+			if($booking['status'] === 'cancelled'){
+				wp_send_json_error( array( 'message' => esc_html__( 'Booking was cancelled', 'tmsm-aquatonic-course-booking' ) ) );
+			}
+
+			// Booking date passed or in the future
+			$now = new Datetime();
+			$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+
+			if($booking_start_object->format('Y-m-d') !== $now->format('Y-m-d')){
+				wp_send_json_error( array( 'message' => esc_html__( 'Booking date is passed or in the future', 'tmsm-aquatonic-course-booking' ) ) );
+			}
+
+
 		}
 		else{
 			if( ! check_admin_referer( 'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' )) die();
 
 			// validate
 			if( ! $this->verify_ajax('tmsm_aquatonic_course_booking_change_status') ) die();
-			error_log('booking_change_status passed verify_ajax');
 
 			$booking_id = sanitize_text_field($_REQUEST['booking_id']);
 		}
 
-
-
-		$status = sanitize_text_field($_REQUEST['status']);
-
 		// Update booking with new status
 		if( $this->booking_is_valid_status($status) ){
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
-
 
 			// Dialog Insight: Mark contact as customer if arrived
 			if($status === 'arrived'){
@@ -862,14 +883,29 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 				$booking_dialoginsight->token = $booking['token'];
 				$booking_dialoginsight->status = 'arrived';
-				$booking_dialoginsight->update();
+				try {
+					$booking_dialoginsight->update();
+				} catch (Exception $exception) {
+
+					if($redirect_to_admin === false){
+						wp_send_json_error( array( 'message' => $exception->getMessage() ) );
+					}
+
+				}
 
 			}
 
-
 		}
 
-		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'options-general.php?page=tmsm-aquatonic-course-booking-settings' ) );
+		// Return JSON
+		if($redirect_to_admin === false){
+			wp_send_json_success();
+		}
+		// Or redirect
+		else{
+			wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'options-general.php?page=tmsm-aquatonic-course-booking-settings' ) );
+		}
+
 		exit;
 	}
 

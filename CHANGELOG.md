@@ -1,4 +1,5 @@
 * Add barcode field to course sql table
+* Barcode scan JSOn returns error messages
 
 ### 1.1.0: March 9th, 2021
 * Dialog Insight API refactoring
