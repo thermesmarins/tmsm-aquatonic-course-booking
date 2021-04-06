@@ -1,4 +1,7 @@
-* Fix fill booking_id when chaing status 
+* Fix fill booking_id when changing status
+* Fix sending JSON data with default function, not error or success  
+* Remove Gravity Forms overflow hidden
+* better Dialog Insight settings control
 
 ### 1.1.1: April 5th, 2021
 * Add barcode field to course sql table

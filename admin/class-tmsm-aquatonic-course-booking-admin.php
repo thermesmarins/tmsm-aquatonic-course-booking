@@ -365,7 +365,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 *
 	 * @param int $gform_id
 	 */
-	static function gform_check_add_form( int $gform_id){
+	static function gform_check_add_form( $gform_id){
 
 		$wp_error = new WP_Error();
 		if(!empty($gform_id)){
@@ -458,7 +458,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 *
 	 * @param int $gform_id
 	 */
-	static function gform_check_cancel_form( int $gform_id){
+	static function gform_check_cancel_form( $gform_id){
 
 		$wp_error = new WP_Error();
 		if(!empty($gform_id)){
@@ -839,19 +839,19 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			// Booking doesnt exist
 			if( empty($booking)) {
-				wp_send_json_error( array( 'message' => esc_html__( 'Booking not found', 'tmsm-aquatonic-course-booking' ) ) );
+				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Booking not found', 'tmsm-aquatonic-course-booking' ) ) );
 			}
 
 			$booking_id = $booking['booking_id'];
 
 			// Booking is already arrived
 			if($booking['status'] === 'arrived' && $status === 'arrived'){
-				wp_send_json_error( array( 'message' => esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ) ) );
+				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ) ) );
 			}
 
 			// Booking is cancelled
 			if($booking['status'] === 'cancelled'){
-				wp_send_json_error( array( 'message' => esc_html__( 'Booking was cancelled', 'tmsm-aquatonic-course-booking' ) ) );
+				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Booking was cancelled', 'tmsm-aquatonic-course-booking' ) ) );
 			}
 
 			// Booking date passed or in the future
@@ -859,7 +859,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
 
 			if($booking_start_object->format('Y-m-d') !== $now->format('Y-m-d')){
-				wp_send_json_error( array( 'message' => esc_html__( 'Booking date is passed or in the future', 'tmsm-aquatonic-course-booking' ) ) );
+				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Booking date is passed or in the future', 'tmsm-aquatonic-course-booking' ) ) );
 			}
 
 
@@ -890,7 +890,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				} catch (Exception $exception) {
 
 					if($redirect_to_admin === false){
-						wp_send_json_error( array( 'message' => $exception->getMessage() ) );
+						wp_send_json( array( 'success' => false, 'message' => $exception->getMessage() ) );
 					}
 
 				}
@@ -901,7 +901,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Return JSON
 		if($redirect_to_admin === false){
-			wp_send_json_success();
+			wp_send_json(array('success' => true));
 		}
 		// Or redirect
 		else{

@@ -61,8 +61,6 @@ class Dialog_Insight_Booking {
 	 */
 	public function add(){
 
-		error_log( 'dialoginsight_add_booking' );
-
 		$contact = new Dialog_Insight_Contact();
 		$contact->email = $this->email;
 		$contact->get_by_email();
@@ -102,11 +100,11 @@ class Dialog_Insight_Booking {
 			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
 
 			if ( empty( $bookings ) ) {
-				error_log( 'Dialog Insight Add Record to Bookings Table : No response' );
+				//error_log( 'Dialog Insight Add Record to Bookings Table : No response' );
 			}
 		}
 		else{
-			error_log( 'Contact doesnt exist' );
+			//error_log( 'Contact doesnt exist' );
 		}
 
 	}
@@ -117,8 +115,6 @@ class Dialog_Insight_Booking {
 	 * @throws \Exception
 	 */
 	public function update(){
-
-		error_log( 'dialoginsight_update_booking' );
 
 		if( !empty($this->token) && !empty($this->status)){
 			$request = [

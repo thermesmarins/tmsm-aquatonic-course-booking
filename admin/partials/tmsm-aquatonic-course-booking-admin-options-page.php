@@ -47,15 +47,19 @@
 		?>
 		<form method="post" action="options.php"><?php
 
-			// Testing Dialog Insight API
-			try {
-				$project = \Dialog_Insight_API::request( [], 'projects', 'Get' );
-			} catch (Exception $exception) {
-				//echo 'Exception reçue : ',  $exception->getMessage(), "\n";
-				add_settings_error( 'dialoginsight_api', 'dialoginsight_errors',
-					sprintf(__( 'Dialog Insight API connection failed with error code: %s', 'tmsm-aquatonic-course-booking' ), $exception->getMessage()), 'error' );
-				settings_errors('dialoginsight_api');
+
+			if( ! empty($options['dialoginsight_idkey']) && ! empty($options['dialoginsight_apikey']) && ! empty($options['dialoginsight_idproject']) && ! empty($options['dialoginsight_relationaltableid'] ) ){
+				// Testing Dialog Insight API
+				try {
+					$project = \Dialog_Insight_API::request( [], 'projects', 'Get' );
+				} catch (Exception $exception) {
+					//echo 'Exception reçue : ',  $exception->getMessage(), "\n";
+					add_settings_error( 'dialoginsight_api', 'dialoginsight_errors',
+						sprintf(__( 'Dialog Insight API connection failed with error code: %s', 'tmsm-aquatonic-course-booking' ), $exception->getMessage()), 'error' );
+
+				}
 			}
+			settings_errors('dialoginsight_api');
 
 			// Testing the Gravity Forms Add form
 			Tmsm_Aquatonic_Course_Booking_Admin::gform_check_add_form($options['gform_add_id']);

@@ -41,11 +41,14 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	private $version;
 
 	/**
+	 * Tmsm_Aquatonic_Course_Booking_Public constructor.
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @param $plugin_name
+	 * @param $version
+	 *
+	 * @throws Exception
 	 */
 	public function __construct( $plugin_name, $version ) {
 
@@ -53,7 +56,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$this->version = $version;
 
 		self::_get_times();
-
 
 	}
 
@@ -260,12 +262,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 	}
 
-
 	/**
 	 * Booking Submission
 	 *
 	 * @param $entry
 	 * @param $form
+	 *
+	 * @throws Exception
 	 */
 	function gform_after_submission_booking( $entry, $form ) {
 		global $wpdb;
@@ -283,28 +286,28 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		// Get entry data
+		$lastname     = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
+		$firstname    = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
+		$email        = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
+		$phone        = self::field_value_from_class( 'tmsm-aquatonic-course-phone', $form['fields'], $entry );
+		$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
+		$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
+		$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
+
 		$birthdate_computed = null;
-		$birthdate = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-birthdate', $form['fields'], $entry));
-		$course_start = sanitize_text_field(self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry) . ' '.self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry).':00');
+		$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
+		$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
-		error_log('field firstname ID: '. self::field_id_from_class('tmsm-aquatonic-course-firstname', $form['fields']));
-		error_log('field lastname ID: '. self::field_id_from_class('tmsm-aquatonic-course-lastname', $form['fields']));
-		error_log('field email ID: '. self::field_id_from_class('tmsm-aquatonic-course-email', $form['fields']));
-		error_log('field phone ID: '. self::field_id_from_class('tmsm-aquatonic-course-phone', $form['fields']));
-		error_log('field participants ID: '. self::field_id_from_class('tmsm-aquatonic-course-participants', $form['fields']));
-		error_log('field date ID: '. self::field_id_from_class('tmsm-aquatonic-course-date', $form['fields']));
-		error_log('field hourminutes ID: '. self::field_id_from_class('tmsm-aquatonic-course-hourminutes', $form['fields']));
-
-		error_log('field firstname value: '. self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry));
-		error_log('field lastname value: '. self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry));
-		error_log('value birthdate value: '. $birthdate);
-		error_log('field email value: '. self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry));
-		error_log('field phone value: '. self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry));
-		error_log('field participants value: '. self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry));
-		error_log('field date value: '. self::field_value_from_class('tmsm-aquatonic-course-date', $form['fields'], $entry));
-		error_log('field hourminutes value: '. self::field_value_from_class('tmsm-aquatonic-course-hourminutes', $form['fields'], $entry));
-		error_log('field course_start value: '. $course_start);
-		error_log('token: '. $token);
+		error_log( 'field firstname value: ' . $firstname );
+		error_log( 'field lastname value: ' . $lastname );
+		error_log( 'value birthdate value: ' . $birthdate );
+		error_log( 'field email value: ' . $email );
+		error_log( 'field phone value: ' . $phone );
+		error_log( 'field participants value: ' . $participants );
+		error_log( 'field date value: ' . $date );
+		error_log( 'field hourminutes value: ' . $hourminutes );
+		error_log( 'field course_start value: ' . $course_start );
+		error_log( 'token: ' . $token );
 
 
 
@@ -330,22 +333,25 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$now = new DateTime('now', wp_timezone());
 
+		$barcode = self::generate_barcode( $lastname );
+
 		// Format data
-		if(!empty($course_start) && !empty($course_start)) {
+		if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
 			$table = $wpdb->prefix . 'aquatonic_course_booking';
-			$data = array(
-				'firstname' => self::field_value_from_class('tmsm-aquatonic-course-firstname', $form['fields'], $entry),
-				'lastname' => self::field_value_from_class('tmsm-aquatonic-course-lastname', $form['fields'], $entry),
-				'email' => self::field_value_from_class('tmsm-aquatonic-course-email', $form['fields'], $entry),
-				'phone' => self::field_value_from_class('tmsm-aquatonic-course-phone', $form['fields'], $entry),
-				'birthdate' => $birthdate_computed,
-				'participants' => self::field_value_from_class('tmsm-aquatonic-course-participants', $form['fields'], $entry),
-				'status' => 'active',
-				'date_created' => $now->format('Y-m-d H:i:s'),
+			$data  = array(
+				'firstname'    => $firstname,
+				'lastname'     => $lastname,
+				'email'        => $email,
+				'phone'        => $phone,
+				'birthdate'    => $birthdate_computed,
+				'participants' => $participants,
+				'status'       => 'active',
+				'date_created' => $now->format( 'Y-m-d H:i:s' ),
 				'course_start' => $course_start,
-				'course_end' => $course_end,
-				'author' => get_current_user_id(),
-				'token' => $token,
+				'course_end'   => $course_end,
+				'author'       => get_current_user_id(),
+				'token'        => $token,
+				'barcode'      => $barcode,
 			);
 
 			$format = array(
@@ -360,6 +366,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'%s',
 				'%s',
 				'%d',
+				'%s',
 				'%s',
 			);
 
@@ -383,6 +390,28 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 
+	/**
+	 * Returns a barcode with format: R-XXXXXXXXXXX-00000000 (21 characters)
+	 *
+	 * @param $lastname
+	 *
+	 * @return string
+	 */
+	private function generate_barcode($lastname){
+		global $wpdb;
+
+		$barcode = '';
+		$barcode .= 'R-';
+		$barcode .= str_pad(substr(strtoupper(sanitize_title($lastname)), 0, 10), 10, "X", STR_PAD_RIGHT);
+		$next_id = 1;
+		$table_status = $wpdb->get_row('SHOW TABLE STATUS LIKE '.$wpdb->prefix . 'aquatonic_course_booking');
+		if ( $table_status ) {
+			$next_id += $table_status->Auto_increment;
+		}
+		$barcode .= '-' . str_pad($next_id, 8, '0', STR_PAD_LEFT);
+
+		return $barcode;
+	}
 
 
 	/**
@@ -400,16 +429,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
-		$custom_merge_tag = '{booking_token}';
-
-		// added for GF 1.9.x
-		if ( strpos( $text, $custom_merge_tag ) === false || empty( $entry ) || empty( $form ) ) {
-			return $text;
+		$custom_merge_tag_token = '{booking_token}';
+		if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$entry_id = $entry['id'];
+			$token    = self::gform_entry_generate_token( $entry_id );
+			$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
 		}
 
-		$entry_id = $entry['id'];
-		$token    = self::gform_entry_generate_token( $entry_id );
-		$text     = str_replace( $custom_merge_tag, urlencode( $token ), $text );
+		$custom_merge_tag_barcode = '{booking_barcode}';
+		if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+
+		}
 
 		return $text;
 	}
