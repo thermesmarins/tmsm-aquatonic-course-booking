@@ -1,5 +1,6 @@
 {
   "name": "thermesmarins/tmsm-aquatonic-course-booking",
+  "version": "1.2.0",
   "description": "Aquatonic Booking",
   "homepage": "https://github.com/thermesmarins/tmsm-aquatonic-course-booking",
   "type": "wordpress-plugin",

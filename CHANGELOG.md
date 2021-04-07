@@ -1,3 +1,4 @@
+### 1.2.0: April 7th, 2021
 * Add vendor php-barcode-generator
 * Action to generate a barcode image from a barcode number
 * Gravity Forms merge tag for barcode image action URL

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-04-05 15:54+0200\n"
+"POT-Creation-Date: 2021-04-07 16:48+0200\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -183,48 +183,48 @@ msgstr ""
 msgid "Dialog Insight fields all need to be defined"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:847
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:842
 msgid "Booking not found"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:852
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:849
 msgid "Participant is already arrived"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:857
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:854
 msgid "Booking was cancelled"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:865
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:862
 msgid "Booking date is passed or in the future"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:928
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:923
 msgid "Active"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:929
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:924
 msgid "Mark as active"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:933
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:928
 msgid "Arrived"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:934
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:940
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:929
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:935
 msgid "Mark as arrived"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:939
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:934
 msgid "Cancelled"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:944
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:939
 msgid "No-show"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:945
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:940
 msgid "Mark as no-show"
 msgstr ""
 
@@ -236,96 +236,101 @@ msgstr ""
 msgid "Today's Bookings"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:56
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:58
 #, php-format
 msgid "Dialog Insight API connection failed with error code: %s"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:69
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:73
 msgid "Save options"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:139
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:143
 msgid "Aquatonic Attendance is not available"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:170
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:174
 msgid "Capacity"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:203
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:207
 msgid "Ongoing Bookings"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:233
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:237
 msgid "Ending Bookings"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:263
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:267
 msgid "Starting Bookings"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:292
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:296
 msgid "Free"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:357
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:361
 msgid "Can Start"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:359
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:363
 msgid "(Minimum Value of Free Row)"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:364
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:391
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:368
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:395
 msgid "Real Time"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:371
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:375
 #, php-format
 msgid "Next Refresh at %s in %s"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:377
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:381
 msgid "Force refresh attendance"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:412
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:416
 msgid "Firstname"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:413
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:417
 msgid "Lastname"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:414
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:418
 msgid "Email"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:415
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:419
 msgid "Participants"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:416
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:420
 msgid "Start"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:417
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:421
 msgid "Status"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:418
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:422
 msgid "Actions"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:430
-#: public/class-tmsm-aquatonic-course-booking-public.php:473
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:423
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:424
+msgid "Barcode"
+msgstr ""
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:436
+#: public/class-tmsm-aquatonic-course-booking-public.php:594
 #, php-format
 msgid "%s at %s"
 msgstr ""
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:454
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:470
 msgid "New Booking"
 msgstr ""
 
@@ -337,73 +342,77 @@ msgstr ""
 msgid "Forgot data type"
 msgstr ""
 
-#: includes/class-tmsm-aquatonic-course-booking.php:245
+#: includes/class-tmsm-aquatonic-course-booking.php:252
 msgid "Every 5 minutes"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:143
-#: public/class-tmsm-aquatonic-course-booking-public.php:316
+#: public/class-tmsm-aquatonic-course-booking-public.php:145
+#: public/class-tmsm-aquatonic-course-booking-public.php:319
 msgctxt "birthdate date format for humans"
 msgid "mm/dd/yyyy"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:144
+#: public/class-tmsm-aquatonic-course-booking-public.php:146
 msgid "Loading"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:145
+#: public/class-tmsm-aquatonic-course-booking-public.php:147
 msgid "No time slot found"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:238
+#: public/class-tmsm-aquatonic-course-booking-public.php:240
 msgid "Change time"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:313
+#: public/class-tmsm-aquatonic-course-booking-public.php:316
 msgctxt "birthdate date format for machines"
 msgid "m/d/Y"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:317
+#: public/class-tmsm-aquatonic-course-booking-public.php:320
 msgctxt "birthdate date format for machines"
 msgid "m/d/y"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:476
+#: public/class-tmsm-aquatonic-course-booking-public.php:541
+msgid "Barcode missing"
+msgstr ""
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:597
 msgid "This booking was already cancelled"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:479
+#: public/class-tmsm-aquatonic-course-booking-public.php:600
 #, php-format
 msgid ""
 "Do you want to cancel the following booking? Booking on %s for %d "
 "participants"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:487
+#: public/class-tmsm-aquatonic-course-booking-public.php:608
 msgid "This booking was not found"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:491
+#: public/class-tmsm-aquatonic-course-booking-public.php:612
 msgid "The booking token was not found"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:738
+#: public/class-tmsm-aquatonic-course-booking-public.php:859
 msgid "Token security is not valid"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:749
+#: public/class-tmsm-aquatonic-course-booking-public.php:870
 msgid "Ajax referer is not valid"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1058
+#: public/class-tmsm-aquatonic-course-booking-public.php:1179
 msgid "No first slot available to calculate all the slots"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1063
+#: public/class-tmsm-aquatonic-course-booking-public.php:1184
 msgid "No end slot available to calculate all the slots"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1175
+#: public/class-tmsm-aquatonic-course-booking-public.php:1296
 msgid "No time slot available for this day"
 msgstr ""
