@@ -103,6 +103,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Include Pluggable to be able to use wp_get_current_user() function
 		include_once(ABSPATH . 'wp-includes/pluggable.php');
 
+		// Autoloading via composer
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -227,6 +230,10 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
+
+		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
+		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
+
 
 	}
 

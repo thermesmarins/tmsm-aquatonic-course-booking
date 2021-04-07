@@ -333,7 +333,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$now = new DateTime('now', wp_timezone());
 
-		$barcode = self::generate_barcode_number( $lastname );
+		$barcode = '';
+		if(!empty($entry_id)){
+			$barcode = self::gform_generate_barcode_number( $lastname, $entry_id );
+		}
 
 		// Format data
 		if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
@@ -391,30 +394,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 
 	/**
-	 * Returns a barcode with format: R-XXXXXXXXXXX-00000000 (21 characters)
-	 *
-	 * @param $lastname
-	 *
-	 * @return string
-	 */
-	private function generate_barcode_number($lastname){
-		global $wpdb;
-
-		$barcode = '';
-		$barcode .= 'R-';
-		$barcode .= str_pad(substr(strtoupper(sanitize_title($lastname)), 0, 10), 10, "X", STR_PAD_RIGHT);
-		$next_id = 1;
-		$table_status = $wpdb->get_row('SHOW TABLE STATUS LIKE '.$wpdb->prefix . 'aquatonic_course_booking');
-		if ( $table_status ) {
-			$next_id += $table_status->Auto_increment;
-		}
-		$barcode .= '-' . str_pad($next_id, 8, '0', STR_PAD_LEFT);
-
-		return $barcode;
-	}
-
-
-	/**
 	 * Allow the text to be filtered so custom merge tags can be replaced.
 	 *
 	 * @param string      $text       The text in which merge tags are being processed.
@@ -427,6 +406,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
+	/**
+	 * @param $text
+	 * @param $form
+	 * @param $entry
+	 * @param $url_encode
+	 * @param $esc_html
+	 * @param $nl2br
+	 * @param $format
+	 *
+	 * @return string
+	 * @throws \Picqer\Barcode\Exceptions\BarcodeException
+	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
 		$custom_merge_tag_token = '{booking_token}';
@@ -436,17 +427,50 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
 		}
 
-		$custom_merge_tag_barcode = '{booking_barcode}';
-		if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
 
+		$custom_merge_tag_barcode = '{booking_barcode}';
+		$custom_merge_tag_barcode_image = '{booking_barcode_image}';
+		if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$entry_id = $entry['id'];
+			$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
+			$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
+			if ( ! empty( $barcode ) ) {
+				$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
+				$barcode_generate_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
+
+				/*try {
+					$barcode_image = '
+					<div style="background: black; padding: 40px 20px 10px 20px;border-radius: 20px; text-align: center;">
+					<img width="100%" height="60" src="data:image/png;base64,' . base64_encode( $generator->getBarcode( $barcode,
+							$generator::TYPE_CODE_128_A ) ) . '">
+					<span style="color: white; display: block; ">'.$barcode.'</span>
+					</div>
+							';
+				} catch (\Picqer\Barcode\Exceptions\BarcodeException $exception) {
+					$barcode_image = $exception->getMessage();
+				}*/
+
+				$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
+				$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_generate_url, $text );
+			}
+		}
+
+
+		$custom_merge_tag_site_logo = '{site_logo}';
+		if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$text     = str_replace( $custom_merge_tag_site_logo,  get_bloginfo( 'logo' ), $text );
+		}
+
+		$custom_merge_tag_site_name = '{site_name}';
+		if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$text     = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
 		}
 
 		return $text;
 	}
 
-
 	/**
-	 * Generate token for Gravity Forms Entry
+	 * Generate token for Gravity Forms entry
 	 *
 	 * @param int $entry_id
 	 *
@@ -465,6 +489,73 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		return $token;
+	}
+
+	/**
+	 * Generate barcode for Gravity Forms entry
+	 * Returns a barcode with format: R-XXXXXXXXXXX-00000000 (21 characters)
+	 *
+	 * @param string $lastname
+	 * @param int $entry_id
+	 *
+	 * @return string
+	 */
+	private function gform_entry_generate_barcode( string $lastname, int $entry_id ){
+		global $wpdb;
+
+		// Check if barcode exists for entry
+		$barcode = gform_get_meta( $entry_id, '_booking_barcode' );
+
+		// Create barcode for entry if barcode doesn't exist
+		if(empty($barcode)){
+			error_log('gform_update_meta _booking_barcode');
+			$barcode = '';
+			$barcode .= 'R-';
+			$barcode .= str_pad(substr(strtoupper(sanitize_title($lastname)), 0, 10), 10, "X", STR_PAD_RIGHT);
+			$next_id = 1;
+			$table_status = $wpdb->get_row('SHOW TABLE STATUS LIKE '.$wpdb->prefix . 'aquatonic_course_booking');
+			if ( $table_status ) {
+				$next_id += $table_status->Auto_increment;
+			}
+			$barcode .= '-' . str_pad($next_id, 8, '0', STR_PAD_LEFT);
+			gform_update_meta( $entry_id, '_booking_barcode', $barcode );
+		}
+
+		return $barcode;
+	}
+
+	/**
+	 * Generate directly the image when admin ajax is called
+	 *
+	 *
+	 * @throws \Picqer\Barcode\Exceptions\BarcodeException
+	 */
+	public function generate_barcode_image(){
+
+		$barcode = sanitize_text_field( $_REQUEST['barcode'] );
+
+		error_log('generate_barcode_image');
+
+		$generator     = new Picqer\Barcode\BarcodeGeneratorJPG();
+		if( empty($barcode)){
+			die(__('Barcode missing', 'tmsm-aquatonic-course-booking'));
+		}
+
+		try{
+			$image = $generator->getBarcode( $barcode, $generator::TYPE_CODE_128_A, 3, 80 );
+
+			//nocache_headers();
+			header( "Content-type: image/jpg;" );
+			header( "Content-Length: " . strlen( $image ) );
+
+			echo $image;
+		}
+		catch (\Picqer\Barcode\Exceptions\BarcodeException $exception) {
+
+			die($exception->getMessage());
+		}
+
+		die();
 	}
 
 	/**

@@ -420,6 +420,8 @@
 				<th scope="col"><?php esc_html_e( 'Start', 'tmsm-aquatonic-course-booking' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Status', 'tmsm-aquatonic-course-booking' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Actions', 'tmsm-aquatonic-course-booking' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Barcode', 'tmsm-aquatonic-course-booking' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Barcode', 'tmsm-aquatonic-course-booking' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -449,6 +451,16 @@
 						<a class="<?php echo $statuses['arrived']['actionclass'];?>" href="<?php echo $link; ?>"><?php  echo $statuses['arrived']['markas']; ?></a>
 						<?php } ?>
 					</td>
+					<td><?php echo sanitize_text_field( $booking->barcode ); ?></td>
+					<td><?php
+
+						if(!empty($booking->barcode)){
+							$generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+
+							echo '<img width="200" height="100" src="data:image/png;base64,' . base64_encode($generator->getBarcode($booking->barcode, $generator::TYPE_CODE_128_A)) . '">';
+						}
+
+					?></td>
 				</tr>
 			<?php } ?>
 			</tbody>

@@ -1,4 +1,7 @@
 * Add vendor php-barcode-generator
+* Action to generate a barcode image from a barcode number
+* Gravity Forms merge tag for barcode image action URL
+* Gravity Forms merge tag for barcode number
 
 ### 1.1.2: April 6th, 2021
 * Fix fill booking_id when changing status
