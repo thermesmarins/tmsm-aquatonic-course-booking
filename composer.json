@@ -1,0 +1,13 @@
+{
+  "name": "thermesmarins/tmsm-aquatonic-course-booking",
+  "description": "Aquatonic Booking",
+  "homepage": "https://github.com/thermesmarins/tmsm-aquatonic-course-booking",
+  "type": "wordpress-plugin",
+  "license": "GNU General Public License v3.0",
+  "support": {
+    "issues": "https://github.com/thermesmarins/tmsm-aquatonic-course-booking/issues"
+  },
+  "require": {
+    "picqer/php-barcode-generator": "^2.2"
+  }
+}

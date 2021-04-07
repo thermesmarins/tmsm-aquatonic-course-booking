@@ -1,3 +1,5 @@
+* Add vendor php-barcode-generator
+
 ### 1.1.2: April 6th, 2021
 * Fix fill booking_id when changing status
 * Fix sending JSON data with default function, not error or success  

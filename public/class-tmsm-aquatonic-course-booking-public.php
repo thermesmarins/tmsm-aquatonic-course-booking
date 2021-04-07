@@ -333,7 +333,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$now = new DateTime('now', wp_timezone());
 
-		$barcode = self::generate_barcode( $lastname );
+		$barcode = self::generate_barcode_number( $lastname );
 
 		// Format data
 		if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
@@ -397,7 +397,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
-	private function generate_barcode($lastname){
+	private function generate_barcode_number($lastname){
 		global $wpdb;
 
 		$barcode = '';
