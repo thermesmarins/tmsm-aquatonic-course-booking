@@ -443,15 +443,31 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 		}
 
-
 		$custom_merge_tag_site_logo = '{site_logo}';
 		if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$text     = str_replace( $custom_merge_tag_site_logo,  get_bloginfo( 'logo' ), $text );
+			$text = str_replace( $custom_merge_tag_site_logo, get_bloginfo( 'logo' ), $text );
+		}
+
+		$custom_merge_tag_barcode_logo = '{barcode_logo}';
+		if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$barcode_logo_url = plugins_url( 'img/barcode-logo.png', dirname( __FILE__ ) );
+			$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
 		}
 
 		$custom_merge_tag_site_name = '{site_name}';
 		if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$text     = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
+			$text = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
+		}
+
+		$custom_merge_tag_place_name = '{place_name}';
+		if ( strpos( $text, $custom_merge_tag_place_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+
+			$place_name = get_bloginfo( 'name' );
+			if ( class_exists( 'RankMath\Helper' ) ) {
+				$place_name = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
+			}
+
+			$text = str_replace( $custom_merge_tag_place_name, $place_name, $text );
 		}
 
 		return $text;
@@ -674,20 +690,21 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$notification['message'] .= '';
 
 		// Prepare data for markup
-		$image = null;
-		$address = null;
+		$image           = null;
+		$address         = null;
 		$contact_page_id = null;
-		if(class_exists('WPSEO_Options') && !empty(WPSEO_Options::get( 'company_logo' ))){
+		$shop_name       = get_bloginfo( 'name' );
+		$shop_url        = home_url();
+
+		if ( class_exists( 'WPSEO_Options' ) && ! empty( WPSEO_Options::get( 'company_logo' ) ) ) {
 			$image = WPSEO_Options::get( 'company_logo' );
 		}
-		if(class_exists('RankMath\Helper')){
-			$image = RankMath\Helper::get_settings( 'titles.knowledgegraph_logo' );
-			$address = RankMath\Helper::get_settings( 'titles.local_address' );
+		if ( class_exists( 'RankMath\Helper' ) ) {
+			$image           = RankMath\Helper::get_settings( 'titles.knowledgegraph_logo' );
+			$shop_name       = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
+			$address         = RankMath\Helper::get_settings( 'titles.local_address' );
 			$contact_page_id = RankMath\Helper::get_settings( 'titles.local_seo_contact_page' );
 		}
-
-		$shop_name      = get_bloginfo( 'name' );
-		$shop_url       = home_url();
 
 		$entry_id = $entry['id'];
 		$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
@@ -767,20 +784,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string
 	 */
-	public function gform_html_message_template_pre_send_email(string $template){
+	public function gform_html_message_template_pre_send_email( string $template ) {
 
-		if( function_exists('wc_get_template_html')){
+		if ( function_exists( 'wc_get_template_html' ) ) {
 			$styles = wc_get_template_html( 'emails/email-styles.php' );
 
 			$header = wc_get_template_html(
 				'emails/email-header.php',
 				array(
-					'email_heading'      => '{subject}',
+					'email_heading' => '{subject}',
 				)
 			);
-			$footer = wc_get_template_html('emails/email-footer.php');
+			$footer = wc_get_template_html( 'emails/email-footer.php' );
 
-			$template = '<style type="text/css">' . $styles . '</style>' . $header. '{message}' . $footer;
+			$template = '<style type="text/css">' . $styles . '</style>' . $header . '{message}' . $footer;
 		}
 
 		return $template;

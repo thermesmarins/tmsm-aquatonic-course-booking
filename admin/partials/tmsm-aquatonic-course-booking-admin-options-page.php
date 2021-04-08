@@ -19,7 +19,6 @@
 
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
-
 	<h2 class="nav-tab-wrapper">
 		<a class="nav-tab <?php if ( $tab == 'dashboard' ) {
 			echo 'nav-tab-active';
