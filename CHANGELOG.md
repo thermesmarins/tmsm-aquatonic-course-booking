@@ -1,5 +1,7 @@
 * Gravity Forms: Use WooCommerce email templates for notifications
 * Barcode logo round and white
+* Email markup for EventReservation (Barcode needs testing)
+* New settings for add booking and cancel booking pages
 
 ### 1.2.0: April 7th, 2021
 * Add vendor php-barcode-generator

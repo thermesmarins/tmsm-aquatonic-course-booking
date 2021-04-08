@@ -420,26 +420,32 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
+		$entry_id = $entry['id'];
+
 		$custom_merge_tag_token = '{booking_token}';
 		if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$entry_id = $entry['id'];
 			$token    = self::gform_entry_generate_token( $entry_id );
 			$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
 		}
 
+		$custom_merge_tag_cancel_url = '{booking_cancel_url}';
+		if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+			$token       = self::gform_entry_generate_token( $entry_id );
+			$cancel_page = get_permalink( $this->get_option( 'page_cancel_id' ) ) . '?booking_token='.urlencode( $token );
+			$text        = str_replace( $custom_merge_tag_cancel_url, $cancel_page, $text );
+		}
 
 		$custom_merge_tag_barcode = '{booking_barcode}';
 		$custom_merge_tag_barcode_image = '{booking_barcode_image}';
 		if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$entry_id = $entry['id'];
 			$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
 			$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
 			if ( ! empty( $barcode ) ) {
 				$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
-				$barcode_generate_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
+				$barcode_url = self::barcode_url($barcode);
 
 				$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
-				$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_generate_url, $text );
+				$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_url, $text );
 			}
 		}
 
@@ -471,6 +477,21 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		return $text;
+	}
+
+
+	/**
+	 * Return Barcode URL
+	 *
+	 * @param string $barcode
+	 *
+	 * @return string
+	 */
+	private function barcode_url(string $barcode){
+
+		$barcode_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
+
+		return $barcode_url;
 	}
 
 	/**
@@ -734,6 +755,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			//'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
 			//'modifyReservationUrl' => 'https://www.aquatonic.fr/nantes/contact/',
 			'modifyReservationUrl' => 'https://www.aquatonic.fr/rennes/contact/',
+			'cancelReservationUrl' => 'https://www.aquatonic.fr/rennes/contact/',
 			//'modifyReservationUrl' => 'https://www.aquatonic.fr/paris/contact/',
 			'reservationFor'    => [
 				'@type'     => 'Event',
@@ -751,7 +773,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					//https://www.aquatonic.fr/rennes/wp-content/uploads/sites/6/2017/11/logo_aquatonic-rennes-600-300.png
 					//https://www.aquatonic.fr/paris/wp-content/uploads/sites/9/2017/11/logo_aquatonic-paris-600-300.png
 				],
-				'startDate' => $objdate->format( 'Y-m-d\T H:i:s' ),
+				'startDate' => $objdate->format( 'Y-m-d\TH:i:s' ),
 				'location'  => [
 					'@type'   => 'Place',
 					'name'    => $shop_name,
@@ -765,14 +787,16 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					],
 				],
 			],
-
+			'ticketToken' => 'barcode128:' . $barcode,
+			'ticketNumber' => $barcode,
+			'numSeats'     => $participants,
 		);
 
 		if ( $markup ) {
 			$notification['message'] .= '<script type="application/ld+json">' . wc_esc_json( wp_json_encode( $markup ), true ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
-		error_log($notification['message'] );
+		//error_log($notification['message'] );
 		return $notification;
 
 	}

@@ -239,10 +239,21 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		$forms = [];
+		$pages = [];
+		$forms[] = ['value' => '', 'label' => __( 'None', 'tmsm-aquatonic-course-booking' )];
+		$pages[] = ['value' => '', 'label' => __( 'None', 'tmsm-aquatonic-course-booking' )];
+
 		// Select frontend form
 		foreach (GFAPI::get_forms() as $form){
 			$forms[] = ['value' => $form['id'], 'label' => $form['title']];
 		}
+
+		// Select pages
+		foreach (get_pages(['sort_order' => 'DESC', 'sort_column' => 'date']) as $page){
+			$pages[] = ['value' => $page->ID, 'label' => $page->post_title];
+		}
+
 
 		add_settings_field(
 			'gform_add_id',
@@ -257,6 +268,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		);
 
 		add_settings_field(
+			'page_add_id',
+			esc_html__( 'Page for adding a booking', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_select' ),
+			$this->plugin_name,
+			$this->plugin_name . '-form',
+			array(
+				'id' => 'page_add_id',
+				'selections' => $pages,
+			)
+		);
+
+		add_settings_field(
 			'gform_cancel_id',
 			esc_html__( 'Gravity Form for cancelling a booking', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_select' ),
@@ -265,6 +288,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			array(
 				'id' => 'gform_cancel_id',
 				'selections' => $forms,
+			)
+		);
+
+		add_settings_field(
+			'page_cancel_id',
+			esc_html__( 'Page for cancelling a booking', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_select' ),
+			$this->plugin_name,
+			$this->plugin_name . '-form',
+			array(
+				'id' => 'page_cancel_id',
+				'selections' => $pages,
 			)
 		);
 
@@ -567,6 +602,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'error' );
 		}
 
+		if ( empty( $input['page_add_id'] ) || empty( $input['page_cancel_id'] ) ) {
+			add_settings_error( 'page_add_id', 'gform_errors', __( 'Pages all need to be defined', 'tmsm-aquatonic-course-booking' ),
+				'error' );
+		}
+
 		if ( empty( $input['courseaverage'] ) || empty( $input['hoursafter'] ) || empty( $input['timeslots'] ) ) {
 			add_settings_error( 'courseaverage', 'timeslots_errors', __( 'Timeslots fields all need to be defined', 'tmsm-aquatonic-course-booking' ),
 				'error' );
@@ -761,6 +801,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$options[] = array( 'gform_add_id', 'text', '' );
 		$options[] = array( 'gform_cancel_id', 'text', '' );
+		$options[] = array( 'page_add_id', 'text', '' );
+		$options[] = array( 'page_cancel_id', 'text', '' );
 
 		$options[] = array( 'dialoginsight_idkey', 'text', '' );
 		$options[] = array( 'dialoginsight_apikey', 'text', '' );
