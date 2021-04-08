@@ -335,7 +335,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$barcode = '';
 		if(!empty($entry_id)){
-			$barcode = self::gform_generate_barcode_number( $lastname, $entry_id );
+			$barcode = self::gform_entry_generate_barcode( $lastname, $entry_id );
 		}
 
 		// Format data
@@ -437,18 +437,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			if ( ! empty( $barcode ) ) {
 				$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
 				$barcode_generate_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
-
-				/*try {
-					$barcode_image = '
-					<div style="background: black; padding: 40px 20px 10px 20px;border-radius: 20px; text-align: center;">
-					<img width="100%" height="60" src="data:image/png;base64,' . base64_encode( $generator->getBarcode( $barcode,
-							$generator::TYPE_CODE_128_A ) ) . '">
-					<span style="color: white; display: block; ">'.$barcode.'</span>
-					</div>
-							';
-				} catch (\Picqer\Barcode\Exceptions\BarcodeException $exception) {
-					$barcode_image = $exception->getMessage();
-				}*/
 
 				$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
 				$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_generate_url, $text );
@@ -671,6 +659,132 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
+
+	/**
+	 * Gravity Forms notification for booking with markup data
+	 *
+	 * @param array $notification
+	 * @param array $form
+	 * @param array $entry
+	 *
+	 * @return array
+	 */
+	public function gform_notification_booking(  $notification, $form, $entry ){
+
+		$notification['message'] .= '';
+
+		// Prepare data for markup
+		$image = null;
+		$address = null;
+		$contact_page_id = null;
+		if(class_exists('WPSEO_Options') && !empty(WPSEO_Options::get( 'company_logo' ))){
+			$image = WPSEO_Options::get( 'company_logo' );
+		}
+		if(class_exists('RankMath\Helper')){
+			$image = RankMath\Helper::get_settings( 'titles.knowledgegraph_logo' );
+			$address = RankMath\Helper::get_settings( 'titles.local_address' );
+			$contact_page_id = RankMath\Helper::get_settings( 'titles.local_seo_contact_page' );
+		}
+
+		$shop_name      = get_bloginfo( 'name' );
+		$shop_url       = home_url();
+
+		$entry_id = $entry['id'];
+		$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
+		$firstname = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
+		$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
+
+		$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
+		$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
+		$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
+		$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
+		$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+
+		// Building schema markup
+		$markup = array();
+
+		// Generate markup for every Event/Appointment
+		$markup[] = array(
+			'@context'          => 'http://schema.org',
+			'@type'             => 'EventReservation',
+			'reservationNumber' => $barcode,
+			'reservationStatus' => 'http://schema.org/Confirmed',
+			'underName'         => [
+				'@type' => 'Person',
+				'name'  => sanitize_text_field($firstname) . ' ' . sanitize_text_field($lastname),
+			],
+			'modifiedTime' => date(DATE_ATOM, time()),
+			//'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
+			//'modifyReservationUrl' => 'https://www.aquatonic.fr/nantes/contact/',
+			'modifyReservationUrl' => 'https://www.aquatonic.fr/rennes/contact/',
+			//'modifyReservationUrl' => 'https://www.aquatonic.fr/paris/contact/',
+			'reservationFor'    => [
+				'@type'     => 'Event',
+				'name'      => sprintf( __('Aquatonic Course on %s at %s for %d participants', 'tmsm-aquatonic-course-booking'), $date, $hourminutes, $participants),
+				'performer' => [
+					'@type' => 'Organization',
+					'name'  => $shop_name,
+					'image' => $image ?? '',
+					//'image' => 'https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2010/08/aquatonic-nantes-1.jpg',
+					//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/6/2017/08/aquatonic-rennes-1.jpg',
+					//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/9/2012/10/parcours-aquatonic-montevrain.png',
+
+
+					//https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2017/11/logo_aquatonic-nantes-600-300.png
+					//https://www.aquatonic.fr/rennes/wp-content/uploads/sites/6/2017/11/logo_aquatonic-rennes-600-300.png
+					//https://www.aquatonic.fr/paris/wp-content/uploads/sites/9/2017/11/logo_aquatonic-paris-600-300.png
+				],
+				'startDate' => $objdate->format( 'Y-m-d\T H:i:s' ),
+				'location'  => [
+					'@type'   => 'Place',
+					'name'    => $shop_name,
+					'address' => [
+						'@type'           => 'PostalAddress',
+						'streetAddress'   => ( $address ? $address['streetAddress'] : '' ),
+						'addressLocality' => ( $address ? $address['addressLocality'] : '' ),
+						'addressRegion'   => ( $address ? $address['addressRegion'] : '' ),
+						'postalCode'      => ( $address ? $address['postalCode'] : '' ),
+						'addressCountry'  => ( $address ? $address['addressCountry'] : '' ),
+					],
+				],
+			],
+
+		);
+
+		if ( $markup ) {
+			$notification['message'] .= '<script type="application/ld+json">' . wc_esc_json( wp_json_encode( $markup ), true ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+		$notification['message'] .= 'END';
+		error_log($notification['message'] );
+		return $notification;
+
+	}
+
+	/**
+	 * Gravity Forms: Use WooCommerce emails templates for notifications.
+	 *
+	 * @param string $template
+	 *
+	 * @return string
+	 */
+	public function gform_html_message_template_pre_send_email(string $template){
+
+		if( function_exists('wc_get_template_html')){
+			$styles = wc_get_template_html( 'emails/email-styles.php' );
+
+			$header = wc_get_template_html(
+				'emails/email-header.php',
+				array(
+					'email_heading'      => '{subject}',
+				)
+			);
+			$footer = wc_get_template_html('emails/email-footer.php');
+
+			$template = '<style type="text/css">' . $styles . '</style>' . $header. '{message}' . $footer;
+		}
+
+		return $template;
+	}
 
 	/**
 	 * Find booking with Token
