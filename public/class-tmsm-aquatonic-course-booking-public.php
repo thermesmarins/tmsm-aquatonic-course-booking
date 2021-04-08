@@ -450,7 +450,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$custom_merge_tag_barcode_logo = '{barcode_logo}';
 		if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$barcode_logo_url = plugins_url( 'img/barcode-logo.png', dirname( __FILE__ ) );
+			$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
 			$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
 		}
 
@@ -771,7 +771,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		if ( $markup ) {
 			$notification['message'] .= '<script type="application/ld+json">' . wc_esc_json( wp_json_encode( $markup ), true ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
-		$notification['message'] .= 'END';
+
 		error_log($notification['message'] );
 		return $notification;
 
@@ -786,8 +786,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_html_message_template_pre_send_email( string $template ) {
 
-		if ( function_exists( 'wc_get_template_html' ) ) {
-			$styles = wc_get_template_html( 'emails/email-styles.php' );
+		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
 
 			$header = wc_get_template_html(
 				'emails/email-header.php',
@@ -795,9 +794,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					'email_heading' => '{subject}',
 				)
 			);
+
 			$footer = wc_get_template_html( 'emails/email-footer.php' );
 
-			$template = '<style type="text/css">' . $styles . '</style>' . $header . '{message}' . $footer;
+			$wc_email = new WC_Email();
+			$template = $wc_email->style_inline( $header . '{message}' . $footer );
+
 		}
 
 		return $template;

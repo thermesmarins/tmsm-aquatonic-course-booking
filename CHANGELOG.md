@@ -1,4 +1,5 @@
 * Gravity Forms: Use WooCommerce email templates for notifications
+* Barcode logo round and white
 
 ### 1.2.0: April 7th, 2021
 * Add vendor php-barcode-generator
