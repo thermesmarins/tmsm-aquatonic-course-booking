@@ -431,8 +431,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$custom_merge_tag_cancel_url = '{booking_cancel_url}';
 		if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
 			$token       = self::gform_entry_generate_token( $entry_id );
-			$cancel_page = get_permalink( $this->get_option( 'page_cancel_id' ) ) . '?booking_token='.urlencode( $token );
-			$text        = str_replace( $custom_merge_tag_cancel_url, $cancel_page, $text );
+			$cancel_url = '';
+			if ( ! empty( $token ) ) {
+				$cancel_url = self::cancel_url( $token );
+			}
+			$text = str_replace( $custom_merge_tag_cancel_url, $cancel_url, $text );
 		}
 
 		$custom_merge_tag_barcode = '{booking_barcode}';
@@ -479,6 +482,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $text;
 	}
 
+
+	/**
+	 * Get booking cancel page URL
+	 *
+	 * @param string $token
+	 *
+	 * @return string
+	 */
+	private function cancel_url( string $token ) {
+		$cancel_url = '';
+		if ( $this->get_option( 'page_cancel_id' ) ) {
+
+			$cancel_page = get_permalink( $this->get_option( 'page_cancel_id' ) ) . '?booking_token=' . urlencode( $token );
+
+		}
+
+		return $cancel_url;
+	}
 
 	/**
 	 * Return Barcode URL
@@ -708,12 +729,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_notification_booking(  $notification, $form, $entry ){
 
+		error_log('gform_notification_booking');
+
 		$notification['message'] .= '';
 
 		// Prepare data for markup
 		$image           = null;
 		$address         = null;
 		$contact_page_id = null;
+		$cancel_page_id = get_permalink( $this->get_option( 'page_cancel_id' ) );
 		$shop_name       = get_bloginfo( 'name' );
 		$shop_url        = home_url();
 
@@ -727,16 +751,21 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$contact_page_id = RankMath\Helper::get_settings( 'titles.local_seo_contact_page' );
 		}
 
-		$entry_id = $entry['id'];
-		$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
-		$firstname = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
-		$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
+		$entry_id  = $entry['id'];
 
-		$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
-		$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
-		$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
-		$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
-		$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+		$token     = self::gform_entry_generate_token( $entry_id );
+		$booking = self::find_booking_with_token($token);
+
+		error_log('find_booking_with_token:');
+		error_log(print_r($booking, true));
+		$lastname  = $booking['lastname'];
+		$firstname  = $booking['firstname'];
+		$participants  = $booking['participants'];
+		$course_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+		$barcode   = self::gform_entry_generate_barcode( $lastname, $entry_id );
+
+		$date_for_humans = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option( 'date_format' ),
+			get_option( 'time_format' ) ), $course_start_object->getTimestamp() );
 
 		// Building schema markup
 		$markup = array();
@@ -752,28 +781,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'name'  => sanitize_text_field($firstname) . ' ' . sanitize_text_field($lastname),
 			],
 			'modifiedTime' => date(DATE_ATOM, time()),
-			//'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
-			//'modifyReservationUrl' => 'https://www.aquatonic.fr/nantes/contact/',
-			'modifyReservationUrl' => 'https://www.aquatonic.fr/rennes/contact/',
-			'cancelReservationUrl' => 'https://www.aquatonic.fr/rennes/contact/',
-			//'modifyReservationUrl' => 'https://www.aquatonic.fr/paris/contact/',
+			'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
+			'cancelReservationUrl' => self::cancel_url($token) ?? get_permalink($contact_page_id),
 			'reservationFor'    => [
 				'@type'     => 'Event',
-				'name'      => sprintf( __('Aquatonic Course on %s at %s for %d participants', 'tmsm-aquatonic-course-booking'), $date, $hourminutes, $participants),
+				'name'      => sprintf( __('Aquatonic Course on %s for %d participants', 'tmsm-aquatonic-course-booking'), $date_for_humans, $participants),
 				'performer' => [
 					'@type' => 'Organization',
 					'name'  => $shop_name,
-					'image' => $image ?? '',
+					//'image' => $image ?? '',
 					//'image' => 'https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2010/08/aquatonic-nantes-1.jpg',
-					//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/6/2017/08/aquatonic-rennes-1.jpg',
+					'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/6/2017/08/aquatonic-rennes-1.jpg',
 					//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/9/2012/10/parcours-aquatonic-montevrain.png',
-
-
 					//https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2017/11/logo_aquatonic-nantes-600-300.png
 					//https://www.aquatonic.fr/rennes/wp-content/uploads/sites/6/2017/11/logo_aquatonic-rennes-600-300.png
 					//https://www.aquatonic.fr/paris/wp-content/uploads/sites/9/2017/11/logo_aquatonic-paris-600-300.png
 				],
-				'startDate' => $objdate->format( 'Y-m-d\TH:i:s' ),
+				'startDate' => $course_start_object->format( 'Y-m-d\TH:i:s' ),
 				'location'  => [
 					'@type'   => 'Place',
 					'name'    => $shop_name,
