@@ -539,7 +539,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 							$block = '<div style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
 <div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="{booking_barcode_logo}" /></div>
-<div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;border:10px white solid;"><img style="background:white; max-width:100%;height:80px;" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div>';
+<div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;"><img style="background:white; max-width:100%;height:80px;display:block" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div>';
 
 							$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
 
@@ -547,10 +547,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						}
 
 					}
+
 				}
-
-
-
 
 			}
 
@@ -918,33 +916,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	}
 
-	/**
-	 * Gravity Forms: Use WooCommerce emails templates for notifications.
-	 *
-	 * @param string $template
-	 *
-	 * @return string
-	 */
-	public function gform_html_message_template_pre_send_email( string $template ) {
-
-		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
-
-			$header = wc_get_template_html(
-				'emails/email-header.php',
-				array(
-					'email_heading' => '{subject}',
-				)
-			);
-
-			$footer = wc_get_template_html( 'emails/email-footer.php' );
-
-			$wc_email = new WC_Email();
-			$template = $wc_email->style_inline( $header . '{message}' . $footer );
-
-		}
-
-		return $template;
-	}
 
 	/**
 	 * Find booking with Token
@@ -1659,6 +1630,55 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return in_array( $role, $user->roles, true );
 	}
 
+	/**
+	 * Gravity Forms: Use WooCommerce emails templates for notifications.
+	 *
+	 * @param string $template
+	 *
+	 * @return string
+	 */
+	public function gform_html_message_template_pre_send_email( string $template ) {
+
+		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
+
+			$header = wc_get_template_html(
+				'emails/email-header.php',
+				array(
+					'email_heading' => '{subject}',
+				)
+			);
+
+			$footer = wc_get_template_html( 'emails/email-footer.php' );
+
+			$wc_email = new WC_Email();
+			$template = $wc_email->style_inline( $header . '{message}' . $footer );
+
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Gravity Forms: Customize email notification (headers, message, to, subject) to use WooCommerce CSS styling
+	 *
+	 * @param array $email
+	 * @param array $form
+	 * @param array $entry
+	 *
+	 * @return array
+	 */
+	public function gform_pre_send_email ( array $email, array $form, array $entry){
+
+		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
+
+			$wc_email = new WC_Email();
+			$email['message'] = $wc_email->style_inline( $email['message'] );
+
+		}
+
+		return $email;
+	}
+
 
 	/**
 	 * WooCommerce: add custom CSS
@@ -1671,6 +1691,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	public function woocommerce_email_styles(string $css, WC_Email $email){
 
 		$css .= '
+		#template_header h1{color: orange;}
 		@media (prefers-color-scheme: dark) {
 		
 			#template_header_image{
