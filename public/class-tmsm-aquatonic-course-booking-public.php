@@ -490,6 +490,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 								$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
 								$barcode_url = self::barcode_url($barcode);
 
+								if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ) {
+									$barcode_url = 'https://www.aquatonic.fr/barcode.jpg';
+								}
+
 								$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
 								$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_url, $text );
 							}
@@ -504,8 +508,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
 							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
 
-							//https://www.aquatonic.fr/logo-aquatonic-round-white.png
-							$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
+							if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ) {
+								$barcode_logo_url = 'https://www.aquatonic.fr/logo-aquatonic-round-white.png';
+							}
+
+							$text = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
 						}
 
 						$custom_merge_tag_site_name = '{site_name}';
@@ -526,19 +533,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 						$custom_merge_tag_block = '{booking_barcode_block}';
 						if ( strpos( $text, $custom_merge_tag_block ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
-							$date = wp_date( get_option('date_format'), $booking_start_object->getTimestamp() );
-							if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true) {
 
-							}
+							//$barcode_background_pixel_url = plugins_url( 'public/img/whitepixel.gif', dirname( __FILE__ ) );
+							$barcode_background_pixel_url = 'https://via.placeholder.com/1.png/fff/fff';
+
 							$block = '<div style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
-<div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="https://www.aquatonic.fr/logo-aquatonic-round-white.png" /></div>
-<div style="margin:5px 0; color:white;">{place_name}Parcours Aquatonic le {booking_date} à {booking_hourminutes}{booking_participants} participants</div><div style="background-color:white;background-image:url(\'https://www.aquatonic.fr/whitepixel.gif\');background-repeat:repeat;padding:10px 20px;border-radius:10px;border:10px white solid;"><img style="background:white; max-width:100%;height:80px;" src="https://www.aquatonic.fr/barcode.jpg" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div>';
+<div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="{booking_barcode_logo}" /></div>
+<div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;border:10px white solid;"><img style="background:white; max-width:100%;height:80px;" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div>';
 
 							$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
 
-
-							$text     = str_replace( $custom_merge_tag_block, $block, $text );
+							$text = str_replace( $custom_merge_tag_block, $block, $text );
 						}
 
 					}
