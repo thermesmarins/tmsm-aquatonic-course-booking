@@ -500,9 +500,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$text = str_replace( $custom_merge_tag_site_logo, get_bloginfo( 'logo' ), $text );
 						}
 
-						$custom_merge_tag_barcode_logo = '{barcode_logo}';
+						$custom_merge_tag_barcode_logo = '{booking_barcode_logo}';
 						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
 							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
+
+							//https://www.aquatonic.fr/logo-aquatonic-round-white.png
 							$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
 						}
 
@@ -521,6 +523,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 							$text = str_replace( $custom_merge_tag_place_name, $place_name, $text );
 						}
+
+						$custom_merge_tag_block = '{booking_barcode_block}';
+						if ( strpos( $text, $custom_merge_tag_block ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+							$date = wp_date( get_option('date_format'), $booking_start_object->getTimestamp() );
+							if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true) {
+
+							}
+							$block = '<div style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
+<div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="https://www.aquatonic.fr/logo-aquatonic-round-white.png" /></div>
+<div style="margin:5px 0; color:white;">{place_name}Parcours Aquatonic le {booking_date} à {booking_hourminutes}{booking_participants} participants</div><div style="background-color:white;background-image:url(\'https://www.aquatonic.fr/whitepixel.gif\');background-repeat:repeat;padding:10px 20px;border-radius:10px;border:10px white solid;"><img style="background:white; max-width:100%;height:80px;" src="https://www.aquatonic.fr/barcode.jpg" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div>';
+
+							$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
+
+
+							$text     = str_replace( $custom_merge_tag_block, $block, $text );
+						}
+
 					}
 				}
 
@@ -1634,5 +1654,36 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return in_array( $role, $user->roles, true );
 	}
 
+
+	/**
+	 * WooCommerce: add custom CSS
+	 *
+	 * @param string   $css
+	 * @param WC_Email $email
+	 *
+	 * @return string
+	 */
+	public function woocommerce_email_styles(string $css, WC_Email $email){
+
+		$css .= '
+		@media (prefers-color-scheme: dark) {
+		
+			#template_header_image{
+			background: white;
+			}
+		
+			#template_header h1{
+				color: red;
+			}
+		
+			.link {
+				color: green;
+			}
+		
+		}
+		';
+
+		return $css;
+	}
 
 }
