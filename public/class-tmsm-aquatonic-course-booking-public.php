@@ -382,18 +382,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					);
 
 					// Insert data into custom table
-					$wpdb->insert($table, $data, $format);
+					$wpdb->insert( $table, $data, $format );
 
 					// Add booking to Dialog Insight
-					$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
-					$booking->email = $data['email'];
+					$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+					$booking->email        = $data['email'];
 					$booking->participants = $data['participants'];
-					$booking->status = $data['status'];
-					$booking->token = $data['token'];
+					$booking->status       = $data['status'];
+					$booking->token        = $data['token'];
 					$booking->date_created = $data['date_created'];
 					$booking->course_start = $data['course_start'];
-					$booking->course_end = $data['course_end'];
-					$booking->source = substr( get_option( 'blogname' ), 0, 25 );
+					$booking->course_end   = $data['course_end'];
+					//$booking->source = substr( get_option( 'blogname' ), 0, 25 );
+					$booking->source = $options['dialoginsight_sourcecode'];;
 					$booking->add();
 
 				}
@@ -1670,7 +1671,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_pre_send_email( array $email, string $message_format, array $notification, array $entry ) {
 
-		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
+		if ( class_exists( 'WC_Email' ) ) {
 
 			$wc_email         = new WC_Email();
 			$email['message'] = $wc_email->style_inline( $email['message'] );

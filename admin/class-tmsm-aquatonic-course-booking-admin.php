@@ -348,6 +348,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		add_settings_field(
+			'dialoginsight_sourcecode',
+			esc_html__( 'Dialog Insight Source Code', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_sourcecode',
+				'description' => esc_html__( 'Source Code in Dialog Insight', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
 	}
 
 	/**
@@ -613,13 +625,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		if ( empty( $input['dialoginsight_idkey'] ) || empty( $input['dialoginsight_apikey'] ) || empty( $input['dialoginsight_idproject'] )
-		     || empty( $input['dialoginsight_relationaltableid'] ) ) {
+		     || empty( $input['dialoginsight_relationaltableid'] ) || empty( $input['dialoginsight_sourcecode'] ) ) {
 			add_settings_error( 'dialoginsight_idkey', 'dialoginsight_errors',
 				__( 'Dialog Insight fields all need to be defined', 'tmsm-aquatonic-course-booking' ), 'error' );
 		}
-
-		// TODO check if GF Add has all classes
-		// TODO check if GF Cancel has all classes
 
 		return $valid;
 	}
@@ -808,6 +817,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'dialoginsight_apikey', 'text', '' );
 		$options[] = array( 'dialoginsight_idproject', 'text', '' );
 		$options[] = array( 'dialoginsight_relationaltableid', 'text', '' );
+		$options[] = array( 'dialoginsight_sourcecode', 'text', '' );
 
 		return $options;
 	}

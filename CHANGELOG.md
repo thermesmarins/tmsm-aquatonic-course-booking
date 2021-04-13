@@ -1,3 +1,9 @@
+* Gravity Forms: Add WooCommerce styling to message content
+* Gravity Forms: Customize email notification (headers, message, to, subject) to use WooCommerce CSS styling
+* New GF merge tag for barcode block
+* Add custom CSS to emails for dark mode
+* New setting: Dialog Insight Source Code
+
 ### 1.3.0: April 13th, 2021
 * Gravity Forms: Use WooCommerce email templates for notifications
 * Barcode logo round and white
