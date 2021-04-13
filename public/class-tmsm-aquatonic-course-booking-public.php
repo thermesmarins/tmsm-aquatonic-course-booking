@@ -270,125 +270,139 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @throws Exception
 	 */
-	function gform_after_submission_booking( $entry, $form ) {
+	function gform_entry_created( $entry, $form ) {
 		global $wpdb;
 
-		error_log('gform_after_submission_booking');
-		//error_log(print_r($entry, true));
-		//error_log(print_r($form, true));
+		error_log('gform_entry_created ');
 
-		$entry_id = $entry['id'];
+		$options = get_option($this->plugin_name . '-options');
+		if(!empty($options)){
+			$form_add_id = $options['gform_add_id'];
 
-		// Get token
-		$token = null;
-		if(!empty($entry_id)){
-			$token = self::gform_entry_generate_token( $entry_id );
+			if($form['id'] == $form_add_id){
+
+				error_log('gform_entry_created checked form');
+				//error_log(print_r($entry, true));
+				//error_log(print_r($form, true));
+
+				$entry_id = $entry['id'];
+
+				// Get token
+				$token = null;
+				if(!empty($entry_id)){
+					$token = self::gform_entry_generate_token( $entry_id );
+				}
+
+				// Get entry data
+				$lastname     = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
+				$firstname    = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
+				$email        = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
+				$phone        = self::field_value_from_class( 'tmsm-aquatonic-course-phone', $form['fields'], $entry );
+				$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
+				$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
+				$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
+
+				$birthdate_computed = null;
+				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
+				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
+
+				error_log( 'field firstname value: ' . $firstname );
+				error_log( 'field lastname value: ' . $lastname );
+				error_log( 'value birthdate value: ' . $birthdate );
+				error_log( 'field email value: ' . $email );
+				error_log( 'field phone value: ' . $phone );
+				error_log( 'field participants value: ' . $participants );
+				error_log( 'field date value: ' . $date );
+				error_log( 'field hourminutes value: ' . $hourminutes );
+				error_log( 'field course_start value: ' . $course_start );
+				error_log( 'token: ' . $token );
+
+
+
+				// Convert birthdate
+				if(!empty($birthdate)){
+					$objdate = DateTime::createFromFormat( _x( 'm/d/Y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
+					error_log('birthdate object:');
+
+					error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
+					error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
+					//error_log(print_r($objdate, true));
+					$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
+					error_log('birthdate_computed: '. $birthdate_computed);
+				}
+
+				// Calculate date start and end of course
+				error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
+				if(!empty($course_start)){
+					$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+					$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
+					$course_end = $objdate->format( 'Y-m-d H:i:s' );
+				}
+
+				$now = new DateTime('now', wp_timezone());
+
+				$barcode = '';
+				if(!empty($entry_id)){
+					$barcode = self::gform_entry_generate_barcode( $lastname, $entry_id );
+				}
+
+				// Format data
+				if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
+					$table = $wpdb->prefix . 'aquatonic_course_booking';
+					$data  = array(
+						'firstname'    => $firstname,
+						'lastname'     => $lastname,
+						'email'        => $email,
+						'phone'        => $phone,
+						'birthdate'    => $birthdate_computed,
+						'participants' => $participants,
+						'status'       => 'active',
+						'date_created' => $now->format( 'Y-m-d H:i:s' ),
+						'course_start' => $course_start,
+						'course_end'   => $course_end,
+						'author'       => get_current_user_id(),
+						'token'        => $token,
+						'barcode'      => $barcode,
+					);
+
+					$format = array(
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%d',
+						'%s',
+						'%s',
+						'%s',
+						'%s',
+						'%d',
+						'%s',
+						'%s',
+					);
+
+					// Insert data into custom table
+					$wpdb->insert($table, $data, $format);
+
+					// Add booking to Dialog Insight
+					$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+					$booking->email = $data['email'];
+					$booking->participants = $data['participants'];
+					$booking->status = $data['status'];
+					$booking->token = $data['token'];
+					$booking->date_created = $data['date_created'];
+					$booking->course_start = $data['course_start'];
+					$booking->course_end = $data['course_end'];
+					$booking->source = substr( get_option( 'blogname' ), 0, 25 );
+					$booking->add();
+
+				}
+			}
 		}
 
-		// Get entry data
-		$lastname     = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
-		$firstname    = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
-		$email        = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
-		$phone        = self::field_value_from_class( 'tmsm-aquatonic-course-phone', $form['fields'], $entry );
-		$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
-		$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
-		$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
-
-		$birthdate_computed = null;
-		$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
-		$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
-
-		error_log( 'field firstname value: ' . $firstname );
-		error_log( 'field lastname value: ' . $lastname );
-		error_log( 'value birthdate value: ' . $birthdate );
-		error_log( 'field email value: ' . $email );
-		error_log( 'field phone value: ' . $phone );
-		error_log( 'field participants value: ' . $participants );
-		error_log( 'field date value: ' . $date );
-		error_log( 'field hourminutes value: ' . $hourminutes );
-		error_log( 'field course_start value: ' . $course_start );
-		error_log( 'token: ' . $token );
 
 
 
-		// Convert birthdate
-		if(!empty($birthdate)){
-			$objdate = DateTime::createFromFormat( _x( 'm/d/Y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
-			error_log('birthdate object:');
-
-			error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
-			error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
-			//error_log(print_r($objdate, true));
-			$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
-			error_log('birthdate_computed: '. $birthdate_computed);
-		}
-
-		// Calculate date start and end of course
-		error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
-		if(!empty($course_start)){
-			$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
-			$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
-			$course_end = $objdate->format( 'Y-m-d H:i:s' );
-		}
-
-		$now = new DateTime('now', wp_timezone());
-
-		$barcode = '';
-		if(!empty($entry_id)){
-			$barcode = self::gform_entry_generate_barcode( $lastname, $entry_id );
-		}
-
-		// Format data
-		if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
-			$table = $wpdb->prefix . 'aquatonic_course_booking';
-			$data  = array(
-				'firstname'    => $firstname,
-				'lastname'     => $lastname,
-				'email'        => $email,
-				'phone'        => $phone,
-				'birthdate'    => $birthdate_computed,
-				'participants' => $participants,
-				'status'       => 'active',
-				'date_created' => $now->format( 'Y-m-d H:i:s' ),
-				'course_start' => $course_start,
-				'course_end'   => $course_end,
-				'author'       => get_current_user_id(),
-				'token'        => $token,
-				'barcode'      => $barcode,
-			);
-
-			$format = array(
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-				'%d',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-				'%d',
-				'%s',
-				'%s',
-			);
-
-			// Insert data into custom table
-			$wpdb->insert($table, $data, $format);
-
-			// Add booking to Dialog Insight
-			$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
-			$booking->email = $data['email'];
-			$booking->participants = $data['participants'];
-			$booking->status = $data['status'];
-			$booking->token = $data['token'];
-			$booking->date_created = $data['date_created'];
-			$booking->course_start = $data['course_start'];
-			$booking->course_end = $data['course_end'];
-			$booking->source = substr( get_option( 'blogname' ), 0, 25 );
-			$booking->add();
-
-		}
 
 	}
 
@@ -420,64 +434,106 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
+		error_log('gform_replace_merge_tags_booking');
+
 		$entry_id = $entry['id'];
+		$options = get_option($this->plugin_name . '-options');
+		if(!empty($options)) {
+			$form_add_id = $options['gform_add_id'];
 
-		$custom_merge_tag_token = '{booking_token}';
-		if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$token    = self::gform_entry_generate_token( $entry_id );
-			$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
-		}
+			if($form['id'] == $form_add_id){
+				$token    = self::gform_entry_generate_token( $entry_id );
 
-		$custom_merge_tag_cancel_url = '{booking_cancel_url}';
-		if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$token       = self::gform_entry_generate_token( $entry_id );
-			$cancel_url = '';
-			if ( ! empty( $token ) ) {
-				$cancel_url = self::cancel_url( $token );
+				if( !empty($token)){
+					$booking = self::find_booking_with_token($token);
+
+					if(!empty($booking)){
+						$custom_merge_tag_date = '{booking_date}';
+						if ( strpos( $text, $custom_merge_tag_date ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+							$date = wp_date( get_option('date_format'), $booking_start_object->getTimestamp() );
+							$text     = str_replace( $custom_merge_tag_date, $date, $text );
+						}
+
+						$custom_merge_tag_hourminutes = '{booking_hourminutes}';
+						if ( strpos( $text, $custom_merge_tag_hourminutes ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+							$hourminutes = wp_date( get_option('time_format'), $booking_start_object->getTimestamp() );
+							$text     = str_replace( $custom_merge_tag_hourminutes, $hourminutes, $text );
+						}
+
+						$custom_merge_tag_participants = '{booking_participants}';
+						if ( strpos( $text, $custom_merge_tag_participants ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$text     = str_replace( $custom_merge_tag_participants, $booking['participants'], $text );
+						}
+
+						$custom_merge_tag_token = '{booking_token}';
+						if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
+						}
+
+						$custom_merge_tag_cancel_url = '{booking_cancel_url}';
+						if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$cancel_url = '';
+							if ( ! empty( $token ) ) {
+								$cancel_url = self::cancel_url( $token );
+							}
+							$text = str_replace( $custom_merge_tag_cancel_url, $cancel_url, $text );
+						}
+
+						$custom_merge_tag_barcode = '{booking_barcode_number}';
+						$custom_merge_tag_barcode_image = '{booking_barcode_image}';
+						if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$lastname = $booking['lastname'];
+							$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
+							if ( ! empty( $barcode ) ) {
+								$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
+								$barcode_url = self::barcode_url($barcode);
+
+								$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
+								$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_url, $text );
+							}
+						}
+
+						$custom_merge_tag_site_logo = '{site_logo}';
+						if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$text = str_replace( $custom_merge_tag_site_logo, get_bloginfo( 'logo' ), $text );
+						}
+
+						$custom_merge_tag_barcode_logo = '{barcode_logo}';
+						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
+							$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
+						}
+
+						$custom_merge_tag_site_name = '{site_name}';
+						if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+							$text = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
+						}
+
+						$custom_merge_tag_place_name = '{place_name}';
+						if ( strpos( $text, $custom_merge_tag_place_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+
+							$place_name = get_bloginfo( 'name' );
+							if ( class_exists( 'RankMath\Helper' ) ) {
+								$place_name = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
+							}
+
+							$text = str_replace( $custom_merge_tag_place_name, $place_name, $text );
+						}
+					}
+				}
+
+
+
+
 			}
-			$text = str_replace( $custom_merge_tag_cancel_url, $cancel_url, $text );
+
 		}
 
-		$custom_merge_tag_barcode = '{booking_barcode}';
-		$custom_merge_tag_barcode_image = '{booking_barcode_image}';
-		if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$lastname = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
-			$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
-			if ( ! empty( $barcode ) ) {
-				$generator     = new Picqer\Barcode\BarcodeGeneratorPNG();
-				$barcode_url = self::barcode_url($barcode);
 
-				$text          = str_replace( $custom_merge_tag_barcode, $barcode, $text );
-				$text          = str_replace( $custom_merge_tag_barcode_image, $barcode_url, $text );
-			}
-		}
 
-		$custom_merge_tag_site_logo = '{site_logo}';
-		if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$text = str_replace( $custom_merge_tag_site_logo, get_bloginfo( 'logo' ), $text );
-		}
 
-		$custom_merge_tag_barcode_logo = '{barcode_logo}';
-		if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
-			$text             = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
-		}
-
-		$custom_merge_tag_site_name = '{site_name}';
-		if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-			$text = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
-		}
-
-		$custom_merge_tag_place_name = '{place_name}';
-		if ( strpos( $text, $custom_merge_tag_place_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
-
-			$place_name = get_bloginfo( 'name' );
-			if ( class_exists( 'RankMath\Helper' ) ) {
-				$place_name = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
-			}
-
-			$text = str_replace( $custom_merge_tag_place_name, $place_name, $text );
-		}
 
 		return $text;
 	}
@@ -491,10 +547,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @return string
 	 */
 	private function cancel_url( string $token ) {
-		$cancel_url = '';
-		if ( $this->get_option( 'page_cancel_id' ) ) {
 
-			$cancel_page = get_permalink( $this->get_option( 'page_cancel_id' ) ) . '?booking_token=' . urlencode( $token );
+		$cancel_url  = '';
+		$cancel_page = $this->get_option( 'page_cancel_id' );
+		if ( ! empty( $cancel_page ) ) {
+
+			$cancel_url = get_permalink( $cancel_page ) . '?booking_token=' . urlencode( $token );
 
 		}
 
@@ -524,14 +582,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	private function gform_entry_generate_token( int $entry_id ){
 
+		error_log('gform_entry_generate_token');
 		// Check if token exists for entry
 		$token = gform_get_meta( $entry_id, '_booking_token' );
 
 		// Create token for entry if token doesn't exist
 		if(empty($token)){
-			error_log('gform_update_meta _booking_token');
 			$token = $entry_id.'-'. wp_generate_password(24);
+			error_log('gform_update_meta _booking_token: '.$token);
 			gform_update_meta( $entry_id, '_booking_token', $token );
+		}
+		else{
+			error_log('token found : '. $token);
 		}
 
 		return $token;
@@ -559,7 +621,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$barcode .= 'R-';
 			$barcode .= str_pad(substr(strtoupper(sanitize_title($lastname)), 0, 10), 10, "X", STR_PAD_RIGHT);
 			$next_id = 1;
-			$table_status = $wpdb->get_row('SHOW TABLE STATUS LIKE '.$wpdb->prefix . 'aquatonic_course_booking');
+			$table_status = $wpdb->get_row("SHOW TABLE STATUS LIKE '".$wpdb->prefix . "aquatonic_course_booking". "'");
 			if ( $table_status ) {
 				$next_id += $table_status->Auto_increment;
 			}
@@ -737,7 +799,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$image           = null;
 		$address         = null;
 		$contact_page_id = null;
-		$cancel_page_id = get_permalink( $this->get_option( 'page_cancel_id' ) );
+		$cancel_page_id  = get_permalink( $this->get_option( 'page_cancel_id' ) );
 		$shop_name       = get_bloginfo( 'name' );
 		$shop_url        = home_url();
 
@@ -754,67 +816,73 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$entry_id  = $entry['id'];
 
 		$token     = self::gform_entry_generate_token( $entry_id );
-		$booking = self::find_booking_with_token($token);
+		if(! empty($token)){
+			$booking = self::find_booking_with_token($token);
 
-		error_log('find_booking_with_token:');
-		error_log(print_r($booking, true));
-		$lastname  = $booking['lastname'];
-		$firstname  = $booking['firstname'];
-		$participants  = $booking['participants'];
-		$course_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
-		$barcode   = self::gform_entry_generate_barcode( $lastname, $entry_id );
+			error_log('find_booking_with_token:');
+			error_log(print_r($booking, true));
+			$lastname  = $booking['lastname'];
+			$firstname  = $booking['firstname'];
+			$participants  = $booking['participants'];
+			$course_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+			$barcode   = self::gform_entry_generate_barcode( $lastname, $entry_id );
 
-		$date_for_humans = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option( 'date_format' ),
-			get_option( 'time_format' ) ), $course_start_object->getTimestamp() );
+			$date_for_humans = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option( 'date_format' ),
+				get_option( 'time_format' ) ), $course_start_object->getTimestamp() );
 
-		// Building schema markup
-		$markup = array();
+			// Building schema markup
+			$markup = array();
 
-		// Generate markup for every Event/Appointment
-		$markup[] = array(
-			'@context'          => 'http://schema.org',
-			'@type'             => 'EventReservation',
-			'reservationNumber' => $barcode,
-			'reservationStatus' => 'http://schema.org/Confirmed',
-			'underName'         => [
-				'@type' => 'Person',
-				'name'  => sanitize_text_field($firstname) . ' ' . sanitize_text_field($lastname),
-			],
-			'modifiedTime' => date(DATE_ATOM, time()),
-			'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
-			'cancelReservationUrl' => self::cancel_url($token) ?? get_permalink($contact_page_id),
-			'reservationFor'    => [
-				'@type'     => 'Event',
-				'name'      => sprintf( __('Aquatonic Course on %s for %d participants', 'tmsm-aquatonic-course-booking'), $date_for_humans, $participants),
-				'performer' => [
-					'@type' => 'Organization',
-					'name'  => $shop_name,
-					//'image' => $image ?? '',
-					//'image' => 'https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2010/08/aquatonic-nantes-1.jpg',
-					'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/6/2017/08/aquatonic-rennes-1.jpg',
-					//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/9/2012/10/parcours-aquatonic-montevrain.png',
-					//https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2017/11/logo_aquatonic-nantes-600-300.png
-					//https://www.aquatonic.fr/rennes/wp-content/uploads/sites/6/2017/11/logo_aquatonic-rennes-600-300.png
-					//https://www.aquatonic.fr/paris/wp-content/uploads/sites/9/2017/11/logo_aquatonic-paris-600-300.png
+			// Generate markup for every Event/Appointment
+			$markup[] = array(
+				'@context'          => 'http://schema.org',
+				'@type'             => 'EventReservation',
+				'reservationNumber' => $barcode,
+				'reservationStatus' => 'http://schema.org/Confirmed',
+				'underName'         => [
+					'@type' => 'Person',
+					'name'  => sanitize_text_field($firstname) . ' ' . sanitize_text_field($lastname),
 				],
-				'startDate' => $course_start_object->format( 'Y-m-d\TH:i:s' ),
-				'location'  => [
-					'@type'   => 'Place',
-					'name'    => $shop_name,
-					'address' => [
-						'@type'           => 'PostalAddress',
-						'streetAddress'   => ( $address ? $address['streetAddress'] : '' ),
-						'addressLocality' => ( $address ? $address['addressLocality'] : '' ),
-						'addressRegion'   => ( $address ? $address['addressRegion'] : '' ),
-						'postalCode'      => ( $address ? $address['postalCode'] : '' ),
-						'addressCountry'  => ( $address ? $address['addressCountry'] : '' ),
+				'modifiedTime' => date(DATE_ATOM, time()),
+				'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
+				'cancelReservationUrl' => self::cancel_url($token) ?? get_permalink($contact_page_id),
+				'reservationFor'    => [
+					'@type'     => 'Event',
+					'name'      => sprintf( __('Aquatonic Course on %s for %d participants', 'tmsm-aquatonic-course-booking'), $date_for_humans, $participants),
+					'performer' => [
+						'@type' => 'Organization',
+						'name'  => $shop_name,
+						//'image' => $image ?? '',
+						//'image' => 'https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2010/08/aquatonic-nantes-1.jpg',
+						'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/6/2017/08/aquatonic-rennes-1.jpg',
+						//'image' => 'https://mk0aquatonicxmkh2brf.kinstacdn.com/wp-content/uploads/sites/9/2012/10/parcours-aquatonic-montevrain.png',
+						//https://www.aquatonic.fr/nantes/wp-content/uploads/sites/8/2017/11/logo_aquatonic-nantes-600-300.png
+						//https://www.aquatonic.fr/rennes/wp-content/uploads/sites/6/2017/11/logo_aquatonic-rennes-600-300.png
+						//https://www.aquatonic.fr/paris/wp-content/uploads/sites/9/2017/11/logo_aquatonic-paris-600-300.png
+					],
+					'startDate' => $course_start_object->format( 'Y-m-d\TH:i:s' ),
+					'location'  => [
+						'@type'   => 'Place',
+						'name'    => $shop_name,
+						'address' => [
+							'@type'           => 'PostalAddress',
+							'streetAddress'   => ( $address ? $address['streetAddress'] : '' ),
+							'addressLocality' => ( $address ? $address['addressLocality'] : '' ),
+							'addressRegion'   => ( $address ? $address['addressRegion'] : '' ),
+							'postalCode'      => ( $address ? $address['postalCode'] : '' ),
+							'addressCountry'  => ( $address ? $address['addressCountry'] : '' ),
+						],
 					],
 				],
-			],
-			'ticketToken' => 'barcode128:' . $barcode,
-			'ticketNumber' => $barcode,
-			'numSeats'     => $participants,
-		);
+				'ticketToken' => 'barcode128:' . $barcode,
+				'ticketNumber' => $barcode,
+				'numSeats'     => $participants,
+			);
+		}
+		else{
+			error_log('token is empty');
+		}
+
 
 		if ( $markup ) {
 			$notification['message'] .= '<script type="application/ld+json">' . wc_esc_json( wp_json_encode( $markup ), true ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -863,6 +931,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	public function find_booking_with_token(string $token){
 		global $wpdb;
 
+		error_log('find_booking_with_token '. $token);
 		$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE token = %s", $token ), ARRAY_A );
 
 		return $booking;

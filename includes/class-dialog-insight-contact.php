@@ -58,8 +58,8 @@ class Dialog_Insight_Contact {
 
 		$contacts = \Dialog_Insight_API::request( $request, 'contacts', 'Get' );
 
-		error_log( '$contacts:' );
-		error_log( print_r( $contacts, true ) );
+		//error_log( '$contacts:' );
+		//error_log( print_r( $contacts, true ) );
 
 		if ( ! empty( $contacts->Records ) && ! empty( $contacts->Records[0] ) ) {
 			error_log( 'First contact found, assigning values' );
