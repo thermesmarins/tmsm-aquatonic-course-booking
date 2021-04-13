@@ -1,8 +1,11 @@
+### 1.3.0: April 13th, 2021
 * Gravity Forms: Use WooCommerce email templates for notifications
 * Barcode logo round and white
 * Email markup for EventReservation (Barcode needs testing)
 * New settings for add booking and cancel booking pages
 * Barcode logo for Aquatonic
+* New hook for adding GF entry into custom database: gf_entry_saved instead of gform_after_submission
+* Barcode white border (with background-image)
 
 ### 1.2.0: April 7th, 2021
 * Add vendor php-barcode-generator
