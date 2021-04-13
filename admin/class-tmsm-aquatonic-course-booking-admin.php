@@ -406,6 +406,21 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		$aquos_secret = $this->get_option('aquos_secret') ?? wp_generate_password( 50, true, true );
+
+		add_settings_field(
+			'aquos_secret',
+			esc_html__( 'Aquos Secret', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-aquos',
+			array(
+				'id' => 'aquos_secret',
+				'readonly' => true,
+				'value' => $aquos_secret,
+			)
+		);
+
 	}
 
 	/**
@@ -894,6 +909,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'aquos_endpoint_lessons', 'text', '' );
 		$options[] = array( 'aquos_endpoint_contact', 'text', '' );
 		$options[] = array( 'aquos_siteid', 'text', '' );
+		$options[] = array( 'aquos_secret', 'text', '' );
 
 		return $options;
 	}
@@ -1040,8 +1056,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$site_id = $this->get_option('aquos_siteid');
 
 				if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
-					$request = [
-						'civilite' => 'M.',
+					$data = [
 						'prenom' => $booking['firstname'],
 						'nom' => $booking['lastname'],
 						'email' => $booking['email'],
@@ -1049,14 +1064,22 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 						'telephone' => $booking['phone'],
 						'id_site' => $site_id,
 					];
+
+					$body = json_encode($data);
+
 					$headers = [
-						'Content-Type' => 'application/json; charset=utf-8'
+						'Content-Type' => 'application/json; charset=utf-8',
+						'X-Signature' => $this->aquos_generate_signature( $body ),
 					];
+
+					error_log('headers with signature');
+
+					error_log(print_r($headers, true));
 					$response = wp_safe_remote_post(
 						$endpoint,
 						array(
 							'headers' => $headers,
-							'body'    => json_encode($request),
+							'body'    => $body,
 							'timeout' => 70,
 							'data_format' => 'body',
 						)
@@ -1101,6 +1124,33 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		exit;
+	}
+
+
+	/**
+	 * Aquos: generate signature
+	 *
+	 * @param string $payload
+	 *
+	 * @return string
+	 */
+	private function aquos_generate_signature( $payload ) {
+		$hash_algo = 'sha256';
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return base64_encode( hash_hmac( $hash_algo, $payload, wp_specialchars_decode( $this->aquos_secret(), ENT_QUOTES ), true ) );
+	}
+
+	/**
+	 * Aquos: returns secret
+	 *
+	 * @return string
+	 */
+	private function aquos_secret() {
+
+		$secret = $this->get_option('aquos_secret');
+
+		return $secret;
 	}
 
 

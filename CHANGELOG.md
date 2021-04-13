@@ -4,7 +4,7 @@
 * Add custom CSS to emails for dark mode
 * New setting: Dialog Insight Source Code
 * New settings: Aquos endpoints and site ID
-* Aquos: send contact information with web service request
+* Aquos: send contact information with web service request (with signature)
 
 ### 1.3.0: April 13th, 2021
 * Gravity Forms: Use WooCommerce email templates for notifications
