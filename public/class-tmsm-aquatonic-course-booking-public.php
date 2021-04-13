@@ -275,9 +275,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		error_log('gform_entry_created ');
 
-		$options = get_option($this->plugin_name . '-options');
-		if(!empty($options)){
-			$form_add_id = $options['gform_add_id'];
+		$form_add_id = $this->get_option('gform_add_id');
+		if(!empty($form_add_id)){
 
 			if($form['id'] == $form_add_id){
 
@@ -394,7 +393,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$booking->course_start = $data['course_start'];
 					$booking->course_end   = $data['course_end'];
 					//$booking->source = substr( get_option( 'blogname' ), 0, 25 );
-					$booking->source = $options['dialoginsight_sourcecode'];;
+					$booking->source = $this->get_option('dialoginsight_sourcecode');;
 					$booking->add();
 
 				}
@@ -438,9 +437,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		error_log('gform_replace_merge_tags_booking');
 
 		$entry_id = $entry['id'];
-		$options = get_option($this->plugin_name . '-options');
-		if(!empty($options)) {
-			$form_add_id = $options['gform_add_id'];
+		$form_add_id = $this->get_option('gform_add_id');
+
+		if(!empty($form_add_id)) {
 
 			if($form['id'] == $form_add_id){
 				$token    = self::gform_entry_generate_token( $entry_id );

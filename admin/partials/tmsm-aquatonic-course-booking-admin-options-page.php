@@ -19,6 +19,37 @@
 
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
+	<pre>
+	<?php
+
+	$request = [
+		'civilite' => 'M.',
+		'prenom' => 'Nicolas',
+		'nom' => 'Mollet',
+		'email' => 'nmollet@thalasso-saintmalo.com',
+		'telephone' => '0750859247',
+		'id_site' => 10,
+	];
+	$headers = [
+		'Content-Type' => 'application/json; charset=utf-8'
+	];
+	print_r($request);
+	echo json_encode($request);
+
+	$response = wp_safe_remote_post(
+		'https://resaparcours.aquatonic.fr/ajoutclient',
+		array(
+			'headers' => $headers,
+			'body'    => json_encode($request),
+			'timeout' => 70,
+			'data_format' => 'body',
+		)
+	);
+	print_r($response);
+	echo wp_remote_retrieve_response_code( $response );
+
+	?>
+</pre>
 	<h2 class="nav-tab-wrapper">
 		<a class="nav-tab <?php if ( $tab == 'dashboard' ) {
 			echo 'nav-tab-active';

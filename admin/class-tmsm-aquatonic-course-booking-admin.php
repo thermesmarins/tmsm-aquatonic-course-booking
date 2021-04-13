@@ -168,6 +168,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Creates a settings section
+	 *
+	 * @since 		1.0.0
+	 * @param 		array 		$params 		Array of parameters for the section
+	 * @return 		mixed 						The settings section
+	 */
+	public function section_aquos( $params ) {
+		include_once( plugin_dir_path( __FILE__ ) . 'partials/'. $this->plugin_name.'-admin-section-aquos.php' );
+	}
+
+	/**
 	 * Registers settings fields with WordPress
 	 */
 	public function register_fields() {
@@ -631,6 +642,25 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Get option
+	 * @param string $option_name
+	 *
+	 * @return null
+	 */
+	private function get_option($option_name = null){
+
+		$options = get_option($this->plugin_name . '-options');
+
+		if(!empty($option_name)){
+			return $options[$option_name] ?? null;
+		}
+		else{
+			return $options;
+		}
+
+	}
+
+	/**
 	 * Validates saved options
 	 *
 	 * @since 		1.0.0
@@ -921,8 +951,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function booking_change_status(){
 		global $wpdb;
 
-		$barcode = sanitize_text_field($_REQUEST['barcode']);
-		$status = sanitize_text_field($_REQUEST['status']);
+		$barcode = sanitize_text_field($_REQUEST['barcode'] ?? null);
+		$status = sanitize_text_field($_REQUEST['status'] ?? null);
 
 		$redirect_to_admin = true;
 
@@ -944,11 +974,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			// Booking is already arrived
 			if($booking['status'] === 'arrived' && $status === 'arrived'){
 				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ) ) );
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Aquos reached, error message: '. esc_html__( 'Participant is already arrived', 'tmsm-aquatonic-course-booking' ));
+				}
 			}
 
 			// Booking is cancelled
 			if($booking['status'] === 'cancelled'){
 				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Booking was cancelled', 'tmsm-aquatonic-course-booking' ) ) );
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Aquos reached, error message: '. esc_html__( 'Booking was cancelled', 'tmsm-aquatonic-course-booking' ));
+				}
 			}
 
 			// Booking date passed or in the future
@@ -957,6 +993,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			if($booking_start_object->format('Y-m-d') !== $now->format('Y-m-d')){
 				wp_send_json( array( 'success' => false, 'message' => esc_html__( 'Booking date is passed or in the future', 'tmsm-aquatonic-course-booking' ) ) );
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Aquos reached, error message: '. esc_html__( 'Booking date is passed or in the future', 'tmsm-aquatonic-course-booking' ));
+				}
 			}
 
 
@@ -974,11 +1013,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if( $this->booking_is_valid_status($status) && !empty($booking_id) ){
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
 
-			// Dialog Insight: Mark contact as customer if arrived
 			if($status === 'arrived'){
 				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
 
-				// Update booking in Dialog Insight
+				// Dialog Insight: Mark contact as customer if arrived
 				$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 				$booking_dialoginsight->token = $booking['token'];
 				$booking_dialoginsight->status = 'arrived';
@@ -989,12 +1027,69 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					if($redirect_to_admin === false){
 						wp_send_json( array( 'success' => false, 'message' => $exception->getMessage() ) );
 					}
+					else{
+						if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+							error_log('Dialog Insight not updated: '. $exception->getMessage());
+						}
+					}
 
 				}
 
-			}
+				// Aquos, send contact information
+				$endpoint = $this->get_option('aquos_endpoint_contact');
+				$site_id = $this->get_option('aquos_siteid');
 
-		}
+				if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
+					$request = [
+						'civilite' => 'M.',
+						'prenom' => $booking['firstname'],
+						'nom' => $booking['lastname'],
+						'email' => $booking['email'],
+						'datenaissance' => str_replace('-', '', $booking['birthdate'] ),
+						'telephone' => $booking['phone'],
+						'id_site' => $site_id,
+					];
+					$headers = [
+						'Content-Type' => 'application/json; charset=utf-8'
+					];
+					$response = wp_safe_remote_post(
+						$endpoint,
+						array(
+							'headers' => $headers,
+							'body'    => json_encode($request),
+							'timeout' => 70,
+							'data_format' => 'body',
+						)
+					);
+					$response_code = wp_remote_retrieve_response_code( $response );
+
+					if ( is_wp_error( $response ) ) {
+						if($redirect_to_admin === false){
+							wp_send_json( array( 'success' => false, 'message' => sprintf( __( 'Aquos Error: %s', 'tmsm-aquatonic-course-booking' ), $response->get_error_message() ) ) );
+						}
+						else{
+							if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+								error_log('Aquos reached, error message: '. $response->get_error_message());
+							}
+						}
+					}
+
+					if ( 200 !== $response_code ) {
+						if($redirect_to_admin === false){
+							wp_send_json( array( 'success' => false, 'message' => sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ), absint( $response_code ) ) ) );
+						}
+						else{
+							if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+								error_log('Aquos not reached, error code: '. $response_code);
+							}
+						}
+					}
+
+				} // endpoint exists
+
+			} // status arrived
+
+		} // valid status
 
 		// Return JSON
 		if($redirect_to_admin === false){
