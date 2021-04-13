@@ -71,12 +71,9 @@ class Dialog_Insight_API {
 		$user_agent = self::get_user_agent();
 		$app_info   = $user_agent['application'];
 
-		return apply_filters(
-			'woocommerce_stripe_request_headers',
-			array(
+		return array(
 				'User-Agent'                 => $app_info['name'] . '/' . $app_info['version'] . ' (' . $app_info['url'] . ')',
 				'X-DialogInsight-Client-User-Agent' => json_encode( $user_agent ),
-			)
 		);
 	}
 
@@ -87,7 +84,6 @@ class Dialog_Insight_API {
 	 * @return null
 	 */
 	static function get_option($option_name = null){
-
 
 		$options = get_option(self::PLUGIN_NAME . '-options');
 

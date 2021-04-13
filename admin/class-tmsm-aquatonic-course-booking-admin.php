@@ -360,6 +360,41 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		add_settings_field(
+			'aquos_endpoint_contact',
+			esc_html__( 'Aquos Endpoint for Adding Contact', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-aquos',
+			array(
+				'id' => 'aquos_endpoint_contact',
+				'description' => esc_html__( 'URL to endpoint', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		add_settings_field(
+			'aquos_endpoint_lessons',
+			esc_html__( 'Aquos Endpoint for Lessons', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-aquos',
+			array(
+				'id' => 'aquos_endpoint_lessons',
+				'description' => esc_html__( 'URL to endpoint', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		add_settings_field(
+			'aquos_siteid',
+			esc_html__( 'Aquos Site ID', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-aquos',
+			array(
+				'id' => 'aquos_siteid',
+			)
+		);
+
 	}
 
 	/**
@@ -386,6 +421,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-dialoginsight',
 			esc_html__( 'Dialog Insight', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'section_dialoginsight' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->plugin_name . '-aquos',
+			esc_html__( 'Aquos', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_aquos' ),
 			$this->plugin_name
 		);
 
@@ -819,6 +861,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'dialoginsight_relationaltableid', 'text', '' );
 		$options[] = array( 'dialoginsight_sourcecode', 'text', '' );
 
+		$options[] = array( 'aquos_endpoint_lessons', 'text', '' );
+		$options[] = array( 'aquos_endpoint_contact', 'text', '' );
+		$options[] = array( 'aquos_siteid', 'text', '' );
+
 		return $options;
 	}
 
@@ -832,7 +878,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=options-general.php?page=tmsm-aquatonic-course-booking-settings">';
 		}
 	}
-
 
 	/**
 	 * Mark Bookings as Now How

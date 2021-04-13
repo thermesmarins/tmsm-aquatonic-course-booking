@@ -3,6 +3,7 @@
 * New GF merge tag for barcode block
 * Add custom CSS to emails for dark mode
 * New setting: Dialog Insight Source Code
+* New settings: Aquos endpoints and site ID
 
 ### 1.3.0: April 13th, 2021
 * Gravity Forms: Use WooCommerce email templates for notifications
