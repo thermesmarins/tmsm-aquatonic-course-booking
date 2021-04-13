@@ -1659,19 +1659,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
-	 * Gravity Forms: Customize email notification (headers, message, to, subject) to use WooCommerce CSS styling
+	 * Gravity Forms: Customize email notification (headers, message, to, subject) to use WooCommerce CSS styling.
 	 *
-	 * @param array $email
-	 * @param array $form
-	 * @param array $entry
+	 * @param array  $email          An array containing the email to address, subject, message, headers, attachments and abort email flag.
+	 * @param string $message_format The message format: html or text.
+	 * @param array  $notification   The current Notification object.
+	 * @param array  $entry          The current Entry object.
 	 *
 	 * @return array
 	 */
-	public function gform_pre_send_email ( array $email, array $form, array $entry){
+	public function gform_pre_send_email( array $email, string $message_format, array $notification, array $entry ) {
 
 		if ( function_exists( 'wc_get_template_html' ) && class_exists( 'WC_Email' ) ) {
 
-			$wc_email = new WC_Email();
+			$wc_email         = new WC_Email();
 			$email['message'] = $wc_email->style_inline( $email['message'] );
 
 		}
@@ -1681,7 +1682,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 
 	/**
-	 * WooCommerce: add custom CSS
+	 * WooCommerce: Add custom CSS to emails
 	 *
 	 * @param string   $css
 	 * @param WC_Email $email
@@ -1690,24 +1691,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function woocommerce_email_styles(string $css, WC_Email $email){
 
-		$css .= '
-		#template_header h1{color: orange;}
-		@media (prefers-color-scheme: dark) {
-		
-			#template_header_image{
-			background: white;
-			}
-		
-			#template_header h1{
-				color: red;
-			}
-		
-			.link {
-				color: green;
-			}
-		
-		}
-		';
+		$css .= '';
 
 		return $css;
 	}

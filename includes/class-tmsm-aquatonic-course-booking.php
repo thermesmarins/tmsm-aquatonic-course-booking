@@ -237,7 +237,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
 
 		$this->loader->add_filter( 'gform_html_message_template_pre_send_email', $plugin_public, 'gform_html_message_template_pre_send_email', 20, 1 );
-		$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email', 20, 3 );
+		$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email', 20, 4 );
 		$this->loader->add_filter( 'woocommerce_email_styles', $plugin_public, 'woocommerce_email_styles', 20, 2 );
 
 	}
