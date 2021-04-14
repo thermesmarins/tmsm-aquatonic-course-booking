@@ -5,6 +5,8 @@
 * New setting: Dialog Insight Source Code
 * New settings: Aquos endpoints and site ID
 * Aquos: send contact information with web service request (with signature)
+* New booking field: title (Miss or Mr)
+* New database version number: 3
 
 ### 1.3.0: April 13th, 2021
 * Gravity Forms: Use WooCommerce email templates for notifications

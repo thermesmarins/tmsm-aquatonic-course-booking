@@ -61,6 +61,10 @@ class Dialog_Insight_Booking {
 	 */
 	public function add(){
 
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('Dialog Insight add booking');
+		}
+
 		$contact = new Dialog_Insight_Contact();
 		$contact->email = $this->email;
 		$contact->get_by_email();
@@ -100,11 +104,16 @@ class Dialog_Insight_Booking {
 			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
 
 			if ( empty( $bookings ) ) {
-				//error_log( 'Dialog Insight Add Record to Bookings Table : No response' );
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Dialog Insight Add Record to Bookings Table : No response');
+				}
 			}
 		}
 		else{
-			//error_log( 'Contact doesnt exist' );
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Contact doesnt exist');
+			}
 		}
 
 	}

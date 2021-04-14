@@ -40,7 +40,7 @@ define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.3.0' );
 /**
  * Current database schema version.
  */
-define( 'TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION', '2' );
+define( 'TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION', '3' );
 
 /**
  * The code that runs during plugin activation.

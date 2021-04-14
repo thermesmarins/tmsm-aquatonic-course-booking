@@ -273,16 +273,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	function gform_entry_created( $entry, $form ) {
 		global $wpdb;
 
-		error_log('gform_entry_created ');
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('gform_entry_created ');
+		}
 
 		$form_add_id = $this->get_option('gform_add_id');
 		if(!empty($form_add_id)){
 
 			if($form['id'] == $form_add_id){
 
-				error_log('gform_entry_created checked form');
-				//error_log(print_r($entry, true));
-				//error_log(print_r($form, true));
 
 				$entry_id = $entry['id'];
 
@@ -305,6 +304,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
 				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
+				/*
 				error_log( 'field firstname value: ' . $firstname );
 				error_log( 'field lastname value: ' . $lastname );
 				error_log( 'value birthdate value: ' . $birthdate );
@@ -315,19 +315,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				error_log( 'field hourminutes value: ' . $hourminutes );
 				error_log( 'field course_start value: ' . $course_start );
 				error_log( 'token: ' . $token );
-
+				*/
 
 
 				// Convert birthdate
 				if(!empty($birthdate)){
 					$objdate = DateTime::createFromFormat( _x( 'm/d/Y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
-					error_log('birthdate object:');
-
-					error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
-					error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
-					//error_log(print_r($objdate, true));
+					//error_log('birthdate object:');
+					//error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
+					//error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
 					$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
-					error_log('birthdate_computed: '. $birthdate_computed);
+					//error_log('birthdate_computed: '. $birthdate_computed);
 				}
 
 				// Calculate date start and end of course
@@ -364,6 +362,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'barcode'      => $barcode,
 					);
 
+					if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+						error_log(print_r($data, true));
+					}
+
 					$format = array(
 						'%s',
 						'%s',
@@ -381,20 +383,36 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					);
 
 					// Insert data into custom table
-					$wpdb->insert( $table, $data, $format );
+					$result_insert = $wpdb->insert( $table, $data, $format );
+					if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+						error_log('Booking inserted result: ' . $result_insert);
+					}
 
-					// Add booking to Dialog Insight
-					$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
-					$booking->email        = $data['email'];
-					$booking->participants = $data['participants'];
-					$booking->status       = $data['status'];
-					$booking->token        = $data['token'];
-					$booking->date_created = $data['date_created'];
-					$booking->course_start = $data['course_start'];
-					$booking->course_end   = $data['course_end'];
-					//$booking->source = substr( get_option( 'blogname' ), 0, 25 );
-					$booking->source = $this->get_option('dialoginsight_sourcecode');;
-					$booking->add();
+					// Add contact to Dialog Insight
+					$contact            = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
+					$contact->email     = $data['email'];
+					$contact->firstname = $data['firstname'];
+					$contact->lastname  = $data['lastname'];
+					$contact->birthdate = $birthdate_computed;
+					$contact->phone     = $data['phone'];
+
+					if($contact->add()){
+						// Add booking to Dialog Insight
+						$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+						$booking->email        = $data['email'];
+						$booking->participants = $data['participants'];
+						$booking->status       = $data['status'];
+						$booking->token        = $data['token'];
+						$booking->date_created = $data['date_created'];
+						$booking->course_start = $data['course_start'];
+						$booking->course_end   = $data['course_end'];
+						//$booking->source = substr( get_option( 'blogname' ), 0, 25 );
+						$booking->source = $this->get_option('dialoginsight_sourcecode');;
+						$booking->add();
+
+					}
+
+
 
 				}
 			}
@@ -434,7 +452,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
-		error_log('gform_replace_merge_tags_booking');
 
 		$entry_id = $entry['id'];
 		$form_add_id = $this->get_option('gform_add_id');

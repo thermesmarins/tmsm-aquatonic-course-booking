@@ -24,10 +24,19 @@ class Dialog_Insight_Contact {
 	 */
 	public $lastname;
 
+	/**
+	 * @var      string    $phone
+	 */
+	public $phone;
+
+	/**
+	 * @var      string    $birthdate
+	 */
+	public $birthdate;
+
 
 	public function __construct() {
 
-		error_log('Dialog_Insight_Contact __construct');
 	}
 
 	/**
@@ -37,8 +46,9 @@ class Dialog_Insight_Contact {
 	 */
 	public function get_by_email( ){
 
-
-		error_log( 'dialoginsight_get_contact' );
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'dialoginsight_get_contact' );
+		}
 
 		$result_array = [];
 		$contact      = [];
@@ -70,6 +80,88 @@ class Dialog_Insight_Contact {
 			$this->contact_id = $contact->idContact ?? null;
 		}
 
+	}
+
+	/**
+	 * Add contact
+	 *
+	 * @throws \Exception
+	 */
+	public function add( ){
+
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'Dialog Insight Add Contact' );
+		}
+
+		$result_array = [];
+		$contact      = [];
+
+		$request = [
+			'Records' => [
+				[
+					'ID'   => [
+						'key_f_EMail' => $this->email,
+					],
+					'Data' => [
+						'f_EMail'         => $this->email,
+						'f_FirstName'     => $this->firstname,
+						'f_LastName'      => $this->lastname,
+						'f_dateNaissance' => self::format_birthdate($this->birthdate),
+						'f_MobilePhone'   => $this->phone,
+					],
+				],
+			],
+			'MergeOptions' => [
+				'AllowInsert'            => true,
+				'AllowUpdate'            => true,
+				'SkipDuplicateRecords'   => false,
+				'SkipUnmatchedRecords'   => false,
+				'ReturnRecordsOnSuccess' => false,
+				'ReturnRecordsOnError'   => false,
+				'FieldOptions'           => null,
+			],
+		];
+
+		try {
+			$result = \Dialog_Insight_API::request( $request, 'contacts', 'Merge' );
+		} catch (\Exception $exception) {
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'Dialog Insight Add Contact Error: ' . $exception->getMessage() );
+			}
+			return false;
+
+		}
+
+		//error_log( '$contacts:' );
+		//error_log( print_r( $contacts, true ) );
+
+		if ( ! empty($result) && ! empty( $result->Success ) &&  $result->Success== true ) {
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'Dialog Insight contact added successfully' );
+			}
+			return true;
+		}
+		else{
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true && ! empty($result) && ! empty( $result->ErrorMessage )){
+				error_log( 'Dialog Insight contact not added, error: ' . $result->ErrorMessage );
+			}
+			return false;
+		}
+
+	}
+
+
+	/**
+	 * Format birthdate for Dialog Insight
+	 *
+	 * @param string $birthdate
+	 *
+	 * @return string
+	 */
+	static function format_birthdate( $birthdate){
+		return str_replace('-', '.', $birthdate);
 	}
 
 }
