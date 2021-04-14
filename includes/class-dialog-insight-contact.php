@@ -34,6 +34,11 @@ class Dialog_Insight_Contact {
 	 */
 	public $birthdate;
 
+	/**
+	 * @var      int    $title
+	 */
+	public $title;
+
 
 	public function __construct() {
 
@@ -105,6 +110,7 @@ class Dialog_Insight_Contact {
 					'Data' => [
 						'f_EMail'         => $this->email,
 						'f_FirstName'     => $this->firstname,
+						'f_civilite'     =>  ( $this->title == 1 ? 'M.' : 'Mme'),
 						'f_LastName'      => $this->lastname,
 						'f_dateNaissance' => self::format_birthdate($this->birthdate),
 						'f_MobilePhone'   => $this->phone,

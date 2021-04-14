@@ -299,6 +299,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$participants = self::field_value_from_class( 'tmsm-aquatonic-course-participants', $form['fields'], $entry );
 				$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
 				$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
+				$title        = self::field_value_from_class( 'tmsm-aquatonic-course-title', $form['fields'], $entry );
 
 				$birthdate_computed = null;
 				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
@@ -346,7 +347,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				// Format data
 				if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
 					$table = $wpdb->prefix . 'aquatonic_course_booking';
-					$data  = array(
+					$data = array(
 						'firstname'    => $firstname,
 						'lastname'     => $lastname,
 						'email'        => $email,
@@ -360,6 +361,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'author'       => get_current_user_id(),
 						'token'        => $token,
 						'barcode'      => $barcode,
+						'title'        => $title,
 					);
 
 					if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
@@ -380,6 +382,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'%d',
 						'%s',
 						'%s',
+						'%d',
 					);
 
 					// Insert data into custom table
