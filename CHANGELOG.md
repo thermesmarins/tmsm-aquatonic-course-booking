@@ -1,3 +1,4 @@
+### 1.4.0: April 14th, 2021
 * Gravity Forms: Add WooCommerce styling to message content
 * Gravity Forms: Customize email notification (headers, message, to, subject) to use WooCommerce CSS styling
 * New GF merge tag for barcode block
