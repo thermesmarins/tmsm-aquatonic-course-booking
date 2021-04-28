@@ -1303,7 +1303,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return array
 	 */
-	public function capacity_timeslots_forthedate( string $date = ''){
+	public function allotment_timeslots_forthedate( string $date = ''){
 
 		$total_capacity = [];
 
@@ -1428,7 +1428,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
 
 
-			$capacity_forthedate_timeslots = self::capacity_timeslots_forthedate($date_with_dash);
+			$capacity_forthedate_timeslots = self::allotment_timeslots_forthedate($date_with_dash);
 
 			//usort($slots_in_opening_hours, function($a, $b) {
 			//	return strcmp($a['start'], $b['start']);
@@ -1576,11 +1576,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Get participants number with an ongoing course for the time
 	 *
-	 * @param DateTime $datetime
+	 * @param DateTimeInterface $datetime
 	 *
 	 * @return int
 	 */
-	public function get_participants_ongoing_forthetime( DateTime $datetime){
+	public function get_participants_ongoing_forthetime( DateTimeInterface $datetime){
 		global $wpdb;
 
 		$uses_count = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(participants) FROM

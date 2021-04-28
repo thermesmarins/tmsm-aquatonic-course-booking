@@ -40,15 +40,12 @@
 
 	<?php
 
+
+
 	$options       = get_option( $this->plugin_name . '-options' );
 
 	if ( $tab == 'settings' ) {
 
-		$lessons_data = get_transient('tmsm-aquatonic-course-booking-lessons-data');
-		print_r($lessons_data);
-		foreach ($lessons_data as $lessons){
-			print_r($lessons);
-		}
 
 		?>
 		<form method="post" action="options.php"><?php
@@ -104,7 +101,6 @@
 			$now->modify( '-15 minutes' );
 		}
 
-
 		$averagecourse = $options['courseaverage'];
 
 		$slotsize    = $options['slotsize'];
@@ -124,16 +120,28 @@
 		$now_plus_courseaverage->modify( '+' . $averagecourse . ' minutes' );
 		$period = new DatePeriod( $now, $interval, $now_plus_courseaverage );
 
+		// For Tests
+		$now_for_testing_lessons = clone $now;
+		$period_for_testing_lessons = clone $period;
+		if( ! empty($options['tests_lessonsdate']) ){
+			$now_for_testing_lessons_year = substr($options['tests_lessonsdate'], 0, 4);
+			$now_for_testing_lessons_month = substr($options['tests_lessonsdate'], 4, 2);
+			$now_for_testing_lessons_day = substr($options['tests_lessonsdate'], 6, 2);
+			$now_for_testing_lessons->setDate($now_for_testing_lessons_year, $now_for_testing_lessons_month, $now_for_testing_lessons_day);
+			$now_for_testing_lessons_plus_courseaverage = clone $now_for_testing_lessons;
+			$now_for_testing_lessons_plus_courseaverage->modify( '+' . $averagecourse . ' minutes' );
+			$period_for_testing_lessons = new DatePeriod( $now_for_testing_lessons, $interval, $now_for_testing_lessons_plus_courseaverage );
+		}
+
 		$plugin_public                 = new Tmsm_Aquatonic_Course_Booking_Public( $this->plugin_name, null );
+		$plugin_admin                 = new Tmsm_Aquatonic_Course_Booking_Admin( $this->plugin_name, null );
 		//echo '<pre>';
-		$capacity_timeslots_forthedate = $plugin_public->capacity_timeslots_forthedate( date( 'Y-m-d' ) );
-		//print_r( $capacity_timeslots_forthedate );
+		$allotment_timeslots_forthedate = $plugin_public->allotment_timeslots_forthedate( date( 'Y-m-d' ) );
+		//print_r( allotment_timeslots_forthedate );
 		//echo '</pre>';
 
-		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
+		$realtime = $options['tests_realtimeattendance'] ?? get_option( 'tmsm-aquatonic-attendance-count' );
 
-		// TEST BEGIN >>>>
-		$realtime = 50; // For tests only
 		global $wpdb;
 		$bookings_change_date_to_today = $wpdb->query("UPDATE {$wpdb->prefix}aquatonic_course_booking  SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" );
 		// Mysql Query to change date of bookings:
@@ -141,8 +149,11 @@
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
 		// TESTS END <<<<<<<<<<<<<<<<<
 
-
-
+		$lessons_data = get_transient('tmsm-aquatonic-course-booking-lessons-data');
+		foreach ($lessons_data as $lessons){
+			print_r($lessons);
+			echo '<br>';
+		}
 
 		// Display table only if realtime data exists
 		if ( $realtime === false ) {
@@ -175,31 +186,91 @@
 				</thead>
 				<tbody>
 
-				<!-- Capacity -->
+
+
+				<!-- Lessons Subscribed -->
+				<?php if( $plugin_admin->lessons_has_data()) {
+				?>
+					<tr>
+						<th scope="col"><?php esc_html_e( 'Subscribed Lesson Members', 'tmsm-aquatonic-course-booking' ); ?></th>
+						<?php
+						$counter = 0;
+						$period_for_lessons = ($period_for_testing_lessons !== $period ? $period_for_testing_lessons : $period);
+
+						foreach ( $period_for_lessons as $period_item ) {
+							$period_item->setTimezone( wp_timezone() );
+							$counter ++;
+
+							?>
+							<td class="tooltip-row"><?php
+								echo '<span class="tooltip-trigger lessons-subscribed lessons-subscribed-' . $counter .'">' .$plugin_admin->lessons_subscribed_forthetime( $period_item ) . '</span>';
+
+								if($period_for_testing_lessons !== $period){
+									echo ' ';
+									echo __('(Test Mode)','tmsm-aquatonic-course-booking');
+								}
+								?></td>
+							<?php
+						}
+						?>
+					</tr>
+
+				<?php }?>
+
+				<!-- Lessons Arrived -->
+				<?php if( $plugin_admin->lessons_has_data()) {
+				?>
+					<tr>
+						<th scope="col"><?php esc_html_e( 'Arrived Lesson Members', 'tmsm-aquatonic-course-booking' ); ?></th>
+						<?php
+						$counter = 0;
+						$period_for_lessons = ($period_for_testing_lessons !== $period ? $period_for_testing_lessons : $period);
+
+						foreach ( $period_for_lessons as $period_item ) {
+							$period_item->setTimezone( wp_timezone() );
+							$counter ++;
+
+							?>
+							<td class="tooltip-row"><?php
+								echo '<span class="tooltip-trigger lessons-arrived lessons-arrived-' . $counter .'">' .$plugin_admin->lessons_arrived_forthetime( $period_item ) . '</span>';
+								if($period_for_testing_lessons !== $period){
+									echo ' ';
+									echo __('(Test Mode)','tmsm-aquatonic-course-booking');
+								}
+
+								?></td>
+							<?php
+						}
+						?>
+					</tr>
+
+				<?php }?>
+
+				<!-- Booking Allotments -->
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Capacity', 'tmsm-aquatonic-course-booking' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Booking Allotments', 'tmsm-aquatonic-course-booking' ); ?></th>
 					<?php
-					$counter = 0;
-					$capacity_timeslots_forthedate_counter = [];
-					$capacity_timeslots_forthedate_difference = [];
+					$counter                                   = 0;
+					$allotment_timeslots_forthedate_counter    = [];
+					$allotment_timeslots_forthedate_difference = [];
 					foreach ( $period as $period_item ) {
 						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
 
 						?>
 						<td><?php
-							if ( isset( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
-								echo '<span class="capacity capacity-' . $counter .'">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]. '</span>';
+							if ( isset( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
+								echo '<span class="allotment allotment-' . $counter .'">' . $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>';
 							} else {
-								$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
+								$allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
 							}
-							$capacity_timeslots_forthedate_counter[$counter] = $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
+							$allotment_timeslots_forthedate_counter[ $counter] = $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
 
-							if($counter != 1 && $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $capacity_timeslots_forthedate_counter[$counter - 1]){
-								$difference = (($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]) >= 0 ? '+' : ''). ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $capacity_timeslots_forthedate_counter[$counter - 1]);
+							if($counter != 1 && $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $allotment_timeslots_forthedate_counter[ $counter - 1]){
+								$difference = ( ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $allotment_timeslots_forthedate_counter[ $counter - 1]) >= 0 ? '+' : '') . ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $allotment_timeslots_forthedate_counter[ $counter - 1]);
 
-								echo ' (<span class="capacity-different capacity-different-' . $counter . '">'.$difference .'</span>)';
-								$capacity_timeslots_forthedate_difference[$counter] = $difference;
+								echo ' (<span class="allotment-different allotment-different-' . $counter . '">'.$difference .'</span>)';
+								$allotment_timeslots_forthedate_difference[ $counter] = $difference;
 
 							}
 							?></td>
@@ -301,8 +372,8 @@
 				<tr>
 					<th scope="col"><?php esc_html_e( 'Free', 'tmsm-aquatonic-course-booking' ); ?></th>
 					<?php
-					$counter = 0;
-					$capacity_timeslots_forthedate_free = [];
+					$counter                             = 0;
+					$allotment_timeslots_forthedate_free = [];
 					foreach ( $period as $period_item ) {
 						$period_item->setTimezone( wp_timezone() );
 						$counter ++;
@@ -312,48 +383,48 @@
 
 							// First "Free" column
 							if($counter === 1){
-								$capacity_timeslots_forthedate_free[$counter] = ($capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
-								                                                 + $plugin_public->get_participants_ending_forthetime( $period_item )
-								                                                 - $plugin_public->get_participants_starting_forthetime( $period_item ) );
+								$allotment_timeslots_forthedate_free[ $counter] = ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
+								                                                    + $plugin_public->get_participants_ending_forthetime( $period_item )
+								                                                    - $plugin_public->get_participants_starting_forthetime( $period_item ) );
 								echo '<span class="free free-'. $counter .'">'
-								     . $capacity_timeslots_forthedate_free[$counter]
+								     . $allotment_timeslots_forthedate_free[ $counter]
 								     . '</span>'
 								;
 
-								echo ' (' . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
+								echo ' (' . '<span class="allotment allotment-' . $counter . '">' . $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
 								     . $realtime . '</span>' . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>' . ')';
 							}
 							// Other "Free" columns
 							else{
 
-								$capacity_timeslots_forthedate_free[$counter] = ( $capacity_timeslots_forthedate_free[ ( $counter - 1 ) ]
-								                                                  + $plugin_public->get_participants_ending_forthetime( $period_item )
-								                                                  - $plugin_public->get_participants_starting_forthetime( $period_item )
-								                                                  + ($capacity_timeslots_forthedate_difference[ $counter ] ?? 0)
+								$allotment_timeslots_forthedate_free[ $counter] = ( $allotment_timeslots_forthedate_free[ ( $counter - 1 ) ]
+								                                                    + $plugin_public->get_participants_ending_forthetime( $period_item )
+								                                                    - $plugin_public->get_participants_starting_forthetime( $period_item )
+								                                                    + ( $allotment_timeslots_forthedate_difference[ $counter ] ?? 0)
 								);
 								echo '<span class="free free-' . $counter . '">'
-								     . $capacity_timeslots_forthedate_free[$counter] . '</span>';
+								     . $allotment_timeslots_forthedate_free[ $counter] . '</span>';
 
 								echo ' ('
 								     . '<span class="free free-'. ( $counter - 1 ) .'">'
-								     . $capacity_timeslots_forthedate_free[( $counter - 1 )]
+								     . $allotment_timeslots_forthedate_free[ ( $counter - 1 )]
 								     . '</span>'
 								     . '+'
 								     . '<span class="booking-ending booking-ending-' . $counter . '">'
 								     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter . '">'
 								     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
-								     . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] ) ? '<span class="capacity-different capacity-different-' . $counter . '">'
-								     . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
+								     . ( isset( $allotment_timeslots_forthedate_difference[ $counter ] ) ? '<span class="allotment-different allotment-different-' . $counter . '">'
+								                                                                           . $allotment_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
 								     . ')';
 							}
 
-							if($capacity_timeslots_forthedate_free[$counter] < $canstart){
+							if( $allotment_timeslots_forthedate_free[ $counter] < $canstart){
 								$canstart_counter = $counter;
 							}
 
-							$canstart = min($canstart,  $capacity_timeslots_forthedate_free[$counter]);
+							$canstart = min($canstart, $allotment_timeslots_forthedate_free[ $counter]);
 
 
 							?></td>
@@ -371,8 +442,14 @@
 
 				<!-- Real Time -->
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' ); ?></th>
-					<td><?php echo '<span class="realtime">' . $realtime . '</span>'; ?></td>
+					<th scope="col"><?php esc_html_e( 'Real Time', 'tmsm-aquatonic-course-booking' );
+					?></th>
+					<td><?php echo '<span class="realtime">' . $realtime . '</span>';
+						if(!empty($options['tests_realtimeattendance']) && $options['tests_realtimeattendance'] != 0) {
+							echo ' ';
+							echo __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
+						}
+					?></td>
 					<td colspan="5">
 								<?php
 								if( has_action('tmsm_aquatonic_attendance_cronaction')){

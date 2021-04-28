@@ -187,7 +187,7 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		// Mark as noshow bookings automatically
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'bookings_mark_as_noshow', 10 );
-		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'lessons_get_planning', 10 );
+		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'lessons_set_data', 10 );
 
 		// Ajax for change booking status
 		$this->loader->add_action( 'wp_ajax_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );

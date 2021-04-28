@@ -2,8 +2,8 @@
 @booking-ending: deeppink;
 @booking-ongoing: brown;
 @realtime: orange;
-@capacity-different: #e8c4c4;
-@capacity: #a5a800;
+@allotment-different: #e8c4c4;
+@allotment: #a5a800;
 
 
 .settings_page_tmsm-aquatonic-course-booking-settings{
@@ -18,7 +18,7 @@
         padding: 2px;
 
     }
-    .capacity-1, .realtime, .booking-starting, .booking-ending, .capacity-different, .free{
+    .allotment-1, .realtime, .booking-starting, .booking-ending, .allotment-different, .free{
         font-weight: bold;
     }
 
@@ -29,8 +29,8 @@
         padding: 1px;
     }
 
-    .capacity-1{
-        color: @capacity;
+    .allotment-1{
+        color: @allotment;
     }
 
     .realtime{
@@ -75,22 +75,22 @@
             color: darken(hsl(hue(@booking-starting), saturation(@booking-starting), lightness(@booking-starting)), 25%);
         }
     }
-    .capacity-different{
-        color: @capacity-different;
-        &.capacity-different-2{
-            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 5%);
+    .allotment-different{
+        color: @allotment-different;
+        &.allotment-different-2{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 5%);
         }
-        &.capacity-different-3{
-            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 10%);
+        &.allotment-different-3{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 10%);
         }
-        &.capacity-different-4{
-            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 15%);
+        &.allotment-different-4{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 15%);
         }
-        &.capacity-different-5{
-            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 20%);
+        &.allotment-different-5{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 20%);
         }
-        &.capacity-different-6{
-            color: darken(hsl(hue(@capacity-different), saturation(@capacity-different), lightness(@capacity-different)), 25%);
+        &.allotment-different-6{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 25%);
         }
     }
     .booking-ending{

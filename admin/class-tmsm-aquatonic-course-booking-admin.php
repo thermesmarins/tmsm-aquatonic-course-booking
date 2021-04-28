@@ -179,6 +179,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Creates a settings section
+	 *
+	 * @since 		1.0.0
+	 * @param 		array 		$params 		Array of parameters for the section
+	 * @return 		mixed 						The settings section
+	 */
+	public function section_tests( $params ) {
+		include_once( plugin_dir_path( __FILE__ ) . 'partials/'. $this->plugin_name.'-admin-section-tests.php' );
+	}
+
+	/**
 	 * Registers settings fields with WordPress
 	 */
 	public function register_fields() {
@@ -240,7 +251,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		add_settings_field(
 			'timeslots',
-			esc_html__( 'Timeslots', 'tmsm-aquatonic-course-booking' ),
+			esc_html__( 'Booking Allotments', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_textarea' ),
 			$this->plugin_name,
 			$this->plugin_name . '-times',
@@ -429,6 +440,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-tests',
 			array(
 				'id' => 'tests_lessonsdate',
+				'description' => esc_html__( 'Date Format: Ymd. Example: 20210428', 'tmsm-aquatonic-course-booking' ),
 			)
 		);
 
@@ -1318,16 +1330,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	/**
 	 * Call "Lessons" web service
 	 */
-	public function lessons_get_planning(){
-
-		error_log('lessons_get_planning');
+	public function lessons_set_data(){
 
 		$endpoint = $this->get_option('aquos_endpoint_lessons');
 		$site_id = $this->get_option('aquos_siteid');
+		$tests_lessonsdate = $this->get_option('tests_lessonsdate');
 
 		if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
 			$data = [
-				'date'    => date( 'Ymd' ),
+				'date'    => $tests_lessonsdate ?? date( 'Ymd' ),
 				'id_site' => $site_id,
 			];
 
@@ -1349,8 +1360,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			);
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			error_log( print_r( $response, true ) );
 
 			if ( $response_code >= 400 ) {
 
@@ -1382,6 +1391,95 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 
 		}
+	}
+
+	/**
+	 * Do we have lessons data?
+	 *
+	 * @return bool
+	 */
+	public function lessons_has_data(){
+		return !empty(get_transient('tmsm-aquatonic-course-booking-lessons-data'));
+	}
+
+	/**
+	 * Return lessons data
+	 *
+	 * @return array
+	 */
+	public function lessons_get_data(){
+		return get_transient('tmsm-aquatonic-course-booking-lessons-data');
+	}
+
+	/**
+	 * Return lessons data formatted
+	 *
+	 * @return array
+	 */
+	public function lessons_get_data_formatted(){
+
+		$formatted_data = [];
+
+		if($this->lessons_has_data()){
+
+			foreach($this->lessons_get_data() as $data_item){
+				$formatted_data[$data_item->dateheure.':00'] = array(
+					'subscribed' => $data_item->inscrit,
+					'arrived' => $data_item->arrives,
+				);
+
+			}
+		}
+		return $formatted_data;
+	}
+
+	/**
+	 * Get lessons subscribed number for the time
+	 *
+	 * @param DateTimeInterface $datetime
+	 *
+	 * @return int
+	 */
+	public function lessons_subscribed_forthetime( DateTimeInterface $datetime){
+
+		$count = 0;
+
+		if($this->lessons_has_data()){
+			$lessons_data = $this->lessons_get_data_formatted();
+			if(!empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )])){
+				if( ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]) && ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['subscribed'])){
+					$count = $lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['subscribed'];
+				}
+			}
+
+		}
+
+		return $count;
+
+	}
+	/**
+	 * Get lessons arrived number for the time
+	 *
+	 * @param DateTimeInterface $datetime
+	 *
+	 * @return int
+	 */
+	public function lessons_arrived_forthetime( DateTimeInterface $datetime){
+
+		$count = 0;
+
+		if($this->lessons_has_data()){
+			$lessons_data = $this->lessons_get_data_formatted();
+			if(!empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )])){
+				if( ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]) && ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['subscribed'])){
+					$count = $lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['arrived'];
+				}
+			}
+
+		}
+
+		return $count;
+
 	}
 
 }
