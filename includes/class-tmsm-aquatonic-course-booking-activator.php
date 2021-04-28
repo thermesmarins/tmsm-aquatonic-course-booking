@@ -91,8 +91,8 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 	 */
 	private static function create_cron_event() {
 
-		if ( ! wp_next_scheduled( 'tmsm_aquatonic_course_noshow_cronaction' ) ) {
-			wp_schedule_event( time(), 'tmsm_aquatonic_course_refresh_schedule', 'tmsm_aquatonic_course_noshow_cronaction' );
+		if ( ! wp_next_scheduled( 'tmsm_aquatonic_course_refresh_event' ) ) {
+			wp_schedule_event( time(), 'tmsm_aquatonic_course_refresh_schedule', 'tmsm_aquatonic_course_refresh_event' );
 		}
 	}
 

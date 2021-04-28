@@ -1282,4 +1282,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return array_key_exists($status, $this->booking_statuses());
 
 	}
+
+	/**
+	 * Call "Lessons" web service
+	 */
+	public function lessons_get_planning(){
+
+	}
+
 }

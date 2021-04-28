@@ -28,7 +28,7 @@ class Tmsm_Aquatonic_Course_Booking_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-		wp_clear_scheduled_hook('tmsm_aquatonic_course_noshow_cronaction');
+		wp_clear_scheduled_hook('tmsm_aquatonic_course_refresh_event');
 	}
 
 }
