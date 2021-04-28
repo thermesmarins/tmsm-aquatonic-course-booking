@@ -43,6 +43,13 @@
 	$options       = get_option( $this->plugin_name . '-options' );
 
 	if ( $tab == 'settings' ) {
+
+		$lessons_data = get_transient('tmsm-aquatonic-course-booking-lessons-data');
+		print_r($lessons_data);
+		foreach ($lessons_data as $lessons){
+			print_r($lessons);
+		}
+
 		?>
 		<form method="post" action="options.php"><?php
 

@@ -1288,6 +1288,68 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function lessons_get_planning(){
 
+		error_log('lessons_get_planning');
+
+		$endpoint = $this->get_option('aquos_endpoint_lessons');
+		$site_id = $this->get_option('aquos_siteid');
+
+		if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
+			$data = [
+				'date'    => date( 'Ymd' ),
+				'id_site' => $site_id,
+			];
+
+			$body = json_encode( $data );
+
+			$headers = [
+				'Content-Type' => 'application/json; charset=utf-8',
+				'X-Signature'  => $this->aquos_generate_signature( $body ),
+			];
+
+			$response      = wp_safe_remote_post(
+				$endpoint,
+				array(
+					'headers'     => $headers,
+					'body'        => $body,
+					'timeout'     => 20,
+					'data_format' => 'body',
+				)
+			);
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			error_log( print_r( $response, true ) );
+
+			if ( $response_code >= 400 ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+						absint( $response_code ) ) );
+				}
+
+			}
+
+			if ( isset( $response_data->Status ) && $response_data->Status === 'false' ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ) );
+				}
+
+			}
+
+			if ( is_wp_error( $response ) ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( 'Aquos reached, error message: ' . $response->get_error_message() );
+				}
+
+			}
+
+			// Save data in transient
+			set_transient( 'tmsm-aquatonic-course-booking-lessons-data', $response_data );
+
+
+		}
 	}
 
 }
