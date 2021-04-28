@@ -421,6 +421,28 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		add_settings_field(
+			'tests_lessonsdate',
+			esc_html__( 'Lessons Date', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-tests',
+			array(
+				'id' => 'tests_lessonsdate',
+			)
+		);
+
+		add_settings_field(
+			'tests_realtimeattendance',
+			esc_html__( 'Real Time Attendance', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-tests',
+			array(
+				'id' => 'tests_realtimeattendance',
+			)
+		);
+
 	}
 
 	/**
@@ -454,6 +476,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-aquos',
 			esc_html__( 'Aquos', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'section_aquos' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->plugin_name . '-tests',
+			esc_html__( 'Tests', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_tests' ),
 			$this->plugin_name
 		);
 
@@ -918,6 +947,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'aquos_endpoint_contact', 'text', '' );
 		$options[] = array( 'aquos_siteid', 'text', '' );
 		$options[] = array( 'aquos_secret', 'text', '' );
+
+		$options[] = array( 'tests_lessonsdate', 'text', '' );
+		$options[] = array( 'tests_realtimeattendance', 'text', '' );
 
 		return $options;
 	}
