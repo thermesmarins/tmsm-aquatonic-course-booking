@@ -183,7 +183,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'options_page_menu' );
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
-		$this->loader->add_action( 'admin_head', $plugin_admin, 'dashboard_refresh' );
+		//$this->loader->add_action( 'admin_head', $plugin_admin, 'dashboard_refresh' ); // not needed anymore, replaced by countdown
 
 		// Mark as noshow bookings automatically
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'bookings_mark_as_noshow', 10 );

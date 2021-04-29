@@ -144,7 +144,7 @@
 		$realtime = $options['tests_realtimeattendance'] ?? get_option( 'tmsm-aquatonic-attendance-count' );
 
 		global $wpdb;
-		$bookings_change_date_to_today = $wpdb->query("UPDATE {$wpdb->prefix}aquatonic_course_booking  SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" );
+		$bookings_change_date_to_today = $wpdb->query("UPDATE {$wpdb->prefix}aquatonic_course_booking  SET status= 'active', course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" );
 		// Mysql Query to change date of bookings:
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = course_start + INTERVAL 1 DAY, course_end = course_end + INTERVAL 1 DAY
 		// UPDATE aq_6_aquatonic_course_booking SET course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))
@@ -414,7 +414,7 @@
 
 							// First "Free" column
 							if($counter === 1){
-								$free[ $counter] = ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
+								$free[ $counter] = ( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
 								                     + $plugin_public->get_participants_ending_forthetime( $period_item )
 								                     - $plugin_public->get_participants_starting_forthetime( $period_item ) );
 								echo '<span class="free free-'. $counter .'">'
@@ -422,7 +422,7 @@
 								     . '</span>'
 								;
 
-								echo ' (' . '<span class="allotment allotment-' . $counter . '">' . $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
+								echo ' (' . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
 								     . $realtime . '</span>' . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>' . ')';
 							}
@@ -432,7 +432,7 @@
 								$free[ $counter] = ( $free[ ( $counter - 1 ) ]
 								                     + $plugin_public->get_participants_ending_forthetime( $period_item )
 								                     - $plugin_public->get_participants_starting_forthetime( $period_item )
-								                     + ( $allotment_timeslots_forthedate_difference[ $counter ] ?? 0)
+								                     + ( $capacity_timeslots_forthedate_difference[ $counter ] ?? 0)
 								                     + ( $plugin_admin->lessons_has_data() ? $lessons_subscribed_forthedate_counter[ ( $counter - 1 ) ] : 0 )
 								                     - ( $plugin_admin->lessons_has_data() ? $lessons_subscribed_forthedate_counter[ $counter ] : 0 )
 								);
@@ -448,8 +448,8 @@
 								     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
 								     . '<span class="booking-starting booking-starting-' . $counter . '">'
 								     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
-								     . ( isset( $allotment_timeslots_forthedate_difference[ $counter ] ) ? '<span class="allotment-different allotment-different-' . $counter . '">'
-								                                                                           . $allotment_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
+								     . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] ) ? '<span class="capacity-different capacity-different-' . $counter . '">'
+								                                                                           . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
 								     . ($plugin_admin->lessons_has_data() ? '+'. '<span class="lessons-subscribed lessons-subscribed-' . ( $counter - 1 ) . '">' . $lessons_subscribed_forthedate_counter[ ( $counter - 1 ) ] . '</span>' : '')
 								     . ($plugin_admin->lessons_has_data() ? '-'. '<span class="lessons-subscribed lessons-subscribed-' . $counter . '">' . $lessons_subscribed_forthedate_counter[ $counter ] . '</span>' : '')
 

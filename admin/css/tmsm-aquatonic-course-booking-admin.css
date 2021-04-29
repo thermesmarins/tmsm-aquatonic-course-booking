@@ -1,10 +1,33 @@
+.settings_page_tmsm-aquatonic-course-booking-settings {
+  /*.allotment-1{
+        color: @allotment;
+    }*/
+  /*.allotment-different{
+        color: @allotment-different;
+        &.allotment-different-2{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 5%);
+        }
+        &.allotment-different-3{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 10%);
+        }
+        &.allotment-different-4{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 15%);
+        }
+        &.allotment-different-5{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 20%);
+        }
+        &.allotment-different-6{
+            color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 25%);
+        }
+    }*/
+}
 .settings_page_tmsm-aquatonic-course-booking-settings .table-dashboard td {
   font-size: 14px;
 }
 .settings_page_tmsm-aquatonic-course-booking-settings span {
   padding: 2px;
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-1,
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-1,
 .settings_page_tmsm-aquatonic-course-booking-settings .realtime,
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-starting,
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ending,
@@ -19,8 +42,8 @@
   cursor: none;
   padding: 1px;
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-1 {
-  color: #a5a800;
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-1 {
+  color: #5769d9;
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .realtime {
   color: orange;
@@ -61,23 +84,23 @@
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-starting.booking-starting-6 {
   color: hsl(195.05882353, 100%, 25%);
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different {
-  color: #e8c4c4;
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different {
+  color: #f395ff;
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different.allotment-different-2 {
-  color: hsl(0, 43.90243902%, 78.92156863%);
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-2 {
+  color: hsl(293.20754717, 100%, 74.21568627%);
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different.allotment-different-3 {
-  color: hsl(0, 43.90243902%, 73.92156863%);
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-3 {
+  color: hsl(293.20754717, 100%, 69.21568627%);
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different.allotment-different-4 {
-  color: hsl(0, 43.90243902%, 68.92156863%);
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-4 {
+  color: hsl(293.20754717, 100%, 64.21568627%);
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different.allotment-different-5 {
-  color: hsl(0, 43.90243902%, 63.92156863%);
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-5 {
+  color: hsl(293.20754717, 100%, 59.21568627%);
 }
-.settings_page_tmsm-aquatonic-course-booking-settings .allotment-different.allotment-different-6 {
-  color: hsl(0, 43.90243902%, 58.92156863%);
+.settings_page_tmsm-aquatonic-course-booking-settings .capacity-different.capacity-different-6 {
+  color: hsl(293.20754717, 100%, 54.21568627%);
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ending {
   color: deeppink;

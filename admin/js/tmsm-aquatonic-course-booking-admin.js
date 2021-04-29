@@ -35,6 +35,7 @@
       + '<span>%S</span> sec'));
     if (event.elapsed && executeAfterElapsed === false) {
       executeAfterElapsed = true;
+      console.log('rezloading');
       document.location.reload();
     }
   });
