@@ -1172,15 +1172,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
-	 * Returns Attendance Timeslots
+	 * Returns Capacity Timeslots
 	 *
 	 * @return mixed|null
 	 */
 	private function capacity_periods_settings(){
 
 
-		return $this->get_option('timeslots');
-		/*
 		$attendance_options = self::attendance_options();
 		if( empty($attendance_options) ){
 			return null;
@@ -1189,12 +1187,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			return null;
 		}
 
-		return $attendance_options['timeslots'];*/
+		return $attendance_options['timeslots'];
 
 	}
 
 	/**
-	 * Returns Opening Times for the requested date
+	 * Returns (Capacity) Opening Times for the requested date
 	 *
 	 * @param string $date (Y-m-d)
 	 *
@@ -1303,11 +1301,210 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return array
 	 */
-	public function allotment_timeslots_forthedate( string $date = ''){
+	public function capacity_timeslots_forthedate( string $date = ''){
 
 		$total_capacity = [];
 
 		$opening_periods = self::capacity_periods_forthedate( $date );
+		$date_with_dash = $date;
+		if ( empty( $opening_periods ) ) {
+			return $total_capacity;
+		}
+
+		$averagecourse = $this->get_option('courseaverage');
+
+		$slotsize = $this->get_option('slotsize');
+		$slotminutes = 15;
+		if( $slotsize == 6){
+			$slotminutes = 10;
+		}
+		if( $slotsize == 3){
+			$slotminutes = 20;
+		}
+		if( $slotsize == 2){
+			$slotminutes = 30;
+		}
+
+
+		$interval = DateInterval::createFromDateString($slotminutes . ' minutes');
+
+
+		//error_log('$opening_periods');
+		//error_log(print_r($opening_periods, true));
+
+		//print_r('$opening_periods');
+		//print_r($opening_periods);
+
+		// First pass to calculate start and end datetimes
+		foreach($opening_periods as &$opening_period){
+
+			$opening_details = explode('-', $opening_period['times']);
+			$opening_capacity = explode('-', $opening_period['capacity']);
+			$opening_start = $opening_details[0];
+			$opening_end = $opening_details[1];
+
+			$opening_period['start'] = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_start);
+			$opening_period['end'] = DateTime::createFromFormat( 'Y-m-d H:i', $date_with_dash. ' '. $opening_end);
+
+		}
+
+		//print_r('$opening_periods after first pass');
+		//print_r($opening_periods);
+
+		//error_log('$opening_periods after first pass');
+		//error_log(print_r($opening_periods, true));
+
+		unset($opening_period);
+
+		// Second pass to see if there are overlapping slots
+		foreach ( $opening_periods as $opening_period ) {
+			$period = new DatePeriod( $opening_period['start'], $interval, $opening_period['end'] );
+
+			//print_r('$period');
+			//print_r($period);
+
+			//error_log('$opening_period');
+			//error_log(print_r($opening_period, true));
+
+			foreach ( $period as $slot_begin ) {
+				$slot_end = clone $slot_begin;
+				$slot_end->modify( '+' . $averagecourse . ' minutes' );
+
+				//echo "\n".$slot_begin->format( "Y-m-d H:i:s" ) . ' - '.$opening_period['capacity'];
+				$total_capacity[$slot_begin->format( "Y-m-d H:i:s" )] = $opening_period['capacity'];
+			}
+
+
+		}
+		return $total_capacity;
+	}
+
+	/**
+	 * Returns Allotment Timeslots
+	 *
+	 * @return mixed|null
+	 */
+	private function allotment_periods_settings(){
+
+		return $this->get_option('timeslots');
+
+	}
+
+	/**
+	 * Returns Allotment Opening Times for the requested date
+	 *
+	 * @param string $date (Y-m-d)
+	 *
+	 * @return array|null
+	 */
+	public function allotment_periods_forthedate( string $date = ''){
+
+		$attendance_timeslots = self::allotment_periods_settings();
+
+		if(empty($attendance_timeslots)){
+			return null;
+		}
+
+		if(empty($date)){
+			return null;
+		}
+
+		$date_object = DateTime::createFromFormat( 'Y-m-d', $date );
+		if(empty($date_object)){
+			return null;
+		}
+		$times = [];
+		$timeslots = $attendance_timeslots.PHP_EOL;
+		$timeslots_items = preg_split('/\r\n|\r|\n/', esc_attr($timeslots));
+		$open = false;
+		$capacity = 0;
+
+		//print_r('$timeslots_items');
+		//print_r($timeslots_items);
+
+		//error_log('$timeslots_items');
+		//error_log(print_r($timeslots_items , true));
+
+		// First pass to list all slots
+		foreach($timeslots_items as &$timeslots_item){
+
+			$tmp_timeslots_item = $timeslots_item;
+			$tmp_timeslots_item_array = explode('=', $tmp_timeslots_item);
+
+			if ( is_array( $tmp_timeslots_item_array ) && count($tmp_timeslots_item_array) === 3 ) {
+				$timeslots_item = [
+					'times'    => trim( $tmp_timeslots_item_array[1] ),
+					'capacity' => trim( $tmp_timeslots_item_array[2] ),
+				];
+				if ( (int) $tmp_timeslots_item_array[0] < 7 ) {
+					$timeslots_item['daynumber'] = trim( $tmp_timeslots_item_array[0] );
+				} else {
+					$timeslots_item['date'] = trim( $tmp_timeslots_item_array[0] );
+				}
+
+
+			}
+		}
+
+		//print_r('$timeslots_items after first step');
+		//print_r($timeslots_items);
+
+		//error_log('$timeslots_items after first step');
+		//error_log(print_r($timeslots_items , true));
+
+		$timeslots_item = null;
+
+		$date_dayoftheweek = $date_object->format( 'w' );
+		$date = $date_object->format( 'Y-m-d' );
+
+		// Second pass for slots matching date
+		foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
+
+			if ( isset( $timeslots_item_to_parse['date'] ) && $timeslots_item_to_parse['date'] == $date ) {
+				$found_slots_for_date = true;
+				foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
+					$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
+				}
+			}
+		}
+		//print_r('$times after second pass');
+		//print_r( $times );
+
+		if ( empty( $times ) ) {
+			// Third pass for slots matching day of the week
+			foreach($timeslots_items as $timeslots_key => $timeslots_item_to_parse){
+
+				if ( isset( $timeslots_item_to_parse['daynumber'] ) && $timeslots_item_to_parse['daynumber'] == $date_dayoftheweek ) {
+					foreach( explode(',', $timeslots_item_to_parse['times']) as $timeslots_times){
+						$times[] = ['times' => $timeslots_times, 'capacity' => $timeslots_item_to_parse['capacity']];
+					}
+				}
+			}
+
+			//print_r('$times after third pass');
+			//print_r( $times );
+		}
+
+
+		//error_log('$times');
+		//error_log(print_r($times , true));
+
+		return $times;
+
+	}
+
+	/**
+	 * Returns Opening Times for the requested date
+	 *
+	 * @param string $date (Y-m-d)
+	 *
+	 * @return array
+	 */
+	public function allotment_timeslots_forthedate( string $date = ''){
+
+		$total_capacity = [];
+
+		$opening_periods = self::allotment_periods_forthedate( $date );
 		$date_with_dash = $date;
 		if ( empty( $opening_periods ) ) {
 			return $total_capacity;

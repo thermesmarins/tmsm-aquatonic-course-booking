@@ -9,7 +9,8 @@
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-starting,
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ending,
 .settings_page_tmsm-aquatonic-course-booking-settings .allotment-different,
-.settings_page_tmsm-aquatonic-course-booking-settings .free {
+.settings_page_tmsm-aquatonic-course-booking-settings .free,
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed {
   font-weight: bold;
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .highlight {
@@ -113,6 +114,24 @@
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .booking-ongoing.booking-ongoing-6 {
   color: hsl(0, 59.42028986%, 15.58823529%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed {
+  color: #99ec53;
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed.lessons-subscribed-2 {
+  color: hsl(92.54901961, 80.10471204%, 57.54901961%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed.lessons-subscribed-3 {
+  color: hsl(92.54901961, 80.10471204%, 52.54901961%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed.lessons-subscribed-4 {
+  color: hsl(92.54901961, 80.10471204%, 47.54901961%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed.lessons-subscribed-5 {
+  color: hsl(92.54901961, 80.10471204%, 42.54901961%);
+}
+.settings_page_tmsm-aquatonic-course-booking-settings .lessons-subscribed.lessons-subscribed-6 {
+  color: hsl(92.54901961, 80.10471204%, 37.54901961%);
 }
 .settings_page_tmsm-aquatonic-course-booking-settings .widefat .column-wc_actions a.processing::after {
   content: "\e015";

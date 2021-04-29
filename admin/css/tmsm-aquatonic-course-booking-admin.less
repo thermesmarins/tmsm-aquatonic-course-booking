@@ -4,6 +4,8 @@
 @realtime: orange;
 @allotment-different: #e8c4c4;
 @allotment: #a5a800;
+@lessons-subscribed: #99ec53;
+@lessons-arrived: #32dbb1;
 
 
 .settings_page_tmsm-aquatonic-course-booking-settings{
@@ -18,7 +20,7 @@
         padding: 2px;
 
     }
-    .allotment-1, .realtime, .booking-starting, .booking-ending, .allotment-different, .free{
+    .allotment-1, .realtime, .booking-starting, .booking-ending, .allotment-different, .free, .lessons-subscribed{
         font-weight: bold;
     }
 
@@ -128,6 +130,24 @@
         }
         &.booking-ongoing-6{
             color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 25%);
+        }
+    }
+    .lessons-subscribed{
+        color: @lessons-subscribed;
+        &.lessons-subscribed-2{
+            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 5%);
+        }
+        &.lessons-subscribed-3{
+            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 10%);
+        }
+        &.lessons-subscribed-4{
+            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 15%);
+        }
+        &.lessons-subscribed-5{
+            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 20%);
+        }
+        &.lessons-subscribed-6{
+            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 25%);
         }
     }
 
