@@ -1,3 +1,5 @@
+* No Distraction for StormBringer theme
+
 ### 1.4.1: May 04th, 2021
 * New fields for testing: Real Time Attendance, Lessons Date
 * Calculate dashboard with lessons members
