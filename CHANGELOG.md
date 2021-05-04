@@ -1,6 +1,8 @@
+### 1.4.1: May 04th, 2021
 * New fields for testing: Real Time Attendance, Lessons Date
 * Calculate dashboard with lessons members
 * Rename capacity for allotment
+* New dashboard colors for allotment
 
 ### 1.4.0: April 14th, 2021
 * Gravity Forms: Add WooCommerce styling to message content
