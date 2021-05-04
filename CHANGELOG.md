@@ -1,4 +1,5 @@
 * No Distraction for StormBringer theme
+* Fix $el.content for WordPress 5.7
 
 ### 1.4.1: May 04th, 2021
 * New fields for testing: Real Time Attendance, Lessons Date
