@@ -172,11 +172,14 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
           $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]').empty();
         }
         var item = new TmsmAquatonicCourseApp.TimesListItemView( { model: model } );
+        console.log('item render:');
+        console.log(item.render());
         if ($('.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').length > 0) {
-          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().$el.context.outerHTML);
+          //$( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().$el.context.outerHTML);
+          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().el.outerHTML);
         }
         else{
-          console.log('tmsm-aquatonic-course-booking-weekday-times not added for '+model.attributes.date);
+          console.warn('tmsm-aquatonic-course-booking-weekday-times not added for '+model.attributes.date);
         }
 
         //$( '.tmsm-aquatonic-course-booking-weekday-times[data-date=\''+model.attributes.date+'\']').append(item.render().$el);
