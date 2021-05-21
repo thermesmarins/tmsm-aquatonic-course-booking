@@ -14,7 +14,7 @@
  * @subpackage Tmsm_Aquatonic_Course_Booking/admin/partials
  */
 ?>
-<div class="wrap">
+<div class="wrap tmsm-aquatonic-course-booking-wrap">
 
 
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
@@ -22,18 +22,18 @@
 	<h2 class="nav-tab-wrapper">
 		<a class="nav-tab <?php if ( $tab == 'dashboard' ) {
 			echo 'nav-tab-active';
-		} ?>" href="options-general.php?page=tmsm-aquatonic-course-booking-settings">
+		} ?>" href="<?php echo self::admin_page_url();?>?page=tmsm-aquatonic-course-booking-settings">
 			<?php _e( 'Dashboard', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 		<a class="nav-tab <?php if ( $tab == 'bookings' ) {
 			echo 'nav-tab-active';
-		} ?>" href="options-general.php?page=tmsm-aquatonic-course-booking-settings&tab=bookings">
+		} ?>" href="<?php echo self::admin_page_url(); ?>?page=tmsm-aquatonic-course-booking-settings&tab=bookings">
 			<?php _e( 'Today\'s Bookings', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 
 		<a class="nav-tab <?php if ( $tab == 'settings' ) {
 			echo 'nav-tab-active';
-		} ?>" href="options-general.php?page=tmsm-aquatonic-course-booking-settings&tab=settings">
+		} ?>" href="<?php echo self::admin_page_url();?>?page=tmsm-aquatonic-course-booking-settings&tab=settings">
 			<?php _e( 'Settings', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 	</h2>
@@ -498,7 +498,7 @@
 										do_action( 'tmsm_aquatonic_attendance_cronaction' );
 									}
 									?>
-									<a id="refresh-attendance-link" class="button" href="<?php echo admin_url( 'options-general.php?page='.$this->plugin_name.'-settings&force-refresh-attendance=1' );?>"><?php _e( 'Force refresh attendance', 'tmsm-aquatonic-course-booking' ); ?></a>
+									<a id="refresh-attendance-link" class="button" href="<?php echo admin_url( self::admin_page_url().'?page='.$this->plugin_name.'-settings&force-refresh-attendance=1' );?>"><?php _e( 'Force refresh attendance', 'tmsm-aquatonic-course-booking' ); ?></a>
 
 									<?php
 								}

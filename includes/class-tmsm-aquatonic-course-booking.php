@@ -180,6 +180,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_sections' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_fields' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_fields' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'options_page_menu' );
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
@@ -191,7 +192,11 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		// Ajax for change booking status
 		$this->loader->add_action( 'wp_ajax_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );
-		$this->loader->add_action( 'wp_ajax_nopriv_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );
+		$this->loader->add_action( 'wp_ajax_nopriv_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10);
+
+		// Capabilities
+		//$this->loader->add_action( 'map_meta_cap', $plugin_admin, 'map_meta_cap', 10, 4 );
+		//$this->loader->add_action('option_page_capability_aquatonic-course', $plugin_admin, 'option_page_capability');
 
 	}
 
@@ -211,6 +216,7 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_weekday_select' );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time_select' );
+
 
 		// Gravity Forms Hooks only for the selected form
 		$options = get_option($this->plugin_name . '-options');
@@ -244,9 +250,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email', 20, 4 );
 		$this->loader->add_filter( 'woocommerce_email_styles', $plugin_public, 'woocommerce_email_styles', 20, 2 );
 
-
 		// Misc
-		$this->loader->add_filter( 'body_class', $plugin_public, 'body_class', 10, 2 );
+		$this->loader->add_filter( 'body_class', $plugin_public, 'body_class_pages',10, 2);
+
 
 	}
 

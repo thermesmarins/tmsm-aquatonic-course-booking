@@ -95,8 +95,40 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * @since    1.0.0
 	 */
 	public function options_page_menu() {
-		add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'manage_options', $this->plugin_name.'-settings', array($this, 'options_page_display'));
 
+		$current_user_id = get_current_user_id();
+
+		$target_roles = array('administrator');
+		$user_meta = get_userdata($current_user_id);
+		$user_roles = ( array ) $user_meta->roles;
+
+		if ( array_intersect($target_roles, $user_roles) ) {
+			add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+
+		}
+		else{
+			add_menu_page(__('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+			//add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+
+		}
+
+	}
+
+
+	/**
+	 * Admin Page URL
+	 *
+	 * @return string
+	 */
+	private function admin_page_url(){
+
+		$screen = get_current_screen();
+		if(strpos($screen->base, 'toplevel' ) === false){
+			return 'options-general.php';
+		}
+		else{
+			return 'admin.php';
+		}
 	}
 
 	/**
@@ -107,7 +139,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	function settings_link( $links ) {
 		$setting_link = array(
-			'<a href="' . admin_url( 'options-general.php?page='.$this->plugin_name.'-settings' ) . '">'.__('Settings', 'tmsm-aquatonic-course-booking').'</a>',
+			'<a href="' . admin_url( self::admin_page_url(). '?page='.$this->plugin_name.'-settings' ) . '">'.__('Settings', 'tmsm-aquatonic-course-booking').'</a>',
 		);
 		return array_merge( $setting_link, $links );
 	}
@@ -972,8 +1004,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function dashboard_refresh(){
 		global $pagenow;
 		$screen = get_current_screen();
-		if( $pagenow === 'options-general.php' && $screen && $screen->id === 'settings_page_tmsm-aquatonic-course-booking-settings' && empty($_REQUEST['tab']) ){
-			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url=options-general.php?page=tmsm-aquatonic-course-booking-settings">';
+		print_r($screen);
+		if( $pagenow === self::admin_page_url() && $screen && $screen->id === 'settings_page_tmsm-aquatonic-course-booking-settings' && empty($_REQUEST['tab']) ){
+			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url='.self::admin_page_url().'?page=tmsm-aquatonic-course-booking-settings">';
 		}
 	}
 
@@ -1481,5 +1514,53 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return $count;
 
 	}
+
+	/**
+	 * Customize admin capabilities
+	 *
+	 * @param $caps
+	 * @param $cap
+	 * @param $user_id
+	 * @param $args
+	 *
+	 * @return array|mixed
+	 */
+	function map_meta_cap($caps, $cap, $user_id, $args)
+	{
+		if (!is_user_logged_in()) return $caps;
+
+		//print_r($caps);
+		$target_roles = array('editor', 'administrator', 'shop_manager');
+		$user_meta = get_userdata($user_id);
+		$user_roles = ( array ) $user_meta->roles;
+
+		if ( array_intersect($target_roles, $user_roles) ) {
+			if ('manage_options_course' === $cap) {
+				$manage_name = is_multisite() ? 'manage_network' : 'manage_options';
+				$caps = array_diff($caps, [ $manage_name ]);
+			}
+			if ('manage_privacy_options' === $cap) {
+				$manage_name = is_multisite() ? 'manage_network' : 'manage_options';
+				$caps = array_diff($caps, [ $manage_name ]);
+			}
+		}
+		return $caps;
+	}
+
+
+	/**
+	 * Option Page capabilities
+	 *
+	 * @return string|null
+	 */
+	function option_page_capability() {
+		$capability = null;
+		if ( current_user_can( 'manage_woocommerce' ) ) {
+			$capability = 'manage_woocommerce';
+		}
+
+		return $capability;
+	}
+
 
 }

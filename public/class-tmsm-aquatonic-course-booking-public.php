@@ -154,6 +154,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 
+
 	/**
 	 * Get option
 	 * @param string $option_name
@@ -1898,6 +1899,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 
+
+
 	/**
 	 * WooCommerce: Add custom CSS to emails
 	 *
@@ -1913,7 +1916,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $css;
 	}
 
-
 	/**
 	 * Filters the list of CSS body class names
 	 *
@@ -1924,7 +1926,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return string[]
 	 */
-	public function body_class( $classes, $class ) {
+	public function body_class_pages( $classes, $class ) {
 		global $post;
 
 		$cancel_page_id = $this->get_option( 'page_cancel_id' );
