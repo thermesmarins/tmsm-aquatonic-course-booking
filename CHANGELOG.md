@@ -1,3 +1,4 @@
+### 1.4.2: May 19th, 2021
 * No Distraction for StormBringer theme
 * Fix $el.content for WordPress 5.7
 * Allow shop_manager role to access the admin pages
