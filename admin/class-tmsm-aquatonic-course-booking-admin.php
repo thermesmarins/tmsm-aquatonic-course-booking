@@ -1074,11 +1074,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'X-Signature' => $this->aquos_generate_signature( $body ),
 			];
 
-			error_log('headers with signature:');
-			error_log(print_r($headers, true));
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('headers with signature:');
+				error_log(print_r($headers, true));
 
-			error_log('body:');
-			error_log($body);
+				error_log('body:');
+				error_log($body);
+
+			}
 
 			$response = wp_safe_remote_post(
 				$endpoint,

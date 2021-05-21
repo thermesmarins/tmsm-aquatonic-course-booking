@@ -1,6 +1,7 @@
 * No Distraction for StormBringer theme
 * Fix $el.content for WordPress 5.7
 * Allow shop_manager role to access the admin pages
+* Remove update bookings query for testing (too dangerous for production)
 
 ### 1.4.1: May 04th, 2021
 * New fields for testing: Real Time Attendance, Lessons Date
