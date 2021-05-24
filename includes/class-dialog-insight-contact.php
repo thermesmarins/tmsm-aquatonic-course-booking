@@ -101,20 +101,24 @@ class Dialog_Insight_Contact {
 		$result_array = [];
 		$contact      = [];
 
+		$data = [
+			'f_EMail'         => $this->email,
+			'f_FirstName'     => $this->firstname,
+			'f_civilite'     =>  ( $this->title == 1 ? 'M.' : 'Mme'),
+			'f_LastName'      => $this->lastname,
+			'f_MobilePhone'   => $this->phone,
+		];
+		if(!empty($this->birthdate)){
+			$data['f_dateNaissance'] = self::format_birthdate($this->birthdate);
+		}
+
 		$request = [
 			'Records' => [
 				[
 					'ID'   => [
 						'key_f_EMail' => $this->email,
 					],
-					'Data' => [
-						'f_EMail'         => $this->email,
-						'f_FirstName'     => $this->firstname,
-						'f_civilite'     =>  ( $this->title == 1 ? 'M.' : 'Mme'),
-						'f_LastName'      => $this->lastname,
-						'f_dateNaissance' => self::format_birthdate($this->birthdate),
-						'f_MobilePhone'   => $this->phone,
-					],
+					'Data' => $data,
 				],
 			],
 			'MergeOptions' => [

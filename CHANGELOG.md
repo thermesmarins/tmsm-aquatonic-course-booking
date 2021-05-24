@@ -1,3 +1,5 @@
+* Dialog Insight: Make birthdate value optional when sending to web service
+
 ### 1.4.3: May 24th, 2021
 * Times dropdown must be above header in fixed position 
 * Admin: Better label on change booking status button
