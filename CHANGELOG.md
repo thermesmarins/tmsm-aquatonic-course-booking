@@ -1,6 +1,7 @@
 * Times dropdown must be above header in fixed position 
 * Admin: Better label on change booking status button
 * Front: Only load times when on step 2
+* Fix no distraction mode after Elementor footer update
 
 ### 1.4.2: May 19th, 2021
 * No Distraction for StormBringer theme
