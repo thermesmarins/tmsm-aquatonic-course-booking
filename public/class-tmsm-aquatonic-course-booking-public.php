@@ -89,19 +89,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Tmsm_Aquatonic_Course_Booking_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Tmsm_Aquatonic_Course_Booking_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-
 		$posts = get_posts( array(
 			'post_status' => 'draft,publish',
 			'page' => 1,
@@ -120,7 +107,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		wp_enqueue_script( 'jquery-mask', plugin_dir_url( __FILE__ ) . 'js/jquery.mask.min.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public'.(defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true  ? '.min' : '').'.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms' ), $this->version, true );
 
 		// Javascript localization
 		$translation_array = array(
