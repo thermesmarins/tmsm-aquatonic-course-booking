@@ -578,6 +578,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$birthdate = false;
 				$participants = false;
 				$times = false;
+				$summary = false;
 				$title = false;
 				foreach($form['fields'] as $field){
 
@@ -599,6 +600,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					if($field['cssClass'] === 'tmsm-aquatonic-course-times'){
 						$times = true;
 					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-summary'){
+						$summary = true;
+					}
 					if($field['cssClass'] === 'tmsm-aquatonic-course-title'){
 						$title = true;
 					}
@@ -609,12 +613,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
 				}
 
-				if( ! $name ){
-					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+				if( ! $email ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The name field needs the `tmsm-aquatonic-course-email` class', 'tmsm-aquatonic-course-booking'));
 				}
 
 				if( ! $birthdate ){
-					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The birthdate field needs the `tmsm-aquatonic-course-name` class', 'tmsm-aquatonic-course-booking'));
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The birthdate field needs the `tmsm-aquatonic-course-birthdate` class', 'tmsm-aquatonic-course-booking'));
 				}
 
 				if( ! $phone ){
@@ -622,11 +626,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				}
 
 				if( ! $participants ){
-					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The participants field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The participants field needs the `tmsm-aquatonic-course-participants` class', 'tmsm-aquatonic-course-booking'));
 				}
 
 				if( ! $times ){
-					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The times field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The times field needs the `tmsm-aquatonic-course-times` class', 'tmsm-aquatonic-course-booking'));
+				}
+
+				if( ! $summary ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The times field needs the `tmsm-aquatonic-course-summary` class', 'tmsm-aquatonic-course-booking'));
 				}
 
 				if( ! $title ){

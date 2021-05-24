@@ -107,7 +107,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		wp_enqueue_script( 'jquery-mask', plugin_dir_url( __FILE__ ) . 'js/jquery.mask.min.js', array( 'jquery' ), null, true );
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public'.(defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true  ? '.min' : '').'.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public'.(defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true  ? '' : '.min').'.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms' ), $this->version, true );
 
 		// Javascript localization
 		$translation_array = array(
@@ -125,6 +125,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			'form_fields' => [
 				'step' => 1,
 				'date_field' => '.tmsm-aquatonic-course-date input',
+				'summary_field' => '.tmsm-aquatonic-course-summary',
 				'hour_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
 				'minutes_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
 				'submit_button' => '.gform_button[type=submit]',
@@ -133,6 +134,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
 				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
+				'summary' => __( 'Course for %s participant(s) on %s at %s:%s', 'tmsm-aquatonic-course-booking' ),
+				'summarymomentdateformat' => __( 'MMMM DD, YYYY', 'tmsm-aquatonic-course-booking' ),
 
 			] ,
 

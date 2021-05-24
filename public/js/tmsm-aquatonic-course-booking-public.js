@@ -607,6 +607,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         console.log('hour:'+this.model.attributes.hour);
         console.log('minutes:'+this.model.attributes.minutes);
 
+        var day = moment(this.model.attributes.date);
+        console.log(day);
+
+
+
         if($(TmsmAquatonicCourseApp.form_fields.date_field).length > 0){
           $(TmsmAquatonicCourseApp.form_fields.date_field).val(this.model.attributes.date);
         }
@@ -616,6 +621,10 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         if($(TmsmAquatonicCourseApp.form_fields.minutes_field).length > 0){
           $(TmsmAquatonicCourseApp.form_fields.minutes_field).val(this.model.attributes.minutes);
         }
+        if($(TmsmAquatonicCourseApp.form_fields.summary_field).length > 0){
+          $(TmsmAquatonicCourseApp.form_fields.summary_field).html(sprintf(TmsmAquatonicCourseApp.i18n.summary, TmsmAquatonicCourseApp.participants, day.format('dddd DD MMMM YYYY'), this.model.attributes.hour, this.model.attributes.minutes ));
+        }
+
 
 
         this.showConfirm();
