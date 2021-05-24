@@ -395,6 +395,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
     render: function() {
 
+
+      console.warn(' TmsmAquatonicCourseApp.form_fields.step:'+ TmsmAquatonicCourseApp.form_fields.step);
+      if(TmsmAquatonicCourseApp.form_fields.step != 2){
+        return;
+      }
       var object = this;
 
       console.log('WeekDayListView render');
@@ -446,6 +451,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         //console.log(model);
         var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
         $list.append( item.render().$el );
+
 
         console.log('WeekDayListView fetch:');
         TmsmAquatonicCourseApp.times.fetch({
@@ -688,28 +694,45 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   TmsmAquatonicCourseApp.init = function() {
     console.log('TmsmAquatonicCourseApp.init');
 
+
+
+
     $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
 
     if($('.tmsm-aquatonic-course-participants').length > 0 ){
       TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
     }
 
-    TmsmAquatonicCourseApp.times_per_page = 10;
-    TmsmAquatonicCourseApp.times_page = 1;
-    TmsmAquatonicCourseApp.times_indexmax = 1;
+    //if(TmsmAquatonicCourseApp.form_fields.step == 2 ){
+      console.log('loading rest of app');
+      TmsmAquatonicCourseApp.times_per_page = 10;
+      TmsmAquatonicCourseApp.times_page = 1;
+      TmsmAquatonicCourseApp.times_indexmax = 1;
 
-    TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
-    TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
-    TmsmAquatonicCourseApp.timesList = new TmsmAquatonicCourseApp.TimesListView( { collection: TmsmAquatonicCourseApp.times } );
-    TmsmAquatonicCourseApp.timesList.render();
+      TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
+      TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
+      TmsmAquatonicCourseApp.timesList = new TmsmAquatonicCourseApp.TimesListView( { collection: TmsmAquatonicCourseApp.times } );
+      TmsmAquatonicCourseApp.timesList.render();
 
-    TmsmAquatonicCourseApp.weekdays = new TmsmAquatonicCourseApp.WeekDayCollection();
-    TmsmAquatonicCourseApp.weekdays.reset( TmsmAquatonicCourseApp.data.times );
-    TmsmAquatonicCourseApp.weekdaysList = new TmsmAquatonicCourseApp.WeekDayListView( { collection: TmsmAquatonicCourseApp.weekdays } );
-    TmsmAquatonicCourseApp.weekdaysList.render();
+      TmsmAquatonicCourseApp.weekdays = new TmsmAquatonicCourseApp.WeekDayCollection();
+      TmsmAquatonicCourseApp.weekdays.reset( TmsmAquatonicCourseApp.data.times );
+      TmsmAquatonicCourseApp.weekdaysList = new TmsmAquatonicCourseApp.WeekDayListView( { collection: TmsmAquatonicCourseApp.weekdays } );
+      TmsmAquatonicCourseApp.weekdaysList.render();
 
-    TmsmAquatonicCourseApp.selectedData = new TmsmAquatonicCourseApp.SelectedDataModel();
-    TmsmAquatonicCourseApp.selectedDataList = new TmsmAquatonicCourseApp.SelectedDataView( { model: TmsmAquatonicCourseApp.selectedData } );
+      TmsmAquatonicCourseApp.selectedData = new TmsmAquatonicCourseApp.SelectedDataModel();
+      TmsmAquatonicCourseApp.selectedDataList = new TmsmAquatonicCourseApp.SelectedDataView( { model: TmsmAquatonicCourseApp.selectedData } );
+    //}
+
+    // Check Gravity Forms step
+    $(document).bind('gform_post_render', function(event, formId, currentPage){
+      console.warn('currentPage:'+currentPage);
+
+      TmsmAquatonicCourseApp.form_fields.step = currentPage;
+      if(TmsmAquatonicCourseApp.form_fields.step == 2){
+        TmsmAquatonicCourseApp.weekdaysList.render();
+      }
+    });
+
 
 
   };

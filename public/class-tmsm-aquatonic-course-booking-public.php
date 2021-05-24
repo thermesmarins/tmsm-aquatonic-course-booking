@@ -136,6 +136,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'times' => [],
 			],
 			'form_fields' => [
+				'step' => 1,
 				'date_field' => '.tmsm-aquatonic-course-date input',
 				'hour_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_hour input',
 				'minutes_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
