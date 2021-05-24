@@ -5,6 +5,7 @@
 * Enqueue min JS file for production
 * New form field in add form: summary to display selected summary of the booking before confirming
 * Smooth transition to summary field after selecting time
+* Let Gravity Forms hide/show the confirm button
 
 ### 1.4.2: May 19th, 2021
 * No Distraction for StormBringer theme
