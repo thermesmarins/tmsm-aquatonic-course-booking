@@ -568,7 +568,7 @@
 							                                 . $booking->booking_id ),
 								'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' );
 							?>
-						<a class="<?php echo $statuses['arrived']['actionclass'];?>" href="<?php echo $link; ?>"><?php  echo $statuses['arrived']['markas']; ?></a>
+						<a class="<?php echo $statuses['arrived']['actionclass'];?>" href="<?php echo $link; ?>" title="<?php echo esc_attr($statuses['arrived']['markas']) ;?>"><?php  echo $statuses['arrived']['markas']; ?></a>
 						<?php } ?>
 					</td>
 

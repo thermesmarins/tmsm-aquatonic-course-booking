@@ -1,4 +1,5 @@
 * Times dropdown must be above header in fixed position 
+* Admin: Better label on change booking status button
 
 ### 1.4.2: May 19th, 2021
 * No Distraction for StormBringer theme
