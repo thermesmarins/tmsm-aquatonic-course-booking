@@ -736,9 +736,15 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     $(document).bind('gform_post_render', function(event, formId, currentPage){
       console.warn('currentPage:'+currentPage);
 
+      // On step 2, load weekday times
       TmsmAquatonicCourseApp.form_fields.step = currentPage;
       if(TmsmAquatonicCourseApp.form_fields.step == 2){
         TmsmAquatonicCourseApp.weekdaysList.render();
+      }
+
+      // Reset summary field
+      if($(TmsmAquatonicCourseApp.form_fields.summary_field).length > 0){
+        $(TmsmAquatonicCourseApp.form_fields.summary_field).html('');
       }
     });
 
