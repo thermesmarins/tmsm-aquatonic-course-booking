@@ -652,7 +652,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     },
     showConfirm: function(){
       console.log('SelectedDataView showConfirm 02');
-      TmsmAquatonicCourseApp.animateTransition( $(TmsmAquatonicCourseApp.form_fields.submit_button));
+      TmsmAquatonicCourseApp.animateTransition( $(TmsmAquatonicCourseApp.form_fields.summary_field));
       $( this.confirmButton ).show();
     },
     hideConfirm: function(){

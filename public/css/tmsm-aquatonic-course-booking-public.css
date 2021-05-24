@@ -87,7 +87,9 @@
   margin-bottom: 10px;
 }
 .tmsm-aquatonic-course-booking-pages .footer-above-wrapper,
-.tmsm-aquatonic-course-booking-pages .elementor-location-footer {
+.tmsm-aquatonic-course-booking-pages .elementor-location-footer,
+.tmsm-aquatonic-course-booking-pages .footer-wrapper,
+.tmsm-aquatonic-course-booking-pages .footer-below-wrapper {
   display: none;
 }
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */
