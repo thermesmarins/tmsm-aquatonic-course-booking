@@ -553,11 +553,15 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   TmsmAquatonicCourseApp.SelectedDataView = Backbone.View.extend( {
     el: '#tmsm-aquatonic-course-booking-confirm-container',
+    cancelButton: '#tmsm-aquatonic-course-booking-cancel',
+    confirmButton: '.gform_button[type=submit]',
     errorElement: '#tmsm-aquatonic-course-booking-confirm-error',
 
     initialize: function() {
       console.log('SelectedDataView initialize');
       this.hideError();
+      this.hideConfirm();
+      this.hideCancel();
       this.listenTo(this.model, 'change', this.change);
     },
 
@@ -626,6 +630,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         this.showConfirm();
       }
       else{
+        this.hideConfirm();
       }
 
 
@@ -648,8 +653,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     showConfirm: function(){
       console.log('SelectedDataView showConfirm 02');
       TmsmAquatonicCourseApp.animateTransition( $(TmsmAquatonicCourseApp.form_fields.summary_field));
+      $( this.confirmButton ).show();
     },
-
+    hideConfirm: function(){
+      $( this.confirmButton ).hide();
+    },
 
     showCancel: function(){
       console.log('SelectedDataView showCancel');
