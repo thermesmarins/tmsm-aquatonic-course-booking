@@ -1,3 +1,5 @@
+* Times dropdown must be above header in fixed position 
+
 ### 1.4.2: May 19th, 2021
 * No Distraction for StormBringer theme
 * Fix $el.content for WordPress 5.7

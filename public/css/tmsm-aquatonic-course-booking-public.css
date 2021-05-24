@@ -7,6 +7,9 @@
   text-align: center;
   margin: 10px auto;
 }
+#tmsm-aquatonic-course-booking-weekdays-list .dropdown-menu {
+  z-index: 1060;
+}
 #tmsm-aquatonic-course-booking-weekdays-list:before,
 #tmsm-aquatonic-course-booking-weekdays-list:after {
   content: " ";
