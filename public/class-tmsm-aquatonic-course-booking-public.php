@@ -1687,7 +1687,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						continue;
 					}
 				}
-				// Is not a customer
+				// Is not a customer allow timeslot before "hours before"
 				else{
 					if($slot_begin_object < $allow_begin ) {
 						continue;
