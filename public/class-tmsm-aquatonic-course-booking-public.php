@@ -879,7 +879,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					'name'  => sanitize_text_field($firstname) . ' ' . sanitize_text_field($lastname),
 				],
 				'modifiedTime' => date(DATE_ATOM, time()),
-				'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
+				//'modifyReservationUrl' => $contact_page_id ? get_permalink($contact_page_id) : '',
+				'modifyReservationUrl' => self::cancel_url($token) ?? get_permalink($contact_page_id),
 				'cancelReservationUrl' => self::cancel_url($token) ?? get_permalink($contact_page_id),
 				'reservationFor'    => [
 					'@type'     => 'Event',

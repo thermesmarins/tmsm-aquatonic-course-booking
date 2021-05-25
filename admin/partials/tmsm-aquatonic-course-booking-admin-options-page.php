@@ -236,7 +236,7 @@
 							<td class="tooltip-row"><?php
 								echo '<span class="tooltip-trigger lessons-subscribed lessons-subscribed-' . $counter .'">' .$lessons_subscribed_forthedate_counter[ $counter ] . '</span>';
 
-								if($period_for_testing_lessons !== $period){
+								if($period_for_testing_lessons != $period){
 									echo ' ';
 									echo __('(Test Mode)','tmsm-aquatonic-course-booking');
 								}
