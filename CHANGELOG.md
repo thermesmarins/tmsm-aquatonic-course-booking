@@ -1,6 +1,7 @@
 * Dialog Insight: Make birthdate value optional when sending to web service
 * Markup "modifyUrl" now goes to cancel page, not contact page
 * Require wp-i18n for using sprintf in javascript
+* "Pick a timeslot" before the timeslots in the select menu
 
 ### 1.4.3: May 24th, 2021
 * Times dropdown must be above header in fixed position 

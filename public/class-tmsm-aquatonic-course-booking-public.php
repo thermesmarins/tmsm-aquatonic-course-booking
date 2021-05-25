@@ -134,6 +134,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
 				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
+				'pickatimeslot' => __( 'Pick a time slot', 'tmsm-aquatonic-course-booking' ),
 				'summary' => __( 'Course for %s participant(s) on %s at %s:%s', 'tmsm-aquatonic-course-booking' ),
 				'summarymomentdateformat' => __( 'MMMM DD, YYYY', 'tmsm-aquatonic-course-booking' ),
 

@@ -169,7 +169,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       this.collection.each( function( model ) {
         i++;
         if(i===1){
-          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]').empty();
+          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]').empty().append('<option>'+TmsmAquatonicCourseApp.i18n.pickatimeslot+'</option>');
         }
         var item = new TmsmAquatonicCourseApp.TimesListItemView( { model: model } );
         console.log('item render:');
