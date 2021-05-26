@@ -16,7 +16,14 @@
 ?>
 <div class="wrap tmsm-aquatonic-course-booking-wrap">
 
+	<?php
+	$current_user_id = get_current_user_id();
 
+	$target_roles = array('administrator');
+	$user_meta = get_userdata($current_user_id);
+	$user_roles = ( array ) $user_meta->roles;
+
+	?>
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
@@ -31,11 +38,15 @@
 			<?php _e( 'Today\'s Bookings', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 
-		<a class="nav-tab <?php if ( $tab == 'settings' ) {
-			echo 'nav-tab-active';
-		} ?>" href="<?php echo self::admin_page_url();?>?page=tmsm-aquatonic-course-booking-settings&tab=settings">
-			<?php _e( 'Settings', 'tmsm-aquatonic-course-booking' ); ?>
-		</a>
+		<?php
+		if ( array_intersect($target_roles, $user_roles) ) {
+		?>
+			<a class="nav-tab <?php if ( $tab == 'settings' ) {
+				echo 'nav-tab-active';
+			} ?>" href="<?php echo self::admin_page_url();?>?page=tmsm-aquatonic-course-booking-settings&tab=settings">
+				<?php _e( 'Settings', 'tmsm-aquatonic-course-booking' ); ?>
+			</a>
+		<?php } ?>
 	</h2>
 
 	<?php
@@ -418,7 +429,7 @@
 									$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
 									- $realtime
 								    //+ $plugin_public->get_participants_ending_forthetime( $period_item )
-								    //- $plugin_public->get_participants_starting_forthetime( $period_item ) )
+								    //- $plugin_public->get_participants_starting_forthetime( $period_item )
 								);
 								echo '<span class="free free-'. $counter .'">'
 								     . $free[ $counter]
