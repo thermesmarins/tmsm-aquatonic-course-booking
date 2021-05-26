@@ -3,6 +3,7 @@
 * Require wp-i18n for using sprintf in javascript
 * "Pick a timeslot" before the timeslots in the select menu
 * Format phone for Dialog Insight
+* Fix title info was not submitted to Dialog Insight web service
 
 ### 1.4.3: May 24th, 2021
 * Times dropdown must be above header in fixed position 

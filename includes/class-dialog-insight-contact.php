@@ -106,7 +106,6 @@ class Dialog_Insight_Contact {
 			'f_FirstName'     => $this->firstname,
 			'f_civilite'     =>  ( $this->title == 1 ? 'M.' : 'Mme'),
 			'f_LastName'      => $this->lastname,
-			'f_MobilePhone'   => $this->phone,
 		];
 		if(!empty($this->birthdate)){
 			$data['f_dateNaissance'] = self::format_birthdate($this->birthdate);
@@ -185,7 +184,7 @@ class Dialog_Insight_Contact {
 	 * @return string
 	 */
 	static function format_phone( $phone ){
-		return trim( preg_replace( '/[^0-9\+\-\(\)\s]/', '-', preg_replace( '/[\x00-\x1F\x7F-\xFF]/', '', $phone ) ) );
+		return str_replace(' ', '', trim( preg_replace( '/[^0-9\+\-\(\)\s]/', '-', preg_replace( '/[\x00-\x1F\x7F-\xFF]/', '', $phone ) ) ) );
 	}
 
 }

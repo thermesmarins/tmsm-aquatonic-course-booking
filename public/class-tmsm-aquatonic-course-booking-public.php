@@ -391,11 +391,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$contact->lastname  = $data['lastname'];
 					$contact->birthdate = $birthdate_computed;
 					$contact->phone     = $data['phone'];
+					$contact->title     = $data['title'];
 
 					if($contact->add()){
 						// Add booking to Dialog Insight
 						$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 						$booking->email        = $data['email'];
+
 						$booking->participants = $data['participants'];
 						$booking->status       = $data['status'];
 						$booking->token        = $data['token'];
