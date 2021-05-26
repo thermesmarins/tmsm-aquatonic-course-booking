@@ -111,6 +111,9 @@ class Dialog_Insight_Contact {
 		if(!empty($this->birthdate)){
 			$data['f_dateNaissance'] = self::format_birthdate($this->birthdate);
 		}
+		if(!empty($this->phone)){
+			$data['f_MobilePhone'] = self::format_phone($this->phone);
+		}
 
 		$request = [
 			'Records' => [
@@ -172,6 +175,17 @@ class Dialog_Insight_Contact {
 	 */
 	static function format_birthdate( $birthdate){
 		return str_replace('-', '.', $birthdate);
+	}
+
+	/**
+	 * Format phone for Dialog Insight
+	 *
+	 * @param string $phone
+	 *
+	 * @return string
+	 */
+	static function format_phone( $phone ){
+		return trim( preg_replace( '/[^0-9\+\-\(\)\s]/', '-', preg_replace( '/[\x00-\x1F\x7F-\xFF]/', '', $phone ) ) );
 	}
 
 }
