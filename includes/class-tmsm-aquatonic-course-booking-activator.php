@@ -31,9 +31,30 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 
 		self::create_database_schema();
 		self::create_cron_event();
+		self::add_caps();
 
 	}
 
+	/**
+	 * Add capabilities
+	 *
+	 * @since    1.0.0
+	 */
+	public static function add_caps() {
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+
+		$role = get_role( 'shop_manager' );
+		$role->add_cap( 'aquatonic_course' );
+
+	}
 	/**
 	 * Creates the database schema
 	 *

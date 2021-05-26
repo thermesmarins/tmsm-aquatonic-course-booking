@@ -103,11 +103,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$user_roles = ( array ) $user_meta->roles;
 
 		if ( array_intersect($target_roles, $user_roles) ) {
-			add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+			add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic_course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
 
 		}
 		else{
-			add_menu_page(__('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
+			add_menu_page(__('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic_course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
 			//add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
 
 		}
