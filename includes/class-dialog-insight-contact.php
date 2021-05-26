@@ -187,4 +187,8 @@ class Dialog_Insight_Contact {
 		return str_replace(' ', '', trim( preg_replace( '/[^0-9\+\-\(\)\s]/', '-', preg_replace( '/[\x00-\x1F\x7F-\xFF]/', '', $phone ) ) ) );
 	}
 
+
+
+
+
 }

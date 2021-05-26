@@ -1060,114 +1060,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		}
 
-		// Aquos, send contact information
-		$endpoint = $this->get_option('aquos_endpoint_contact');
-		$site_id = $this->get_option('aquos_siteid');
 
-		if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
-			$data = [
-				'civilite' => ($booking['title'] == 1 ? 'M.' : 'Mme'),
-				'prenom' => $booking['firstname'],
-				'nom' => $booking['lastname'],
-				'email' => $booking['email'],
-				'datenaissance' => str_replace('-', '', $booking['birthdate'] ),
-				'telephone' => $booking['phone'],
-				'id_site' => $site_id,
-			];
-
-			$body = json_encode($data);
-
-			$headers = [
-				'Content-Type' => 'application/json; charset=utf-8',
-				'X-Signature' => $this->aquos_generate_signature( $body ),
-			];
-
-			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-				error_log('headers with signature:');
-				error_log(print_r($headers, true));
-
-				error_log('body:');
-				error_log($body);
-
-			}
-
-			$response = wp_safe_remote_post(
-				$endpoint,
-				array(
-					'headers' => $headers,
-					'body'    => $body,
-					'timeout' => 70,
-					'data_format' => 'body',
-				)
-			);
-			$response_code = wp_remote_retrieve_response_code( $response );
-			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-
-			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-				error_log('Aquos response:');
-				error_log(print_r($response, true));
-				error_log('wp_remote_retrieve_body( $response ): ' );
-				error_log(print_r(wp_remote_retrieve_body( $response ), true));
-				error_log(print_r($response_data, true));
-				error_log('$response_data->Status: ' .$response_data->Status);
-				error_log('$response_data->Error: ' .$response_data->Error);
-			}
-
-			if ( $response_code >= 400 ) {
-
-				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-					error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
-						absint( $response_code ) ) );
-				}
-				if ( $redirect_to_admin === false ) {
-					wp_send_json( array( 'success' => false,
-					                     'message' => sprintf( __( 'Error: Delivery URL returned response code: %s',
-						                     'tmsm-aquatonic-course-booking' ), absint( $response_code ) ),
-					) );
-
-
-				} else {
-					return new WP_Error( $response_code,
-						sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
-							absint( $response_code ) ) );
-				}
-
-			}
-
-			if ( isset($response_data->Status) &&  $response_data->Status === 'false') {
-
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log(sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ));
-				}
-				if($redirect_to_admin === false){
-					wp_send_json( array( 'success' => false, 'message' =>   sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error )  ) );
-				}
-				else{
-					return new WP_Error(  $response_code, sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error )  );
-
-				}
-
-			}
-
-			if ( is_wp_error( $response ) ) {
-
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log('Aquos reached, error message: '. $response->get_error_message());
-				}
-
-				if($redirect_to_admin === false){
-					wp_send_json( array( 'success' => false, 'message' => sprintf( __( 'Aquos Error: %s', 'tmsm-aquatonic-course-booking' ), $response->get_error_message() ) ) );
-				}
-			}
-
-			if ( isset($response_data->Status) &&  $response_data->Status === 'true') {
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log('Aquos reached, contact inserted');
-				}
-			}
-
-		} // endpoint exists
 
 
 	}
@@ -1296,33 +1189,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		exit;
-	}
-
-
-	/**
-	 * Aquos: generate signature
-	 *
-	 * @param string $payload
-	 *
-	 * @return string
-	 */
-	private function aquos_generate_signature( $payload ) {
-		$hash_algo = 'sha256';
-
-		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		return base64_encode( hash_hmac( $hash_algo, $payload, wp_specialchars_decode( $this->aquos_secret(), ENT_QUOTES ), true ) );
-	}
-
-	/**
-	 * Aquos: returns secret
-	 *
-	 * @return string
-	 */
-	private function aquos_secret() {
-
-		$secret = $this->get_option('aquos_secret');
-
-		return $secret;
 	}
 
 
