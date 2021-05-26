@@ -452,6 +452,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
         $list.append( item.render().$el );
 
+        $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
 
         console.log('WeekDayListView fetch:');
         TmsmAquatonicCourseApp.times.fetch({
@@ -461,7 +462,14 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
           },
           complete: function(xhr){
             console.log('complete fetch for date '+model.attributes.date_computed);
+            console.log('count options:' + $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option').length);
 
+            // No results: remove the first option "Pick a timeslot" to let appear first "No timeslot available"
+            if($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').length > 0){
+              if($.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.notimeslot){
+                $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(0)').remove();
+              }
+            }
 
             console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
 

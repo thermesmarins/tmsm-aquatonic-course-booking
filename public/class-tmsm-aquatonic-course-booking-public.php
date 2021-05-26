@@ -1719,7 +1719,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					];
 				}
 
-				if($slots_available[$slot_begin]['capacity'] <= 0){
+				if(isset( $slots_available[$slot_begin] ) && $slots_available[$slot_begin]['capacity'] <= 0){
 					unset($slots_available[$slot_begin]);
 				}
 				else{
