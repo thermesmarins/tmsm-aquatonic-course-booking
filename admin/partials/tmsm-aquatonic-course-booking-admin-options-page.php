@@ -414,17 +414,23 @@
 
 							// First "Free" column
 							if($counter === 1){
-								$free[ $counter] = ( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $realtime
-								                     + $plugin_public->get_participants_ending_forthetime( $period_item )
-								                     - $plugin_public->get_participants_starting_forthetime( $period_item ) );
+								$free[ $counter] = (
+									$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
+									- $realtime
+								    //+ $plugin_public->get_participants_ending_forthetime( $period_item )
+								    //- $plugin_public->get_participants_starting_forthetime( $period_item ) )
+								);
 								echo '<span class="free free-'. $counter .'">'
 								     . $free[ $counter]
 								     . '</span>'
 								;
 
-								echo ' (' . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>' . '-' . '<span class="realtime">'
-								     . $realtime . '</span>' . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
-								     . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>' . ')';
+								echo ' ('
+								     . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>'
+								     . '-' . '<span class="realtime">' . $realtime . '</span>'
+								     //. '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>'
+								     //. '-' . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+								. ')';
 							}
 							// Other "Free" columns
 							else{
