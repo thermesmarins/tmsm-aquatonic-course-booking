@@ -10,6 +10,11 @@
 
     .dropdown-menu{
         z-index: 1060;
+        > li {
+            > a {
+                margin: 0 0 5px 0;
+            }
+        }
     }
 
     &:before, &:after{
@@ -61,7 +66,7 @@
 
     .tmsm-aquatonic-course-booking-time-item {
         display: inline-block;
-        margin: 0 10px 10px 0;
+
         @media (min-width: 768px){
             display: block;
         }

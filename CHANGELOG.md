@@ -5,6 +5,7 @@
 * Format phone for Dialog Insight
 * Fix title info was not submitted to Dialog Insight web service
 * Fix capability "aquatonic_course" for shop_manager
+* Fix dropdown menu buttons margins
 
 ### 1.4.3: May 24th, 2021
 * Times dropdown must be above header in fixed position 
