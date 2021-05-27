@@ -2090,25 +2090,31 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 		$minidashboard_values = get_option('tmsm-aquatonic-course-booking-minidashboard');
 
-
+		//		<script type="text/javascript" src="/wp-admin/load-scripts.php?c=0&load%5Bchunk_0%5D=jquery-core,jquery-migrate"></script>
+		//		<script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/jquery.countdown.min.js"></script>
+		//      <script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/tmsm-aquatonic-course-booking-admin.js"></script>
 		echo '<html lang="en">
 		<head>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<title>'.__('Mini Dashboard', 'tmsm-aquatonic-course-booking').'</title>
 		<style>th{font-weight: bold;}
-		body{min-width: inherit !important}
-		.wrap{margin-left:10px !important; margin-right:10px !important;}
+		body{min-width: inherit !important; overflow: hidden !important;}
+		.wrap{margin:0 5px !important;}
+		h3{margin:5px 0!important;}
 		.nowrap{white-space: nowrap}
 		table{margin-bottom:10px !important;}
 		</style>
 		<meta http-equiv="refresh" content="'. (MINUTE_IN_SECONDS * 5) .' ">
-
+		
+		
+		
 		<link rel="stylesheet" href="/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load%5Bchunk_0%5D=dashicons,admin-bar,common,forms,admin-menu,dashboard,list-tables,edit,revisions,media,themes,about,nav-menus,wp-pointer,widgets&amp;load%5Bchunk_1%5D=,site-icon,l10n,buttons,wp-auth-check,media-views" type="text/css" media="all">
 		</head><body><div class="wrap">';
 
 
 		ksort($minidashboard_values);
 		echo '<h3>'.__('Aquatonic Course', 'tmsm-aquatonic-course-booking').'</h3>';
+		echo '</div>';
 		//print_r($minidashboard_values);
 		if( ! empty($minidashboard_values)){
 			echo '<table class="wp-list-table widefat striped table-dashboard"><thead>';
@@ -2121,7 +2127,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 			echo '</tbody></table>';
 		}
-		if( has_action('tmsm_aquatonic_attendance_cronaction')){
+		echo '<div class="wrap">';
+
+
+		$setting_url = admin_url( 'admin.php'. '?page='.$this->plugin_name.'-settings' ) ;
+		echo '<p><a target="_blank" href="'.$setting_url.'">'.__('Access the main dashboard', 'tmsm-aquatonic-course-booking').'</a></p>';
+
+		/*if( has_action('tmsm_aquatonic_attendance_cronaction')){
 			$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );
 			$cronevent += 1 * MINUTE_IN_SECONDS; // Add 30 seconds to let cron event execute
 
@@ -2136,11 +2148,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				?>
 				<?php
 			}
-		}
-		echo '</div>
-		<script type="text/javascript" src="/wp-admin/load-scripts.php?c=0&load%5Bchunk_0%5D=jquery-core,jquery-migrate"></script>
-		<script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/jquery.countdown.min.js"></script>
-		<script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/tmsm-aquatonic-course-booking-admin.js"></script>
+		}*/
+		echo '</div></div>
+
+		
 		</body></html>';
 		die();
 	}
