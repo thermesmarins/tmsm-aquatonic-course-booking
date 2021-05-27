@@ -826,8 +826,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$barcode = sanitize_text_field( $_REQUEST['barcode'] );
 
-		error_log('generate_barcode_image');
-
 		$generator     = new Picqer\Barcode\BarcodeGeneratorJPG();
 		if( empty($barcode)){
 			die(__('Barcode missing', 'tmsm-aquatonic-course-booking'));
