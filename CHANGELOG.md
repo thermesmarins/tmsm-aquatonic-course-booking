@@ -1,3 +1,4 @@
+### 1.4.4: May 27th, 2021
 * Dialog Insight: Make birthdate value optional when sending to web service
 * Markup "modifyUrl" now goes to cancel page, not contact page
 * Require wp-i18n for using sprintf in javascript
