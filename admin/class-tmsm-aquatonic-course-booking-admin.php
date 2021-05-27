@@ -1303,6 +1303,31 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Aquos: generate signature
+	 *
+	 * @param string $payload
+	 *
+	 * @return string
+	 */
+	private function aquos_generate_signature( $payload ) {
+		$hash_algo = 'sha256';
+
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return base64_encode( hash_hmac( $hash_algo, $payload, wp_specialchars_decode( $this->aquos_secret(), ENT_QUOTES ), true ) );
+	}
+
+	/**
+	 * Aquos: returns secret
+	 *
+	 * @return string
+	 */
+	private function aquos_secret() {
+
+		$secret = $this->get_option('aquos_secret');
+
+		return $secret;
+	}
+	/**
 	 * Do we have lessons data?
 	 *
 	 * @return bool

@@ -22,7 +22,6 @@
 	$target_roles = array('administrator');
 	$user_meta = get_userdata($current_user_id);
 	$user_roles = ( array ) $user_meta->roles;
-
 	?>
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
