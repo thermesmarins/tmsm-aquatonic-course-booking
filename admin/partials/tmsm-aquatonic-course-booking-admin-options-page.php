@@ -95,6 +95,7 @@
 
 
 		$now = new Datetime;
+		$minidashboard = array();
 		$canstart = 200; // Fake number of persons that can start, high on purpose
 		$canstart_counter = null;
 
@@ -181,6 +182,7 @@
 						$counter ++;
 
 						$date = wp_date( get_option( 'time_format' ), $period_item->getTimestamp() );
+						$minidashboard[ $counter ][ 'date' ] = $date;
 
 						?>
 						<th scope="col">
@@ -473,12 +475,15 @@
 								     . ')';
 							}
 
+							$minidashboard[ $counter ][ 'free' ] = $free[ $counter];
+
 							if( $free[ $counter] < $canstart){
 								$canstart_counter = $counter;
 							}
 
 							$canstart = min($canstart, $free[ $counter]);
-
+							$minidashboard[ 0 ][ 'date' ] = esc_html__( 'Can Start', 'tmsm-aquatonic-course-booking' );
+							$minidashboard[ 0 ][ 'free' ] = $canstart;
 
 							?></td>
 						<?php
@@ -488,7 +493,7 @@
 
 				<!-- Can Start -->
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Can Start', 'tmsm-aquatonic-course-booking' ); ?></th>
+					<th scope="col"><?php echo esc_html__( 'Can Start', 'tmsm-aquatonic-course-booking' ); ?></th>
 					<td><span class="free free-<?php echo $canstart_counter;?>"><?php echo $canstart ;?></span> </td>
 					<td colspan="5"><?php esc_html_e( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' ); ?></td>
 				</tr>
@@ -506,19 +511,19 @@
 					<td colspan="5">
 								<?php
 								if( has_action('tmsm_aquatonic_attendance_cronaction')){
-								$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );
-								if( ! empty($cronevent)){
-									$date = wp_date( get_option( 'time_format' ), $cronevent );
-									echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), $date, '<b class="refresh" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
+									$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );
+									if( ! empty($cronevent)){
+										$date = wp_date( get_option( 'time_format' ), $cronevent );
+										echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), $date, '<b class="refresh nowrap" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
 
-									if( !empty($_GET['force-refresh-attendance']) && $_GET['force-refresh-attendance'] == 1 ){
-										do_action( 'tmsm_aquatonic_attendance_cronaction' );
+										if( !empty($_GET['force-refresh-attendance']) && $_GET['force-refresh-attendance'] == 1 ){
+											do_action( 'tmsm_aquatonic_attendance_cronaction' );
+										}
+										?>
+										<a id="refresh-attendance-link" class="button" href="<?php echo admin_url( self::admin_page_url().'?page='.$this->plugin_name.'-settings&force-refresh-attendance=1' );?>"><?php _e( 'Force refresh attendance', 'tmsm-aquatonic-course-booking' ); ?></a>
+
+										<?php
 									}
-									?>
-									<a id="refresh-attendance-link" class="button" href="<?php echo admin_url( self::admin_page_url().'?page='.$this->plugin_name.'-settings&force-refresh-attendance=1' );?>"><?php _e( 'Force refresh attendance', 'tmsm-aquatonic-course-booking' ); ?></a>
-
-									<?php
-								}
 								}
 
 
@@ -539,6 +544,7 @@
 			<?php
 
 
+			update_option('tmsm-aquatonic-course-booking-minidashboard', $minidashboard);
 
 		}
 

@@ -186,4 +186,19 @@
 .tmsm-aquatonic-course-booking-wrap #refresh-attendance-link {
   vertical-align: middle;
 }
+.toplevel_page_tmsm-aquatonic-course-booking-mini {
+  padding-top: 0 !important;
+}
+.toplevel_page_tmsm-aquatonic-course-booking-mini #adminmenumain,
+.toplevel_page_tmsm-aquatonic-course-booking-mini .nav-tab-wrapper,
+.toplevel_page_tmsm-aquatonic-course-booking-mini h1,
+.toplevel_page_tmsm-aquatonic-course-booking-mini #wpadminbar {
+  display: none !important;
+}
+.toplevel_page_tmsm-aquatonic-course-booking-mini #wpcontent {
+  margin: 0;
+}
+.toplevel_page_tmsm-aquatonic-course-booking-mini #wpbody-content {
+  padding-bottom: 0 !important;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */

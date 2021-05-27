@@ -42,6 +42,13 @@ define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.4.3' );
  */
 define( 'TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION', '3' );
 
+if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_PATH')){
+	define( 'TMSM_AQUATONIC_COURSE_BOOKING_PATH', plugin_dir_path( __FILE__ ) );
+}
+if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_URL')){
+	define( 'TMSM_AQUATONIC_COURSE_BOOKING_URL', plugin_dir_url( __FILE__ ) );
+}
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-tmsm-aquatonic-course-booking-activator.php

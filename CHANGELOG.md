@@ -9,7 +9,8 @@
 * Fix dashboard now values now only use capacity and realtime, not bookings
 * Settings page now restricted to administrators 
 * Fix timeslots, remove the first option "Pick a timeslot" to let appear first "No timeslot available"
-* Send contact info to Aquos when submitting booking (not when status=arrived anymore) 
+* Send contact info to Aquos when submitting booking (not when status=arrived anymore)
+* Mini dashboard
 
 ### 1.4.3: May 24th, 2021
 * Times dropdown must be above header in fixed position 

@@ -194,6 +194,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_ajax_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10);
 
+
 		// Capabilities
 		//$this->loader->add_action( 'map_meta_cap', $plugin_admin, 'map_meta_cap', 10, 4 );
 		//$this->loader->add_action('option_page_capability_aquatonic-course', $plugin_admin, 'option_page_capability');
@@ -244,6 +245,10 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Barcode
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
+
+		// Ajax for mini dashboard
+		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-minidashboard', $plugin_public, 'minidashboard', 10 );
+		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-minidashboard', $plugin_public, 'minidashboard', 10);
 
 		// Emails
 		$this->loader->add_filter( 'gform_html_message_template_pre_send_email', $plugin_public, 'gform_html_message_template_pre_send_email', 20, 1 );

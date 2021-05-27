@@ -2080,4 +2080,66 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $classes;
 	}
 
+
+	/**
+	 * Mini Dashboard (loaded with in ajax)
+	 */
+	public function minidashboard(){
+
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('minidashboard');
+
+		}
+		$minidashboard_values = get_option('tmsm-aquatonic-course-booking-minidashboard');
+
+
+		echo '<html lang="en">
+		<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<title>'.__('Mini Dashboard', 'tmsm-aquatonic-course-booking').'</title>
+		<style>th{font-weight: bold;}
+		body{min-width: inherit !important}
+		.wrap{margin-left:10px !important; margin-right:10px !important;}
+		.nowrap{white-space: nowrap}
+		table{margin-bottom:10px !important;}
+		</style>
+		<meta http-equiv="refresh" content="'. (MINUTE_IN_SECONDS * 5) .' ">
+
+		<link rel="stylesheet" href="/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load%5Bchunk_0%5D=dashicons,admin-bar,common,forms,admin-menu,dashboard,list-tables,edit,revisions,media,themes,about,nav-menus,wp-pointer,widgets&amp;load%5Bchunk_1%5D=,site-icon,l10n,buttons,wp-auth-check,media-views" type="text/css" media="all">
+		</head><body><div class="wrap">';
+
+
+		ksort($minidashboard_values);
+		echo '<h3>'.__('Aquatonic Course', 'tmsm-aquatonic-course-booking').'</h3>';
+		//print_r($minidashboard_values);
+		if( ! empty($minidashboard_values)){
+			echo '<table class="wp-list-table widefat striped table-dashboard"><thead>';
+			foreach($minidashboard_values as $counter => $value){
+				echo '<tr><'.($counter==0 ? 'th' : 'td') .'>'.(esc_html($value['date']) ?? '' ).'</td><td>'.( esc_html($value['free']) ?? '' ).'</'.($counter==1 ? 'th' : 'td') .'></tr>';
+				if ($counter==0){
+					echo '</thead><tbody>';
+				}
+
+			}
+			echo '</tbody></table>';
+		}
+		if( has_action('tmsm_aquatonic_attendance_cronaction')){
+			$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );
+			if( ! empty($cronevent)){
+				$date = wp_date( get_option( 'time_format' ), $cronevent );
+				echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), '<span class="nowrap">'.$date.'</span>', '<b class="refresh nowrap" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
+
+				?>
+				<?php
+			}
+		}
+		echo '</div>
+		<script type="text/javascript" src="/wp-admin/load-scripts.php?c=0&load%5Bchunk_0%5D=jquery-core,jquery-migrate"></script>
+		<script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/jquery.countdown.min.js"></script>
+		<script src="'.TMSM_AQUATONIC_COURSE_BOOKING_URL.'admin/js/tmsm-aquatonic-course-booking-admin.js"></script>
+		</body></html>';
+		die();
+	}
+
+
 }

@@ -108,7 +108,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 		else{
 			add_menu_page(__('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic_course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
-			//add_options_page( __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), __('Aquatonic Course', 'tmsm-aquatonic-course-booking'), 'aquatonic-course', $this->plugin_name.'-settings', array($this, 'options_page_display'));
 
 		}
 
