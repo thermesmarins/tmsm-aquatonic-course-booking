@@ -2125,6 +2125,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 		if( has_action('tmsm_aquatonic_attendance_cronaction')){
 			$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );
+			$cronevent += 1 * MINUTE_IN_SECONDS; // Add 30 seconds to let cron event execute
+
+			// Crontevent next schedule is in the past, add 5 minutes
+			if($cronevent < time()){
+				$cronevent = $cronevent + 5 * MINUTE_IN_SECONDS;
+			}
 			if( ! empty($cronevent)){
 				$date = wp_date( get_option( 'time_format' ), $cronevent );
 				echo sprintf(__( 'Next Refresh at %s in %s', 'tmsm-aquatonic-course-booking' ), '<span class="nowrap">'.$date.'</span>', '<b class="refresh nowrap" id="refresh-counter" data-time="'.esc_attr($cronevent).'"></b>');
