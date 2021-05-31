@@ -1,5 +1,6 @@
 * Remove debug
 * Updated translations
+* Fix realtime value when negative
 
 ### 1.4.5: May 31th, 2021
 * Automatic refresh of data now executed one minute after cron event has executed, to let time to do the actions

@@ -152,7 +152,11 @@
 		//print_r( allotment_timeslots_forthedate );
 		//echo '</pre>';
 
-		$realtime = $options['tests_realtimeattendance'] ?? get_option( 'tmsm-aquatonic-attendance-count' );
+		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
+		$realtime = max($realtime,0);
+		if ( ! empty( $options['tests_realtimeattendance'] ) ) {
+			$realtime = $options['tests_realtimeattendance'];
+		}
 
 		//global $wpdb;
 		//$bookings_change_date_to_today = $wpdb->query("UPDATE {$wpdb->prefix}aquatonic_course_booking  SET status= 'active', course_start = CONCAT(CURDATE(), ' ', TIME(course_start)), course_end = CONCAT(CURDATE(),' ', TIME(course_end))" );
