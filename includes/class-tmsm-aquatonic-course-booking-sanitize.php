@@ -56,10 +56,6 @@ class Tmsm_Aquatonic_Course_Booking_Sanitize {
 
 		$sanitized = '';
 
-		/**
-		 * Add additional santization before the default sanitization
-		 */
-		do_action( 'slushman_pre_sanitize', $sanitized );
 
 		switch ( $this->type ) {
 
@@ -89,11 +85,6 @@ class Tmsm_Aquatonic_Course_Booking_Sanitize {
 			case 'url'				: $sanitized = esc_url( $this->data ); break;
 
 		} // switch
-
-		/**
-		 * Add additional santization after the default .
-		 */
-		do_action( 'slushman_post_sanitize', $sanitized );
 
 		return $sanitized;
 

@@ -3,6 +3,7 @@
 * Fix missing aquos_generate_signature function
 * Prevent non-admins from seeing  dashboard calculations
 * New setting: Blocked before date
+* Allow 0 for text settings
 
 ### 1.4.4: May 27th, 2021
 * Dialog Insight: Make birthdate value optional when sending to web service

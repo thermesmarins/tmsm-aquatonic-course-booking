@@ -731,8 +731,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * @return string|void
 	 */
 	private function sanitizer( $type, $data ) {
-		if ( empty( $type ) ) { return; }
-		if ( empty( $data ) ) { return; }
+		if ( ! isset( $type ) ) { return; }
+		if ( ! isset( $data ) ) { return; }
 		$return 	= '';
 		$sanitizer 	= new Tmsm_Aquatonic_Course_Booking_Sanitize();
 		$sanitizer->set_data( $data );
@@ -952,7 +952,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$defaults['value'] 			= '';
 		apply_filters( $this->plugin_name . '-field-text-options-defaults', $defaults );
 		$atts = wp_parse_args( $args, $defaults );
-		if ( ! empty( $this->options[$atts['id']] ) ) {
+		if ( isset( $this->options[$atts['id']] ) ) {
 			$atts['value'] = $this->options[$atts['id']];
 		}
 		include( plugin_dir_path( __FILE__ ) . 'partials/' . $this->plugin_name . '-admin-field-text.php' );
