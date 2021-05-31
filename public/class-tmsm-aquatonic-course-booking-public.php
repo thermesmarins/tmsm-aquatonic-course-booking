@@ -260,7 +260,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @param array $form The Form object
 	 */
 	function gform_entry_post_save_booking( $entry, $form ) {
-		error_log('gform_entry_post_save_booking');
+		//error_log('gform_entry_post_save_booking');
 
 		if(!empty($entry)){
 			$entry_id = $entry['id'];
@@ -336,7 +336,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				}
 
 				// Calculate date start and end of course
-				error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
+				//error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
 				if(!empty($course_start)){
 					$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
 					$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
@@ -523,9 +523,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			if ( isset($response_data->Status) &&  $response_data->Status === 'false') {
 
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 					error_log(sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ));
-				}
+				//}
 				if($redirect_to_admin === false){
 					wp_send_json( array( 'success' => false, 'message' =>   sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error )  ) );
 				}
@@ -538,9 +538,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			if ( is_wp_error( $response ) ) {
 
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 					error_log('Aquos reached, error message: '. $response->get_error_message());
-				}
+				//}
 
 				if($redirect_to_admin === false){
 					wp_send_json( array( 'success' => false, 'message' => sprintf( __( 'Aquos Error: %s', 'tmsm-aquatonic-course-booking' ), $response->get_error_message() ) ) );
@@ -779,18 +779,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	private function gform_entry_generate_token( int $entry_id ){
 
-		error_log('gform_entry_generate_token');
+		//error_log('gform_entry_generate_token');
 		// Check if token exists for entry
 		$token = gform_get_meta( $entry_id, '_booking_token' );
 
 		// Create token for entry if token doesn't exist
 		if(empty($token)){
 			$token = $entry_id.'-'. wp_generate_password(24);
-			error_log('gform_update_meta _booking_token: '.$token);
+			//error_log('gform_update_meta _booking_token: '.$token);
 			gform_update_meta( $entry_id, '_booking_token', $token );
 		}
 		else{
-			error_log('token found : '. $token);
+			//error_log('token found : '. $token);
 		}
 
 		return $token;
@@ -813,7 +813,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Create barcode for entry if barcode doesn't exist
 		if(empty($barcode)){
-			error_log('gform_update_meta _booking_barcode');
+			//error_log('gform_update_meta _booking_barcode');
 			$barcode = '';
 			$barcode .= 'R-';
 			$barcode .= str_pad(substr(strtoupper(sanitize_title($lastname)), 0, 10), 10, "X", STR_PAD_RIGHT);
@@ -934,7 +934,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	function gform_after_submission_cancel( $entry, $form ) {
 		global $wpdb;
 
-		error_log('gform_after_submission_cancel');
+		//error_log('gform_after_submission_cancel');
 		//error_log(print_r($entry, true));
 		//error_log(print_r($form, true));
 
@@ -986,7 +986,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_notification_booking(  $notification, $form, $entry ){
 
-		error_log('gform_notification_booking');
+		//error_log('gform_notification_booking');
 
 		$notification['message'] .= '';
 
@@ -1014,8 +1014,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		if(! empty($token)){
 			$booking = self::find_booking_with_token($token);
 
-			error_log('find_booking_with_token:');
-			error_log(print_r($booking, true));
+			//error_log('find_booking_with_token:');
+			//error_log(print_r($booking, true));
 			$lastname  = $booking['lastname'];
 			$firstname  = $booking['firstname'];
 			$participants  = $booking['participants'];
@@ -1076,7 +1076,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			);
 		}
 		else{
-			error_log('token is empty');
+			//error_log('token is empty');
 		}
 
 
@@ -1100,7 +1100,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	public function find_booking_with_token(string $token){
 		global $wpdb;
 
-		error_log('find_booking_with_token '. $token);
+		//error_log('find_booking_with_token '. $token);
 		$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE token = %s", $token ), ARRAY_A );
 
 		return $booking;
@@ -2097,10 +2097,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function minidashboard(){
 
-		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-			error_log('minidashboard');
-
-		}
 		$minidashboard_values = get_option('tmsm-aquatonic-course-booking-minidashboard');
 
 		//		<script type="text/javascript" src="/wp-admin/load-scripts.php?c=0&load%5Bchunk_0%5D=jquery-core,jquery-migrate"></script>
