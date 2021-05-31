@@ -1256,7 +1256,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function ajax_times() {
 
-		error_log('ajax_times');
+		//error_log('ajax_times');
 
 		$this->ajax_checksecurity();
 		$this->ajax_return( $this->_get_times() );
