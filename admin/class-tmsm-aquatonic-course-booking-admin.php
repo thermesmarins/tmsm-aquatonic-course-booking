@@ -262,7 +262,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name,
 			$this->plugin_name . '-times',
 			array(
-				'description' 	=> __( 'Date when reservations can start', 'tmsm-aquatonic-course-booking' ),
+				'description' 	=> __( 'Date when reservations can start. Format: YYYY-MM-DD', 'tmsm-aquatonic-course-booking' ),
 				'id' => 'blockedbeforedate',
 			)
 		);
@@ -274,7 +274,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name,
 			$this->plugin_name . '-times',
 			array(
-				'description' 	=> __( 'Number of hours before the possibility to book. Format: YYYY-MM-DD', 'tmsm-aquatonic-course-booking' ),
+				'description' 	=> __( 'Number of hours before the possibility to book', 'tmsm-aquatonic-course-booking' ),
 				'id' => 'hoursbefore',
 			)
 		);
