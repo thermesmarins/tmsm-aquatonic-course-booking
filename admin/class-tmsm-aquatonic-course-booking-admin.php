@@ -256,13 +256,25 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		);
 
 		add_settings_field(
+			'blockedbeforedate',
+			esc_html__( 'Blocked Before Date', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'description' 	=> __( 'Date when reservations can start', 'tmsm-aquatonic-course-booking' ),
+				'id' => 'blockedbeforedate',
+			)
+		);
+
+		add_settings_field(
 			'hoursbefore',
 			esc_html__( 'Booking Possible Before', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_text' ),
 			$this->plugin_name,
 			$this->plugin_name . '-times',
 			array(
-				'description' 	=> __( 'Number of hours before the possibility to book', 'tmsm-aquatonic-course-booking' ),
+				'description' 	=> __( 'Number of hours before the possibility to book. Format: YYYY-MM-DD', 'tmsm-aquatonic-course-booking' ),
 				'id' => 'hoursbefore',
 			)
 		);
@@ -979,6 +991,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$options[] = array( 'slotsize', 'text', '4' );
 		$options[] = array( 'courseaverage', 'text', '90' );
+		$options[] = array( 'blockedbeforedate', 'text', '' );
 		$options[] = array( 'hoursbefore', 'text', '' );
 		$options[] = array( 'hoursafter', 'text', '' );
 		$options[] = array( 'timeslots', 'textarea', '' );

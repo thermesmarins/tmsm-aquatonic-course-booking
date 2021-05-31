@@ -109,6 +109,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public'.(defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true  ? '' : '.min').'.js', array( 'wp-backbone', 'moment', 'jquery', 'jquery-mask', 'gform_gravityforms', 'wp-i18n' ), $this->version, true );
 
+
+		$daysrangefrom = floor($this->get_option('hoursbefore')/24);
+
+		// Blocked Before this Date
+		if(!empty($this->get_option('blockedbeforedate'))){
+			$objdate_blockedbeforedate = DateTime::createFromFormat( 'Y-m-d', $this->get_option('blockedbeforedate') );
+			$now = new Datetime();
+			if($objdate_blockedbeforedate > $now){
+				$interval = $now->diff($objdate_blockedbeforedate);
+				$daysrangefrom =  $interval->format('%a');
+			}
+		}
+
 		// Javascript localization
 		$translation_array = array(
 			'data' => [
@@ -118,7 +131,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'nonce'        => wp_create_nonce( 'tmsm-aquatonic-course-booking-nonce-action' ),
 				'rest_url' => get_rest_url(),
 				'canviewpriority' => current_user_can('edit_posts'),
-				'daysrangefrom' => floor($this->get_option('hoursbefore')/24),
+				'daysrangefrom' => $daysrangefrom,
 				'daysrangeto' => floor($this->get_option('hoursafter')/24),
 				'times' => [],
 			],
