@@ -437,12 +437,15 @@
 								     . '</span>'
 								;
 
-								echo ' ('
-								     . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>'
-								     . '-' . '<span class="realtime">' . $realtime . '</span>'
-								     //. '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>'
-								     //. '-' . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
-								. ')';
+								if ( array_intersect($target_roles, $user_roles) ) {
+									echo ' ('
+									     . '<span class="capacity capacity-' . $counter . '">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>'
+									     . '-' . '<span class="realtime">' . $realtime . '</span>'
+									     //. '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>'
+									     //. '-' . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+									     . ')';
+								}
+
 							}
 							// Other "Free" columns
 							else{
@@ -457,21 +460,30 @@
 								echo '<span class="free free-' . $counter . '">'
 								     . $free[ $counter] . '</span>';
 
-								echo ' ('
-								     . '<span class="free free-'. ( $counter - 1 ) .'">'
-								     . $free[ ( $counter - 1 )]
-								     . '</span>'
-								     . '+'
-								     . '<span class="booking-ending booking-ending-' . $counter . '">'
-								     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
-								     . '<span class="booking-starting booking-starting-' . $counter . '">'
-								     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
-								     . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] ) ? '<span class="capacity-different capacity-different-' . $counter . '">'
-								                                                                           . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '')
-								     . ($plugin_admin->lessons_has_data() ? '+'. '<span class="lessons-subscribed lessons-subscribed-' . ( $counter - 1 ) . '">' . $lessons_subscribed_forthedate_counter[ ( $counter - 1 ) ] . '</span>' : '')
-								     . ($plugin_admin->lessons_has_data() ? '-'. '<span class="lessons-subscribed lessons-subscribed-' . $counter . '">' . $lessons_subscribed_forthedate_counter[ $counter ] . '</span>' : '')
+								if ( array_intersect($target_roles, $user_roles) ) {
+									echo ' ('
+									     . '<span class="free free-' . ( $counter - 1 ) . '">'
+									     . $free[ ( $counter - 1 ) ]
+									     . '</span>'
+									     . '+'
+									     . '<span class="booking-ending booking-ending-' . $counter . '">'
+									     . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
+									     . '<span class="booking-starting booking-starting-' . $counter . '">'
+									     . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+									     . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] )
+											? '<span class="capacity-different capacity-different-' . $counter . '">'
+											  . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '' )
+									     . ( $plugin_admin->lessons_has_data() ? '+' . '<span class="lessons-subscribed lessons-subscribed-'
+									                                             . ( $counter - 1 ) . '">'
+									                                             . $lessons_subscribed_forthedate_counter[ ( $counter - 1 ) ]
+									                                             . '</span>' : '' )
+									     . ( $plugin_admin->lessons_has_data() ? '-' . '<span class="lessons-subscribed lessons-subscribed-'
+									                                             . $counter . '">'
+									                                             . $lessons_subscribed_forthedate_counter[ $counter ] . '</span>'
+											: '' )
 
-								     . ')';
+									     . ')';
+								}
 							}
 
 							$minidashboard[ $counter ][ 'free' ] = $free[ $counter];
