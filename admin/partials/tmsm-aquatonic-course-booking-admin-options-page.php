@@ -149,6 +149,8 @@
 		//echo '<pre>';
 		$capacity_timeslots_forthedate = $plugin_public->capacity_timeslots_forthedate( date( 'Y-m-d' ) );
 		$allotment_timeslots_forthedate = $plugin_public->allotment_timeslots_forthedate( date( 'Y-m-d' ) );
+		$treatments_timeslots_forthedate = $plugin_public->treatments_capacity_timeslots_forthedate( date( 'Y-m-d' ) );
+
 		//print_r( allotment_timeslots_forthedate );
 		//echo '</pre>';
 
@@ -212,11 +214,10 @@
 
 						?>
 						<td><?php
-							if ( isset( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
-								echo '<span class="capacity capacity-' . $counter .'">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>';
-							} else {
+							if ( !isset( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
 								$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
 							}
+							echo '<span class="capacity capacity-' . $counter .'">' . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>';
 							$capacity_timeslots_forthedate_counter[ $counter] = $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
 
 							if($counter != 1 && $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $capacity_timeslots_forthedate_counter[ $counter - 1]){
@@ -292,6 +293,41 @@
 					</tr>
 
 				<?php }?>-->
+
+				<!-- Treatements Capacity -->
+				<?php if(!empty($treatments_timeslots_forthedate)){?>
+				<tr>
+					<th scope="col"><?php esc_html_e( 'Treatment+Course Allotment', 'tmsm-aquatonic-course-booking' ); ?></th>
+					<?php
+					$counter                                   = 0;
+					$treatments_timeslots_forthedate_counter    = [];
+					$treatments_timeslots_forthedate_difference = [];
+					foreach ( $period as $period_item ) {
+						$period_item->setTimezone( wp_timezone() );
+						$counter ++;
+
+						?>
+						<td><?php
+							if ( !isset( $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
+								$treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
+							}
+							echo '<span class="treatment treatment-' . $counter .'">' . $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]  .'</span>';
+
+							     $treatments_timeslots_forthedate_counter[ $counter] = $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
+
+							if($counter != 1 && $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $treatments_timeslots_forthedate_counter[ $counter - 1]){
+								$difference = ( ( $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $treatments_timeslots_forthedate_counter[ $counter - 1]) >= 0 ? '+' : '') . ( $treatments_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] - $treatments_timeslots_forthedate_counter[ $counter - 1]);
+
+								echo ' (<span class="treatment-different treatment-different-' . $counter . '">'.$difference .'</span>)';
+								$treatments_timeslots_forthedate_difference[ $counter] = $difference;
+
+							}
+							?></td>
+						<?php
+					}
+					?>
+				</tr>
+				<?php } ?>
 
 				<!-- Booking Allotments -->
 				<tr>
@@ -460,6 +496,8 @@
 								                     + ( $capacity_timeslots_forthedate_difference[ $counter ] ?? 0)
 								                     + ( $plugin_admin->lessons_has_data() ? $lessons_subscribed_forthedate_counter[ ( $counter - 1 ) ] : 0 )
 								                     - ( $plugin_admin->lessons_has_data() ? $lessons_subscribed_forthedate_counter[ $counter ] : 0 )
+													 + ( !empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter - 1 ] : 0 )
+													 - ( !empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
 								);
 								echo '<span class="free free-' . $counter . '">'
 								     . $free[ $counter] . '</span>';
@@ -485,6 +523,12 @@
 									                                             . $counter . '">'
 									                                             . $lessons_subscribed_forthedate_counter[ $counter ] . '</span>'
 											: '' )
+
+									     . ( !empty( $treatments_timeslots_forthedate ) ? '+' . '<span class="treatment treatment-'
+									                                                      . $counter . '">'.  $treatments_timeslots_forthedate_counter[ $counter - 1]. '</span>' : '' )
+									     . ( !empty( $treatments_timeslots_forthedate ) ? '-' . '<span class="treatment treatment-'
+									                                                      . $counter . '">'.  $treatments_timeslots_forthedate_counter[ $counter ]. '</span>' : '' )
+
 
 									     . ')';
 								}

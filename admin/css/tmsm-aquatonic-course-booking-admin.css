@@ -32,7 +32,8 @@
 .tmsm-aquatonic-course-booking-wrap .booking-starting,
 .tmsm-aquatonic-course-booking-wrap .booking-ending,
 .tmsm-aquatonic-course-booking-wrap .free,
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed {
+.tmsm-aquatonic-course-booking-wrap .lessons-subscribed,
+.tmsm-aquatonic-course-booking-wrap .treatment {
   font-weight: bold;
 }
 .tmsm-aquatonic-course-booking-wrap .highlight {
@@ -154,6 +155,42 @@
 }
 .tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-6 {
   color: hsl(92.54901961, 80.10471204%, 37.54901961%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment {
+  color: #c6ac81;
+}
+.tmsm-aquatonic-course-booking-wrap .treatment.treatment-2 {
+  color: hsl(37.39130435, 37.70491803%, 59.11764706%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment.treatment-3 {
+  color: hsl(37.39130435, 37.70491803%, 54.11764706%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment.treatment-4 {
+  color: hsl(37.39130435, 37.70491803%, 49.11764706%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment.treatment-5 {
+  color: hsl(37.39130435, 37.70491803%, 44.11764706%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment.treatment-6 {
+  color: hsl(37.39130435, 37.70491803%, 39.11764706%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different {
+  color: #78dbd9;
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different.treatment-different-2 {
+  color: hsl(178.78787879, 57.89473684%, 61.47058824%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different.treatment-different-3 {
+  color: hsl(178.78787879, 57.89473684%, 56.47058824%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different.treatment-different-4 {
+  color: hsl(178.78787879, 57.89473684%, 51.47058824%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different.treatment-different-5 {
+  color: hsl(178.78787879, 57.89473684%, 46.47058824%);
+}
+.tmsm-aquatonic-course-booking-wrap .treatment-different.treatment-different-6 {
+  color: hsl(178.78787879, 57.89473684%, 41.47058824%);
 }
 .tmsm-aquatonic-course-booking-wrap .widefat .column-wc_actions a.processing::after {
   content: "\e015";

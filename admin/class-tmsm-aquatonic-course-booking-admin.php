@@ -294,12 +294,26 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		add_settings_field(
 			'timeslots',
-			esc_html__( 'Booking Allotments', 'tmsm-aquatonic-course-booking' ),
+			esc_html__( 'Booking Allotments for Course', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_textarea' ),
 			$this->plugin_name,
 			$this->plugin_name . '-times',
 			array(
 				'id' => 'timeslots',
+				'rows' => 20,
+				'description' => esc_html__( 'Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day Number is: 0 for Sunday, 1 for Monday, etc. Also for special dates: Date=09:00-21:00=0 where Date is in format YYYY-MM-DD.', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		add_settings_field(
+			'treatmentcourse_allotment',
+			esc_html__( 'Allotments for Treatment+Course', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_textarea' ),
+			$this->plugin_name,
+			$this->plugin_name . '-times',
+			array(
+				'id' => 'treatmentcourse_allotment',
+				'rows' => 10,
 				'description' => esc_html__( 'Format: Day Number=09:00-14:00,15:30-17:30 serapated by a line break. Day Number is: 0 for Sunday, 1 for Monday, etc. Also for special dates: Date=09:00-21:00=0 where Date is in format YYYY-MM-DD.', 'tmsm-aquatonic-course-booking' ),
 			)
 		);
@@ -995,6 +1009,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'hoursbefore', 'text', '' );
 		$options[] = array( 'hoursafter', 'text', '' );
 		$options[] = array( 'timeslots', 'textarea', '' );
+		$options[] = array( 'treatmentcourse_allotment', 'textarea', '' );
 
 		$options[] = array( 'gform_add_id', 'text', '' );
 		$options[] = array( 'gform_cancel_id', 'text', '' );
@@ -1254,11 +1269,20 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function lessons_set_data(){
 
+		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+			error_log('lessons_set_data');
+		}
+
 		$endpoint = $this->get_option('aquos_endpoint_lessons');
 		$site_id = $this->get_option('aquos_siteid');
 		$tests_lessonsdate = $this->get_option('tests_lessonsdate');
 
-		if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
+		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+			error_log('$tests_lessonsdate:'.$tests_lessonsdate);
+			error_log('$endpoint:'.$endpoint);
+			error_log('$site_id:'.$site_id);
+		}
+		if ( ! empty ( $endpoint ) && isset( $site_id ) ) {
 			$data = [
 				'date'    => $tests_lessonsdate ?? date( 'Ymd' ),
 				'id_site' => $site_id,
@@ -1282,6 +1306,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			);
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+				error_log(print_r($response, true));
+				error_log(print_r($response_data, true));
+			}
 
 			if ( $response_code >= 400 ) {
 

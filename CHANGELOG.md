@@ -1,3 +1,5 @@
+* Treatments allotment
+
 ### 1.4.6: June 1st, 2021
 * Remove debug
 * Updated translations

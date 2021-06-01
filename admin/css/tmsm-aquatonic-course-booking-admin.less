@@ -8,6 +8,8 @@
 @allotment: #a5a800;
 @lessons-subscribed: #99ec53;
 @lessons-arrived: #32dbb1;
+@treatment: #c6ac81;
+@treatment-different: #78dbd9;
 
 
 .tmsm-aquatonic-course-booking-wrap{
@@ -22,7 +24,7 @@
         padding: 2px;
 
     }
-    .capacity-1, .realtime, .booking-starting, .booking-ending, .free, .lessons-subscribed{
+    .capacity-1, .realtime, .booking-starting, .booking-ending, .free, .lessons-subscribed, .treatment{
         font-weight: bold;
     }
 
@@ -175,7 +177,43 @@
             color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 25%);
         }
     }
+    .treatment{
+        color: @treatment;
+        &.treatment-2{
+            color: darken(hsl(hue(@treatment), saturation(@treatment), lightness(@treatment)), 5%);
+        }
+        &.treatment-3{
+            color: darken(hsl(hue(@treatment), saturation(@treatment), lightness(@treatment)), 10%);
+        }
+        &.treatment-4{
+            color: darken(hsl(hue(@treatment), saturation(@treatment), lightness(@treatment)), 15%);
+        }
+        &.treatment-5{
+            color: darken(hsl(hue(@treatment), saturation(@treatment), lightness(@treatment)), 20%);
+        }
+        &.treatment-6{
+            color: darken(hsl(hue(@treatment), saturation(@treatment), lightness(@treatment)), 25%);
+        }
+    }
 
+    .treatment-different{
+        color: @treatment-different;
+        &.treatment-different-2{
+            color: darken(hsl(hue(@treatment-different), saturation(@treatment-different), lightness(@treatment-different)), 5%);
+        }
+        &.treatment-different-3{
+            color: darken(hsl(hue(@treatment-different), saturation(@treatment-different), lightness(@treatment-different)), 10%);
+        }
+        &.treatment-different-4{
+            color: darken(hsl(hue(@treatment-different), saturation(@treatment-different), lightness(@treatment-different)), 15%);
+        }
+        &.treatment-different-5{
+            color: darken(hsl(hue(@treatment-different), saturation(@treatment-different), lightness(@treatment-different)), 20%);
+        }
+        &.treatment-different-6{
+            color: darken(hsl(hue(@treatment-different), saturation(@treatment-different), lightness(@treatment-different)), 25%);
+        }
+    }
     .widefat .column-wc_actions a.processing::after{
         content: "\e015";
         line-height: 2.2em;
