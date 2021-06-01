@@ -34,7 +34,7 @@
 		<a class="nav-tab <?php if ( $tab == 'bookings' ) {
 			echo 'nav-tab-active';
 		} ?>" href="<?php echo self::admin_page_url(); ?>?page=tmsm-aquatonic-course-booking-settings&tab=bookings">
-			<?php _e( 'Today\'s Bookings', 'tmsm-aquatonic-course-booking' ); ?>
+			<?php _e( 'Bookings', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 
 		<?php
@@ -574,7 +574,24 @@
 	}
 
 	if ( $tab == 'bookings' ) {
+
+		$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
+		$bookings->prepare_items();
+
+		//$bookings->views();
 		?>
+
+		<form id="<?php echo esc_attr( $bookings->page ); ?>-filter" method="get" action="">
+		<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
+		<input type="hidden" name="tab" value="<?php echo esc_attr( $bookings->tab ); ?>"/>
+			<?php
+			//$bookings->search_box( __( 'Filter', 'complianz-gdpr' ), 'cmplz-cookiesnapshot' );
+			//$bookings->date_select();
+			$bookings->display();
+			?>
+		</form>
+
+
 		<br>
 		<table class="wp-list-table widefat striped">
 			<thead>
