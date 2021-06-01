@@ -1,3 +1,4 @@
+### 1.4.7: June 1st, 2021
 * Treatments allotment
 
 ### 1.4.6: June 1st, 2021
