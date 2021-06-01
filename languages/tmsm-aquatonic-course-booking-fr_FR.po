@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
 "POT-Creation-Date: 2021-06-01 14:27+0200\n"
-"PO-Revision-Date: 2021-06-01 14:28+0200\n"
+"PO-Revision-Date: 2021-06-01 21:16+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -586,7 +586,7 @@ msgstr "Ce token de réservation n’a pas été trouvé"
 #: public/class-tmsm-aquatonic-course-booking-public.php:1047
 #, php-format
 msgid "Aquatonic Course on %s for %d participants"
-msgstr "Parcours Aquatonic le %s pour %d participants"
+msgstr "Parcours Aquatonic le %s pour %d participant(s)"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:1278
 msgid "Token security is not valid"
