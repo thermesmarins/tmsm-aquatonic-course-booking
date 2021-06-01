@@ -1218,13 +1218,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			],
 			'arrived' => [
 				'name' => __( 'Arrived', 'tmsm-aquatonic-course-booking' ),
-				'markas' => __( 'Mark as arrived', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Arrived', 'tmsm-aquatonic-course-booking' ),
 				'iconclass' => 'order-status status-processing status-arrived',
 				'actionclass' => 'button wc-action-button wc-action-button-processing processing',
 			],
 			'cancelled' => [
 				'name' => __( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
-				'markas' => __( 'Mark as arrived', 'tmsm-aquatonic-course-booking' ),
+				'markas' => __( 'Mark as cancelled', 'tmsm-aquatonic-course-booking' ),
 				'iconclass' => 'order-status status-failed status-cancelled',
 			],
 			'noshow' => [

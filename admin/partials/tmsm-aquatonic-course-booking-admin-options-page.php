@@ -591,59 +591,6 @@
 			?>
 		</form>
 
-
-		<br>
-		<table class="wp-list-table widefat striped">
-			<thead>
-			<tr >
-				<th scope="col"><?php esc_html_e( 'Firstname', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Lastname', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Email', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Participants', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Start', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Status', 'tmsm-aquatonic-course-booking' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Actions', 'tmsm-aquatonic-course-booking' ); ?></th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php foreach ( $bookings_of_the_day as $booking ) { ?>
-				<tr class="booking-row" id="booking-<?php echo esc_attr($booking->booking_id)?>">
-					<td><?php echo sanitize_text_field( $booking->firstname ); ?></td>
-					<td><?php echo sanitize_text_field( $booking->lastname ); ?></td>
-					<td><?php echo sanitize_text_field( $booking->email ); ?></td>
-					<td><?php echo sanitize_text_field( $booking->participants ); ?></td>
-					<td><?php
-						$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking->course_start, wp_timezone() );
-						echo wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
-						?></td>
-					<td class="status"><?php
-						$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
-						echo '<mark class="' . $statuses[$booking->status]['iconclass'] . '"><span>' . $statuses[$booking->status]['name'] .' </span></mark>';
-						?></td>
-					<td class="column-wc_actions actions">
-						<?php
-
-
-						if(in_array($booking->status, ['active', 'noshow'])  ){
-							$link = wp_nonce_url( admin_url( 'admin-ajax.php?action=tmsm_aquatonic_course_booking_change_status&status=arrived&booking_id='
-							                                 . $booking->booking_id ),
-								'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' );
-							?>
-						<a class="<?php echo $statuses['arrived']['actionclass'];?>" href="<?php echo $link; ?>" title="<?php echo esc_attr($statuses['arrived']['markas']) ;?>"><?php  echo $statuses['arrived']['markas']; ?></a>
-						<?php } ?>
-					</td>
-
-				</tr>
-			<?php } ?>
-			</tbody>
-
-			<!--<tfoot>
-		<tr>
-			<th><a class="button button-secondary "><span class="dashicon dashicon-plus"></span> <?php esc_html_e( 'New Booking',
-				'tmsm-aquatonic-course-booking' ); ?></a></th>
-		</tr>
-		</tfoot>-->
-		</table>
 		<?php
 	}
 	?>

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-06-01 11:57+0200\n"
+"POT-Creation-Date: 2021-06-01 12:59+0200\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -305,18 +305,18 @@ msgid "Mark as active"
 msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1220
-msgid "Arrived"
-msgstr ""
-
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1221
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1227
-msgid "Mark as arrived"
+msgid "Arrived"
 msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1226
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:299
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:395
 msgid "Cancelled"
+msgstr ""
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1227
+msgid "Mark as cancelled"
 msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1231

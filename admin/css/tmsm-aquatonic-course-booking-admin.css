@@ -201,4 +201,14 @@
 .toplevel_page_tmsm-aquatonic-course-booking-mini #wpbody-content {
   padding-bottom: 0 !important;
 }
+#tmsm-aquatonic-course-booking-settings-filter .wp-list-table .column-course_start,
+#tmsm-aquatonic-course-booking-settings-filter .wp-list-table .column-date_created {
+  white-space: nowrap;
+}
+#tmsm-aquatonic-course-booking-settings-filter .wp-list-table td.column-email {
+  font-size: 70%;
+}
+#tmsm-aquatonic-course-booking-settings-filter .wp-list-table td.column-status {
+  font-size: 80%;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */
