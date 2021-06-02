@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
 "POT-Creation-Date: 2021-06-02 09:21+0200\n"
-"PO-Revision-Date: 2021-06-02 09:21+0200\n"
+"PO-Revision-Date: 2021-06-02 10:20+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -273,7 +273,9 @@ msgstr "Les pages doivent êtres définies"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:824
 msgid "Timeslots fields all need to be defined"
-msgstr "Les champs Date+Heure doivent être défini"
+msgstr ""
+"Les champs Allotement pour les réservations de parcours, Réservation "
+"possible avant, et Réservation possible après doivent être remplis"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:831
 msgid "Dialog Insight fields all need to be defined"
