@@ -1,3 +1,5 @@
+* Remove debug log
+
 ### 1.4.7: June 1st, 2021
 * Treatments allotment
 

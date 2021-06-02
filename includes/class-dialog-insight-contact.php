@@ -77,7 +77,9 @@ class Dialog_Insight_Contact {
 		//error_log( print_r( $contacts, true ) );
 
 		if ( ! empty( $contacts->Records ) && ! empty( $contacts->Records[0] ) ) {
-			error_log( 'First contact found, assigning values' );
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'First contact found, assigning values' );
+			}
 			$contact          = $contacts->Records[0];
 			$this->email      = $contact->f_EMail ?? null;
 			$this->firstname  = $contact->f_FirstName ?? null;
