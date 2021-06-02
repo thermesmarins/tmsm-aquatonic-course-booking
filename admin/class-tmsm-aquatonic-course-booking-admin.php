@@ -1087,8 +1087,35 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		}
 
+	}
 
+	/**
+	 * Mark Booking as Cancelled
+	 *
+	 * @param array $booking
+	 * @param bool $redirect_to_admin
+	 *
+	 * @return WP_Error
+	 */
+	public function booking_mark_as_cancelled( $booking, $redirect_to_admin ){
 
+		// Dialog Insight: Mark contact as customer if arrived
+		$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+		$booking_dialoginsight->token = $booking['token'];
+		$booking_dialoginsight->status = 'cancelled';
+		try {
+			$booking_dialoginsight->update();
+		} catch (Exception $exception) {
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Dialog Insight not updated: '. $exception->getMessage());
+			}
+
+			if($redirect_to_admin === false){
+				wp_send_json( array( 'success' => false, 'message' => $exception->getMessage() ) );
+			}
+
+		}
 
 	}
 
@@ -1202,7 +1229,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 				$this->booking_mark_as_arrived($booking, $redirect_to_admin);
 
-			} // status arrived
+			}
+
+			if($status === 'cancelled'){
+				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
+
+				$this->booking_mark_as_cancelled($booking, $redirect_to_admin);
+
+			}
 
 		} // valid status
 
