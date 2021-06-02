@@ -1,3 +1,4 @@
+### 1.4.8: June 1st, 2021
 * Remove debug log
 * Updated translations
 * Removed dangerous queries
@@ -16,7 +17,7 @@
 * Automatic refresh of data now executed one minute after cron event has executed, to let time to do the actions
 * Mini dashboard: Remove javascript, fix margins, add link to main dashboard
 * Fix missing aquos_generate_signature function
-* Prevent non-admins from seeing  dashboard calculations
+* Prevent non-admins from seeing dashboard calculations
 * New setting: Blocked before date
 * Allow 0 for text settings
 
