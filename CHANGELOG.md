@@ -1,5 +1,7 @@
 * Remove debug log
 * Updated translations
+* Removed dangerous queries
+* Bookings list in backend: Cancel button 
 
 ### 1.4.7: June 1st, 2021
 * Treatments allotment

@@ -1241,6 +1241,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'name' => __( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
 				'markas' => __( 'Mark as cancelled', 'tmsm-aquatonic-course-booking' ),
 				'iconclass' => 'order-status status-failed status-cancelled',
+				'actionclass' => 'button wc-action-button wc-action-button-cancelled cancelled',
 			],
 			'noshow' => [
 				'name' => __( 'No-show', 'tmsm-aquatonic-course-booking' ),

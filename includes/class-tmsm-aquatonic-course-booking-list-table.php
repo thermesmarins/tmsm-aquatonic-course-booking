@@ -244,7 +244,13 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			$link = wp_nonce_url( admin_url( 'admin-ajax.php?action=tmsm_aquatonic_course_booking_change_status&status=arrived&booking_id='
 			                                 . $item['booking_id'] ),
 				'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' );
-			$output = '<a class="'.  $statuses['arrived']['actionclass'].'" href="'.$link .'" title="'. esc_attr($statuses['arrived']['markas']) .'">'.$statuses['arrived']['markas'].'</a>';
+			$output .= '<a class="'.  $statuses['arrived']['actionclass'].'" href="'.$link .'" title="'. esc_attr($statuses['arrived']['markas']) .'">'.$statuses['arrived']['markas'].'</a> ';
+		}
+		if(in_array($item['status'], ['active'])  ){
+			$link = wp_nonce_url( admin_url( 'admin-ajax.php?action=tmsm_aquatonic_course_booking_change_status&status=cancelled&booking_id='
+			                                 . $item['booking_id'] ),
+				'tmsm_aquatonic_course_booking_change_status', 'tmsm_aquatonic_course_booking_nonce' );
+			$output .= '<a class="'.  $statuses['cancelled']['actionclass'].'" href="'.$link .'" title="'. esc_attr($statuses['cancelled']['markas']) .'">'.$statuses['cancelled']['markas'].'</a> ';
 		}
 
 		return $output;
