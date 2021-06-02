@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-06-01 14:27+0200\n"
-"PO-Revision-Date: 2021-06-01 21:16+0200\n"
+"POT-Creation-Date: 2021-06-02 09:21+0200\n"
+"PO-Revision-Date: 2021-06-02 09:21+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -333,7 +333,7 @@ msgstr "No-show"
 msgid "Mark as no-show"
 msgstr "Marquer comme no-show"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1304
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1318
 #: public/class-tmsm-aquatonic-course-booking-public.php:509
 #: public/class-tmsm-aquatonic-course-booking-public.php:513
 #: public/class-tmsm-aquatonic-course-booking-public.php:518
@@ -341,7 +341,7 @@ msgstr "Marquer comme no-show"
 msgid "Error: Delivery URL returned response code: %s"
 msgstr "Erreur : URL de livraison a retourné le code : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1313
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1327
 #: public/class-tmsm-aquatonic-course-booking-public.php:527
 #: public/class-tmsm-aquatonic-course-booking-public.php:530
 #: public/class-tmsm-aquatonic-course-booking-public.php:533
@@ -380,7 +380,7 @@ msgstr "Inscrits aux cours"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:258
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:286
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:562
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:567
 msgid "(Test Mode)"
 msgstr "(Mode test)"
 
@@ -412,26 +412,26 @@ msgstr "Réservations qui débutent"
 msgid "Free"
 msgstr "Libre"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:539
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:550
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:544
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:555
 msgid "Can Start"
 msgstr "Peut commencer"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:552
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:557
 msgid "(Minimum Value of Free Row)"
 msgstr "(Valeur minimum de la ligne « Libre »)"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:557
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:599
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:562
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:604
 msgid "Real Time"
 msgstr "Temps réél"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:577
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:582
 #, php-format
 msgid "Next Refresh at %s in %s"
 msgstr "Prochain rafraîchissement à %s dans %s"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:583
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:588
 msgid "Force refresh attendance"
 msgstr "Forcer le rafraîchissement"
 
@@ -479,6 +479,10 @@ msgstr "%s à %s"
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:297
 msgid "All"
 msgstr "Tout"
+
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:324
+msgid "Filter"
+msgstr "Filtrer"
 
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:373
 msgid "Name"
@@ -630,9 +634,6 @@ msgstr "Accéder au tableau de bord complet"
 
 #~ msgid "Delete"
 #~ msgstr "Supprimer"
-
-#~ msgid "Filter"
-#~ msgstr "Filtrer"
 
 #~ msgctxt "tmsm-aquatonic-course-booking"
 #~ msgid "Firstname"

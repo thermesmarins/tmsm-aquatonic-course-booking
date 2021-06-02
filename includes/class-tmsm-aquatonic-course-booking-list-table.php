@@ -321,7 +321,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		if ( 'top' === $which ) {
 			echo '<div class="alignleft actions">';
 			$this->status_filter();
-			echo wp_kses_post( $this->search_box( 'Filter', 'filter' ) );
+			echo wp_kses_post( $this->search_box( esc_html__( 'Filter', 'tmsm-aquatonic-course-booking' ), 'filter' ) );
 			echo '</div>';
 		}
 	}
