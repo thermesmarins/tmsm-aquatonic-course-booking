@@ -341,22 +341,21 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 * @param string $input_id ID attribute value for the search input field.
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			//return;
-		}
 
-
-
+		$s      = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // input var ok, CSRF ok.
 		$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
 		$search_datecreated = isset( $_REQUEST['search_datecreated'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecreated'] ) ) : '';
 
+		if ( empty( $s ) && ! $this->has_items() ) {
+			//return;
+		}
+
 		//print_r('$search_datecourse:'.$search_datecourse);
 		//print_r('$search_datecreated:'.$search_datecreated);
-		if ( empty( $search_datecourse ) && empty( $search_datecreated ) ) {
+		if ( empty( $search_datecourse ) && empty( $search_datecreated ) && empty( $s ) ) {
 			$objdate = new Datetime();
 			$search_datecourse = $objdate->format('d/m/Y');
 		}
-
 
 		$input_id = $input_id . '-search-input';
 
@@ -392,7 +391,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 */
 	protected function status_filter() {
 		if ( ! $this->has_items() ) {
-			return;
+			//return;
 		}
 		?>
 		<select name="status">
