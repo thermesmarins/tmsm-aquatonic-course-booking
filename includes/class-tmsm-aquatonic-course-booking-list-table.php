@@ -138,7 +138,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		}
 
 
-		if ( empty( $search_datecourse ) && empty( $search_datecreated ) ) {
+		if ( empty( $search_datecourse ) && empty( $search_datecreated ) &&  empty( $s ) ) {
 			$objdate = new Datetime();
 			if(!empty($objdate)){
 				$where_and .= sprintf( " AND DATE(course_start) = '%s'", $objdate->format('Y-m-d') );

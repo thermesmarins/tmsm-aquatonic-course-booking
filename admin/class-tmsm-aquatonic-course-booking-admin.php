@@ -1099,6 +1099,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function booking_mark_as_cancelled( $booking, $redirect_to_admin ){
 
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('booking_mark_as_cancelled');
+		}
+
 		// Dialog Insight: Mark contact as customer if arrived
 		$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 		$booking_dialoginsight->token = $booking['token'];
@@ -1222,6 +1226,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Update booking with new status
 		if( $this->booking_is_valid_status($status) && !empty($booking_id) ){
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('booking_is_valid_status');
+			}
 			$booking_update = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}aquatonic_course_booking SET status = %s WHERE booking_id= %d ", $status, $booking_id ) );
 
 			if($status === 'arrived'){
@@ -1232,6 +1239,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 
 			if($status === 'cancelled'){
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('status cancelled');
+				}
 				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
 
 				$this->booking_mark_as_cancelled($booking, $redirect_to_admin);
