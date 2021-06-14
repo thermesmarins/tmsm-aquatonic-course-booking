@@ -709,11 +709,15 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
    * Set initial data into view and start recurring display updates.
    */
   TmsmAquatonicCourseApp.init = function() {
-    console.log('TmsmAquatonicCourseApp.init');
+    console.log('TmsmAquatonicCourseApp.init 04');
 
 
 
-
+    /*$('.tmsm-aquatonic-course-birthdate input').datepicker({
+      'language': TmsmAquatonicCourseApp.data.locale,
+      'format': TmsmAquatonicCourseApp.i18n.birthdateformatdatepicker
+    });*/
+    $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
     //$('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
 
     if($('.tmsm-aquatonic-course-participants').length > 0 ){

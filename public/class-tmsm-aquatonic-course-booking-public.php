@@ -144,6 +144,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'submit_button' => '.gform_button[type=submit]',
 			],
 			'i18n' => [
+				'birthdateformatdatepicker' => _x( 'mm/dd/yyyy', 'birthdate date format for datepicker', 'tmsm-aquatonic-course-booking' ),
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
 				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
@@ -311,7 +312,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
 				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
-				/*
+
 				error_log( 'field firstname value: ' . $firstname );
 				error_log( 'field lastname value: ' . $lastname );
 				error_log( 'value birthdate value: ' . $birthdate );
@@ -322,17 +323,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				error_log( 'field hourminutes value: ' . $hourminutes );
 				error_log( 'field course_start value: ' . $course_start );
 				error_log( 'token: ' . $token );
-				*/
+
 
 
 				// Convert birthdate
 				if(!empty($birthdate)){
-					$objdate = DateTime::createFromFormat( _x( 'm/d/Y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ), $birthdate );
-					//error_log('birthdate object:');
-					//error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
-					//error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
+					$objdate = DateTime::createFromFormat( 'Y-m-d', $birthdate );
+					error_log('birthdate object:');
+					error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
+					error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
 					$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
-					//error_log('birthdate_computed: '. $birthdate_computed);
+					error_log('birthdate_computed: '. $birthdate_computed);
 				}
 
 				// Calculate date start and end of course
