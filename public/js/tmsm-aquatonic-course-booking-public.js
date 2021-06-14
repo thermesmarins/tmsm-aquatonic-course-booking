@@ -709,7 +709,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
    * Set initial data into view and start recurring display updates.
    */
   TmsmAquatonicCourseApp.init = function() {
-    console.log('TmsmAquatonicCourseApp.init 04');
+    console.log('TmsmAquatonicCourseApp.init');
 
 
 
