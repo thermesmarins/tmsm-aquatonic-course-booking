@@ -2339,8 +2339,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		echo '<div class="wrap">';
 
 
-		$setting_url = admin_url( 'admin.php'. '?page='.$this->plugin_name.'-settings' ) ;
-		echo '<p><a target="_blank" href="'.$setting_url.'">'.__('Access the main dashboard', 'tmsm-aquatonic-course-booking').'</a></p>';
+		//$setting_url = admin_url( 'admin.php'. '?page='.$this->plugin_name.'-settings' ) ;
+		//echo '<p><a target="_blank" href="'.$setting_url.'">'.__('Access the main dashboard', 'tmsm-aquatonic-course-booking').'</a></p>';
 
 		/*if( has_action('tmsm_aquatonic_attendance_cronaction')){
 			$cronevent = wp_next_scheduled( 'tmsm_aquatonic_attendance_cronaction' );

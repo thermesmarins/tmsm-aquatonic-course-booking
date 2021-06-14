@@ -1,3 +1,5 @@
+* Removed link to dashboard from minidashboard
+
 ### 1.4.8: June 1st, 2021
 * Remove debug log
 * Updated translations
