@@ -1,3 +1,4 @@
+### 1.4.9: June 14th, 2021
 * Removed link to dashboard from minidashboard
 
 ### 1.4.8: June 1st, 2021
