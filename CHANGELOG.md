@@ -1,3 +1,5 @@
+* Fix filter bookings query
+
 ### 1.4.9: June 14th, 2021
 * Removed link to dashboard from minidashboard
 

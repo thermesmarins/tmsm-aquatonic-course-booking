@@ -149,7 +149,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$where.= $where_and;
 
 		if ( 'all' !== $status ) {
-			$where .= sprintf( 'status = "%s"', $wpdb->esc_like($status) );
+			$where .= 'AND ' .sprintf( 'status = "%s"', $wpdb->esc_like($status) );
 		}
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE ' . $where;
