@@ -1,6 +1,7 @@
 * Fix filter bookings query
 * Adding debug information
 * Better bookings search allowing to search only by name
+* Removed jquery mask for birthdate
 
 ### 1.4.9: June 14th, 2021
 * Removed link to dashboard from minidashboard

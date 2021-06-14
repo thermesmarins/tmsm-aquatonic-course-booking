@@ -714,7 +714,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
 
 
-    $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
+    //$('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
 
     if($('.tmsm-aquatonic-course-participants').length > 0 ){
       TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
