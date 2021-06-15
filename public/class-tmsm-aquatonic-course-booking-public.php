@@ -786,7 +786,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		// Create token for entry if token doesn't exist
 		if(empty($token)){
-			$token = $entry_id.'-'. wp_generate_password(24);
+			$token = $entry_id.'-'. wp_generate_password(24, false, false);
 			//error_log('gform_update_meta _booking_token: '.$token);
 			gform_update_meta( $entry_id, '_booking_token', $token );
 		}

@@ -1,3 +1,5 @@
+* Remove special chars from tokens
+
 ### 1.5.0: June 15th, 2021
 * Fix filter bookings query
 * Adding debug information
