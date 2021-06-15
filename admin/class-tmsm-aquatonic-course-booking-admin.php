@@ -86,6 +86,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		wp_enqueue_script( 'jquery.countdown', plugin_dir_url( __FILE__ ) . 'js/jquery.countdown.min.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-admin.js', array( 'jquery', 'jquery.countdown' ), $this->version, true );
 
+		// Javascript localization
+		$translation_array = array(
+			'data' => [
+				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( 'tmsm-aquatonic-course-booking-nonce-action' ),
+			],
+			'i18n' => [
+				'surecancel' => __( 'Are you sure you want to cancel this booking?', 'tmsm-aquatonic-course-booking' ),
+			] ,
+
+		);
+		wp_localize_script( $this->plugin_name, 'TmsmAquatonicCourseAdmin', $translation_array );
 	}
 
 

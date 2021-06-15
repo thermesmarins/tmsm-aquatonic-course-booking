@@ -1,6 +1,15 @@
 (function( $ ) {
   'use strict';
 
+  $('.settings_page_tmsm-aquatonic-course-booking-settings .button.cancelled').on( 'click', function( e ) {
+    e.preventDefault();
+    if( window.confirm( TmsmAquatonicCourseAdmin.i18n.surecancel )){
+      var url = $(this).attr('href');
+      console.log(url);
+      window.location.href = url;
+    }
+  });
+
 
   /**
    * Dashboard: Highlight same values in the dashboard table
