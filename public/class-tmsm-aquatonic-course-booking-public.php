@@ -313,7 +313,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
 
-				error_log( 'field firstname value: ' . $firstname );
+				/*error_log( 'field firstname value: ' . $firstname );
 				error_log( 'field lastname value: ' . $lastname );
 				error_log( 'value birthdate value: ' . $birthdate );
 				error_log( 'field email value: ' . $email );
@@ -322,18 +322,18 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				error_log( 'field date value: ' . $date );
 				error_log( 'field hourminutes value: ' . $hourminutes );
 				error_log( 'field course_start value: ' . $course_start );
-				error_log( 'token: ' . $token );
+				error_log( 'token: ' . $token );*/
 
 
 
 				// Convert birthdate
 				if(!empty($birthdate)){
 					$objdate = DateTime::createFromFormat( 'Y-m-d', $birthdate );
-					error_log('birthdate object:');
-					error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
-					error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
+					//error_log('birthdate object:');
+					//error_log(_x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ));
+					//error_log(_x( 'm/d/y', 'birthdate date format for machines', 'tmsm-aquatonic-course-booking' ));
 					$birthdate_computed = $objdate->format( 'Y-m-d' ) ?? null;
-					error_log('birthdate_computed: '. $birthdate_computed);
+					//error_log('birthdate_computed: '. $birthdate_computed);
 				}
 
 				// Calculate date start and end of course
