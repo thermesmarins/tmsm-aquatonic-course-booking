@@ -1,3 +1,4 @@
+### 1.5.0: June 15th, 2021
 * Fix filter bookings query
 * Adding debug information
 * Better bookings search allowing to search only by name
