@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-06-15 09:36+0200\n"
+"POT-Creation-Date: 2021-06-16 10:21+0200\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -302,41 +302,55 @@ msgstr ""
 msgid "Booking date is passed or in the future"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1286
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1269
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:227
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:230
+#: public/class-tmsm-aquatonic-course-booking-public.php:898
+#: public/class-tmsm-aquatonic-course-booking-public.php:1026
+#, php-format
+msgid "%s at %s"
+msgstr ""
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1271
+#, php-format
+msgid "Successfully changed status of booking from %s %s at %s"
+msgstr ""
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1290
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:304
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:399
 msgid "Active"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1287
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1291
 msgid "Mark as active"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1291
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1292
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1295
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1296
 msgid "Arrived"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1297
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1301
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:305
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:400
 msgid "Cancelled"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1298
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1302
 msgid "Mark as cancelled"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1303
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1307
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:306
 msgid "No-show"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1304
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1308
 msgid "Mark as no-show"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1375
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1379
 #: public/class-tmsm-aquatonic-course-booking-public.php:510
 #: public/class-tmsm-aquatonic-course-booking-public.php:514
 #: public/class-tmsm-aquatonic-course-booking-public.php:519
@@ -344,7 +358,7 @@ msgstr ""
 msgid "Error: Delivery URL returned response code: %s"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1384
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1388
 #: public/class-tmsm-aquatonic-course-booking-public.php:528
 #: public/class-tmsm-aquatonic-course-booking-public.php:531
 #: public/class-tmsm-aquatonic-course-booking-public.php:534
@@ -471,14 +485,6 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:227
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:230
-#: public/class-tmsm-aquatonic-course-booking-public.php:898
-#: public/class-tmsm-aquatonic-course-booking-public.php:1026
-#, php-format
-msgid "%s at %s"
-msgstr ""
-
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:303
 msgid "All"
 msgstr ""
@@ -521,7 +527,6 @@ msgid "mm/dd/yyyy"
 msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:148
-#: public/class-tmsm-aquatonic-course-booking-public.php:333
 msgctxt "birthdate date format for humans"
 msgid "mm/dd/yyyy"
 msgstr ""
@@ -549,11 +554,6 @@ msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:247
 msgid "Change time"
-msgstr ""
-
-#: public/class-tmsm-aquatonic-course-booking-public.php:334
-msgctxt "birthdate date format for machines"
-msgid "m/d/y"
 msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:547

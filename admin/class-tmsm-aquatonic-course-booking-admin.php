@@ -1264,7 +1264,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Return JSON
 		if($redirect_to_admin === false){
-			wp_send_json(array('success' => true));
+
+			$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+			$date = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $booking_start_object->getTimestamp() );
+
+			wp_send_json(array('success' => true, 'message' => esc_html__( 'Successfully changed status of booking from %s %s at %s', 'tmsm-aquatonic-course-booking' ), $booking['firstname'], $booking['lastname'], $date));
 		}
 		// Or redirect
 		else{
