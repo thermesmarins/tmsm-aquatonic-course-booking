@@ -1430,6 +1430,178 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		return $secret;
 	}
+
+	/**
+	 * Send Contacts to Aquos every 5 minutes
+	 */
+	public function aquos_send_contacts_cron() {
+
+		global $wpdb;
+
+		error_log( 'aquos_send_contacts_cron_start' );
+		$lastexec_option_name = 'tmsm-aquatonic-course-booking-aquos-send-contacts-last-exec';
+		$now = time();
+		$lastexec_timestamp = get_option( $lastexec_option_name );
+
+		if ( empty( $lastexec_timestamp ) ) {
+			$lastexec_timestamp = $now;
+			update_option( $lastexec_option_name, $lastexec_timestamp, true );
+		}
+
+		error_log('$lastexec_timestamp: ' . $lastexec_timestamp);
+
+		$sql  = "SELECT * FROM `{$wpdb->prefix}aquatonic_course_booking`";
+		$sql .= ' WHERE course_start > ' .$lastexec_timestamp ;
+		$sql .= ' AND course_start <= ' .$now ;
+
+		//$datetime
+
+		$lastexec_object = new DateTime();
+		$lastexec_object->setTimezone(wp_timezone());
+		$lastexec_object->setTimestamp($lastexec_timestamp);
+		$now_object = new DateTime();
+		$now_object->setTimezone(wp_timezone());
+		$now_object->setTimestamp($now);
+
+		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE date_created > '%s' AND date_created <= '%s'", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
+
+		error_log('Found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
+
+		$count = 0;
+		foreach($bookings as $booking){
+
+			$this->aquos_send_contact($booking);
+			$count++;
+        }
+		error_log('Handled '. $count . ' bookings');
+
+		$lastexec_timestamp = $now;
+		update_option( $lastexec_option_name, $lastexec_timestamp, true );
+		error_log('aquos_send_contacts_cron_end');
+	}
+
+	/**
+	 * Send contact data to Aquos
+	 *
+	 * @param $contact
+	 *
+	 * @return WP_Error
+	 */
+	public function aquos_send_contact( $booking ){
+
+		error_log('aquos_send_contact_start');
+
+		// Aquos, send contact information
+		$endpoint = $this->get_option('aquos_endpoint_contact');
+		$site_id = $this->get_option('aquos_siteid');
+
+		if ( ! empty ( $endpoint ) && ! empty( $site_id ) ) {
+			$data = [
+				'civilite'      => ( $booking['title'] == 1 ? 'M.' : 'Mme' ),
+				'prenom'        => $booking['firstname'],
+				'nom'           => $booking['lastname'],
+				'email'         => $booking['email'],
+				'datenaissance' => str_replace( '-', '', $booking['birthdate'] ),
+				'telephone'     => $booking['phone'],
+				'id_site'       => $site_id,
+			];
+
+			$body = json_encode($data);
+
+			$headers = [
+				'Content-Type' => 'application/json; charset=utf-8',
+				'X-Signature' => $this->aquos_generate_signature( $body ),
+			];
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('headers with signature:');
+				error_log(print_r($headers, true));
+
+				error_log('body:');
+				error_log($body);
+
+			}
+
+			$response = wp_remote_post(
+				$endpoint,
+				array(
+					'headers' => $headers,
+					'body'    => $body,
+					'timeout' => 70,
+					'data_format' => 'body',
+				)
+			);
+			//error_log( print_r($response, true) );
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+
+			$handled = false;
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Aquos response:');
+				error_log(print_r($response, true));
+				error_log('wp_remote_retrieve_body( $response ): ' );
+				error_log(print_r(wp_remote_retrieve_body( $response ), true));
+				error_log(print_r($response_data, true));
+				error_log('$response_data->Status: ' .$response_data->Status);
+				error_log('$response_data->Error: ' .$response_data->Error);
+			}
+
+			if ( $response_code >= 400 ) {
+				$handled = true;
+
+				//if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+				error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+					absint( $response_code ) ) );
+				//error_log(print_r($body, true));
+				//error_log(print_r($response_data, true));
+				//}
+
+
+			}
+
+			if ( isset($response_data->Status) &&  $response_data->Status === 'false') {
+				$handled = true;
+
+				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log(sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ));
+				//error_log(print_r($body, true));
+				//error_log(print_r($response_data, true));
+				//}
+
+
+			}
+
+			if ( is_wp_error( $response ) ) {
+				$handled = true;
+
+				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Error message: '. $response->get_error_message());
+				//error_log(print_r($body, true));
+				//error_log(print_r($response_data, true));
+				//}
+
+
+			}
+
+			if ( isset($response_data->Status) &&  $response_data->Status === 'true') {
+				$handled = true;
+
+				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Contact inserted');
+				//}
+			}
+
+			if( $handled === false){
+				error_log('Not handled');
+				//error_log(print_r($data, true));
+			}
+			error_log('aquos_send_contact_end');
+
+		} // endpoint exists
+	}
+
 	/**
 	 * Do we have lessons data?
 	 *

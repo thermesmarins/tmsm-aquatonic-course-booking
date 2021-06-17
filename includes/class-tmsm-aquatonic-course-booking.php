@@ -191,9 +191,14 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
 		//$this->loader->add_action( 'admin_head', $plugin_admin, 'dashboard_refresh' ); // not needed anymore, replaced by countdown
 
-		// Mark as noshow bookings automatically
+		// Mark as noshow bookings automatically every 5 minutes
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'bookings_mark_as_noshow', 10 );
+
+		// Get lessons data every 5 minutes
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'lessons_set_data', 10 );
+
+		// Send Aquos Contacts every 5 minutes
+		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'aquos_send_contacts_cron', 10 );
 
 		// Ajax for change booking status
 		$this->loader->add_action( 'wp_ajax_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );
