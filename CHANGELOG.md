@@ -1,3 +1,4 @@
+### 1.6.0: June 17th, 2021
 * Remove special chars from tokens
 * Aquos contact feedback with name and booking date
 * Due to problem with Aquos webservice, the contacts are now sent with a cron every 5 minutes, and not through the gravity form submission
