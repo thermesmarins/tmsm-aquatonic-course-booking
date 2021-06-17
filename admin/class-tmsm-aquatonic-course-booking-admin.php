@@ -1438,7 +1438,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		global $wpdb;
 
-		error_log( 'aquos_send_contacts_cron_start' );
+		error_log( 'aquos_send_contacts_cron_start ' . home_url() );
 		$lastexec_option_name = 'tmsm-aquatonic-course-booking-aquos-send-contacts-last-exec';
 		$now = time();
 		$lastexec_timestamp = get_option( $lastexec_option_name );
@@ -1448,11 +1448,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			update_option( $lastexec_option_name, $lastexec_timestamp, true );
 		}
 
-		error_log('$lastexec_timestamp: ' . $lastexec_timestamp);
-
-		$sql  = "SELECT * FROM `{$wpdb->prefix}aquatonic_course_booking`";
-		$sql .= ' WHERE course_start > ' .$lastexec_timestamp ;
-		$sql .= ' AND course_start <= ' .$now ;
+		//error_log('aquos_lastexec_timestamp: ' . $lastexec_timestamp);
 
 		//$datetime
 
@@ -1465,7 +1461,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE date_created > '%s' AND date_created <= '%s'", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
 
-		error_log('Found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
+		error_log('aquos_found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
 
 		$count = 0;
 		foreach($bookings as $booking){
@@ -1473,7 +1469,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->aquos_send_contact($booking);
 			$count++;
         }
-		error_log('Handled '. $count . ' bookings');
+		error_log('aquos_handled '. $count . ' bookings');
 
 		$lastexec_timestamp = $now;
 		update_option( $lastexec_option_name, $lastexec_timestamp, true );
@@ -1589,12 +1585,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$handled = true;
 
 				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-				error_log('Contact inserted');
+				error_log('aquos_contact_inserted');
 				//}
 			}
 
 			if( $handled === false){
-				error_log('Not handled');
+				error_log('aquos_not_handled');
 				//error_log(print_r($data, true));
 			}
 			error_log('aquos_send_contact_end');
