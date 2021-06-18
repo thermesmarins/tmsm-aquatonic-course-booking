@@ -2145,8 +2145,30 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function woocommerce_email_styles(string $css, WC_Email $email){
 
-		$css .= '';
+		/*$css .= '
+		@media print{
+			#template_header_image img{
+				height: 120px !important;
+			}
+			#wrapper{
+				padding: 0 !important;
+			}
+			#body_content table td {
+				padding: 10px !important;
+			}
+			#wrapper table table {
+                width: 100% !important;
+			}
+			#footer{
+				display: none !important;
+			}
+			#credit{
+				display: none !important;
+			}
+		}
+		';*/
 
+		$css .= '';
 		return $css;
 	}
 

@@ -117,7 +117,8 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 		if ( ! empty( $s ) ) {
 			$like   = '%' . $wpdb->esc_like( $s ) . '%';
-			$where .= sprintf( "(firstname LIKE '%s' OR lastname LIKE '%s' OR email LIKE '%s')", $like, $like, $like );
+			$where .= $wpdb->prepare('(firstname LIKE %s OR lastname LIKE %s OR email LIKE %s)', $like, $like, $like);
+
 		}
 		else{
 			$where.= ' 1 ';
@@ -149,7 +150,8 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$where.= $where_and;
 
 		if ( 'all' !== $status ) {
-			$where .= 'AND ' .sprintf( 'status = "%s"', $wpdb->esc_like($status) );
+			$status = $wpdb->esc_like($status);
+			$where .= "AND " . "status = '{$status}' ";
 		}
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE ' . $where;
@@ -175,6 +177,8 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$sql .= ' ';
 		$sql .= in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		$sql .= ' LIMIT %d OFFSET %d';
+
+		print_r($sql);
 
 		$this->items = $wpdb->get_results( $wpdb->prepare( $sql, $this->per_page, $paged ), ARRAY_A );
 	}
