@@ -1,5 +1,6 @@
 * Remove error logs
 * Fix bookings query with prepare, that prevented case insensitive searches
+* Prevent URL too long in bookings list search
 
 ### 1.6.0: June 17th, 2021
 * Remove special chars from tokens

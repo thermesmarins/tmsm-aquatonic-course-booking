@@ -619,14 +619,27 @@
 		?>
 
 		<form id="<?php echo esc_attr( $bookings->page ); ?>-filter" method="get" action="">
+			<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
+			<input type="hidden" name="tab" value="<?php echo esc_attr( $bookings->tab ); ?>"/>
+			<?php $bookings->search_box( __( 'Filter', 'tmsm-aquatonic-course-booking' ), 'bookings' ); ?>
+		</form>
+
+		<form id="tmsm-aquatonic-course-booking-settings-table" method="post" action="">
+			<div class="table-responsive">
+				<?php $bookings->display(); ?>
+			</div>
+		</form>
+<!--
+		<form id="<?php echo esc_attr( $bookings->page ); ?>-filter" method="post" action="">
 		<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
 		<input type="hidden" name="tab" value="<?php echo esc_attr( $bookings->tab ); ?>"/>
+			<input type="hidden" name="_wp_http_referer" value="" />
 			<?php
 			//$bookings->search_box( __( 'Filter', 'complianz-gdpr' ), 'cmplz-cookiesnapshot' );
 			//$bookings->date_select();
 			$bookings->display();
 			?>
-		</form>
+		</form>-->
 
 		<?php
 	}

@@ -178,8 +178,6 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$sql .= in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		$sql .= ' LIMIT %d OFFSET %d';
 
-		print_r($sql);
-
 		$this->items = $wpdb->get_results( $wpdb->prepare( $sql, $this->per_page, $paged ), ARRAY_A );
 	}
 
@@ -328,12 +326,12 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 * @param  string $which top/bottom.
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' === $which ) {
-			echo '<div class="alignleft actions">';
-			$this->status_filter();
-			echo wp_kses_post( $this->search_box( esc_html__( 'Filter', 'tmsm-aquatonic-course-booking' ), 'filter' ) );
-			echo '</div>';
-		}
+		//if ( 'top' === $which ) {
+		//	echo '<div class="alignleft actions">';
+		//	$this->status_filter();
+		//	echo wp_kses_post( $this->search_box( esc_html__( 'Filter', 'tmsm-aquatonic-course-booking' ), 'filter' ) );
+		//	echo '</div>';
+		//}
 	}
 
 	/**
@@ -345,6 +343,9 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 * @param string $input_id ID attribute value for the search input field.
 	 */
 	public function search_box( $text, $input_id ) {
+
+		echo '<div class="alignleft actions tablenav top">';
+		$this->status_filter();
 
 		$s      = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // input var ok, CSRF ok.
 		$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
@@ -379,7 +380,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
 
-			<input type="search" placeholder="<?php echo esc_attr__( 'Name', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<input type="search" minlength="3" placeholder="<?php echo esc_attr__( 'Name', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 
 			<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="search_datecourse" value="<?php echo $search_datecourse; ?>" />
 
@@ -387,6 +388,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
 		</p>
+		</div>
 		<?php
 	}
 
@@ -397,12 +399,13 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		if ( ! $this->has_items() ) {
 			//return;
 		}
+
 		?>
 		<select name="status">
 			<option value="all"<?php selected( 'all', $this->status ); ?>><?php echo esc_html__( 'Status', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="active"<?php selected( 'active', $this->status ); ?>><?php echo esc_html__( 'Active', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="cancelled"<?php selected( 'cancelled', $this->status ); ?>><?php echo esc_html__( 'Cancelled', 'tmsm-aquatonic-course-booking' );?></option>
-			<option value="noshow"<?php selected( 'cancelled', $this->status ); ?>><?php echo esc_html__( 'No-Show', 'tmsm-aquatonic-course-booking' );?></option>
+			<option value="noshow"<?php selected( 'noshow', $this->status ); ?>><?php echo esc_html__( 'No-Show', 'tmsm-aquatonic-course-booking' );?></option>
 		</select>
 		<?php
 	}
