@@ -2174,7 +2174,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$css .= '
 		#wrapper{
-			paddinng: 10px 0 0 !important;
+			padding: 10px 0 0 !important;
 		}
 		#template_header_image img{
 				height: 120px !important;
