@@ -1,3 +1,4 @@
+### 1.6.1: June 22th, 2021
 * Remove error logs
 * Fix bookings query with prepare, that prevented case insensitive searches
 * Prevent URL too long in bookings list search
