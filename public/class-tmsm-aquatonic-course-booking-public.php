@@ -2170,7 +2170,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 		';*/
 
-		$css .= '';
+		$css .= '
+		#wrapper{
+			paddinng: 10px 0 0;
+		}
+		#template_header_image img{
+				height: 120px !important;
+		}
+		#header_wrapper{
+			padding: 10px 15px;
+		}
+		h1{
+			font-size: 20px;
+		}
+		#body_content table td {
+			padding: 15px 15px 10px;
+		}
+		';
 
 		return $css;
 	}

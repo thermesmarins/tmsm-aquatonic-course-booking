@@ -1,3 +1,5 @@
+* Optimized email CSS
+
 ### 1.6.1: June 22th, 2021
 * Remove error logs
 * Fix bookings query with prepare, that prevented case insensitive searches
