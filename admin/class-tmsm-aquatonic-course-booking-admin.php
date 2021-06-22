@@ -1247,6 +1247,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
 
 				$this->booking_mark_as_arrived($booking, $redirect_to_admin);
+				$message = esc_html__( 'Booking valid for %s %s at %s', 'tmsm-aquatonic-course-booking' );
 
 			}
 
@@ -1257,6 +1258,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
 
 				$this->booking_mark_as_cancelled($booking, $redirect_to_admin);
+				$message = esc_html__( 'Cancelled booking for %s %s at %s', 'tmsm-aquatonic-course-booking' );
 
 			}
 
@@ -1268,7 +1270,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
 			$date = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $booking_start_object->getTimestamp() );
 
-			wp_send_json(array('success' => true, 'message' => esc_html__( 'Successfully changed status of booking from %s %s at %s', 'tmsm-aquatonic-course-booking' ), $booking['firstname'], $booking['lastname'], $date));
+			wp_send_json(array(
+				'success' => true,
+				'message' => sprintf($message , $booking['firstname'], $booking['lastname'], $date) )
+			);
 		}
 		// Or redirect
 		else{

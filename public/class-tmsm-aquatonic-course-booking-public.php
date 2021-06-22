@@ -2145,6 +2145,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function woocommerce_email_styles(string $css, WC_Email $email){
 
+		// Gmail Desktop doesnt support @media print
+
 		/*$css .= '
 		@media print{
 			#template_header_image img{
@@ -2169,6 +2171,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		';*/
 
 		$css .= '';
+
 		return $css;
 	}
 
