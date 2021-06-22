@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-06-22 11:34+0200\n"
+"POT-Creation-Date: 2021-06-22 15:16+0200\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:118
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:122
-#: public/class-tmsm-aquatonic-course-booking-public.php:2235
+#: public/class-tmsm-aquatonic-course-booking-public.php:2250
 msgid "Aquatonic Course"
 msgstr ""
 
@@ -315,8 +315,8 @@ msgstr ""
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1271
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:229
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:232
-#: public/class-tmsm-aquatonic-course-booking-public.php:779
-#: public/class-tmsm-aquatonic-course-booking-public.php:907
+#: public/class-tmsm-aquatonic-course-booking-public.php:781
+#: public/class-tmsm-aquatonic-course-booking-public.php:909
 #, php-format
 msgid "%s at %s"
 msgstr ""
@@ -567,54 +567,58 @@ msgid ""
 "{booking_hourminutes}<br>{booking_participants} participant(s)"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:726
+#: public/class-tmsm-aquatonic-course-booking-public.php:599
+msgid "If you can't see the barcode, please access this page"
+msgstr ""
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:728
 msgid "Barcode missing"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:782
+#: public/class-tmsm-aquatonic-course-booking-public.php:784
 msgid "This booking was already cancelled"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:785
+#: public/class-tmsm-aquatonic-course-booking-public.php:787
 #, php-format
 msgid ""
 "Do you want to cancel the following booking? Booking on %s for %d "
 "participants"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:793
+#: public/class-tmsm-aquatonic-course-booking-public.php:795
 msgid "This booking was not found"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:797
+#: public/class-tmsm-aquatonic-course-booking-public.php:799
 msgid "The booking token was not found"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:929
+#: public/class-tmsm-aquatonic-course-booking-public.php:931
 #, php-format
 msgid "Aquatonic Course on %s for %d participants"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1160
+#: public/class-tmsm-aquatonic-course-booking-public.php:1162
 msgid "Token security is not valid"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1171
+#: public/class-tmsm-aquatonic-course-booking-public.php:1173
 msgid "Ajax referer is not valid"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1877
+#: public/class-tmsm-aquatonic-course-booking-public.php:1879
 msgid "No first slot available to calculate all the slots"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1882
+#: public/class-tmsm-aquatonic-course-booking-public.php:1884
 msgid "No end slot available to calculate all the slots"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1994
+#: public/class-tmsm-aquatonic-course-booking-public.php:1996
 msgid "No time slot available for this day"
 msgstr ""
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:2218
+#: public/class-tmsm-aquatonic-course-booking-public.php:2233
 msgid "Mini Dashboard"
 msgstr ""
