@@ -467,17 +467,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Allow the text to be filtered so custom merge tags can be replaced.
 	 *
-	 * @param string      $text       The text in which merge tags are being processed.
-	 * @param false|array $form       The Form object if available or false.
-	 * @param false|array $entry      The Entry object if available or false.
-	 * @param bool        $url_encode Indicates if the urlencode function should be applied.
-	 * @param bool        $esc_html   Indicates if the esc_html function should be applied.
-	 * @param bool        $nl2br      Indicates if the nl2br function should be applied.
-	 * @param string      $format     The format requested for the location the merge is being used. Possible values: html, text or url.
-	 *
-	 * @return string
-	 */
-	/**
 	 * @param $text
 	 * @param $form
 	 * @param $entry
@@ -491,45 +480,54 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
-
-		$entry_id = $entry['id'];
 		$form_add_id = $this->get_option('gform_add_id');
+		$form_cancel_id = $this->get_option('gform_cancel_id');
 
-		if(!empty($form_add_id)) {
+		if(is_array($entry)){
+			if(isset($entry['entry_id'])){
+				$entry_id = $entry['entry_id'];
+			}
+			elseif(isset($entry['id'])){
+				$entry_id = $entry['id'];
+			}
+		}
+		else{
+			$entry_id = $entry;
+		}
 
-			if($form['id'] == $form_add_id){
+		if(!empty($form_add_id) && !empty($form_cancel_id) && !empty( $entry ) ) {
+			if($form['id'] == $form_add_id || $form['id'] == $form_cancel_id ){
 				$token    = self::gform_entry_generate_token( $entry_id );
-
 				if( !empty($token)){
 					$booking = self::find_booking_with_token($token);
 
 					if(!empty($booking)){
 						$custom_merge_tag_date = '{booking_date}';
-						if ( strpos( $text, $custom_merge_tag_date ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_date ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
 							$date = wp_date( get_option('date_format'), $booking_start_object->getTimestamp() );
 							$text     = str_replace( $custom_merge_tag_date, $date, $text );
 						}
 
 						$custom_merge_tag_hourminutes = '{booking_hourminutes}';
-						if ( strpos( $text, $custom_merge_tag_hourminutes ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_hourminutes ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
 							$hourminutes = wp_date( get_option('time_format'), $booking_start_object->getTimestamp() );
 							$text     = str_replace( $custom_merge_tag_hourminutes, $hourminutes, $text );
 						}
 
 						$custom_merge_tag_participants = '{booking_participants}';
-						if ( strpos( $text, $custom_merge_tag_participants ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_participants ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$text     = str_replace( $custom_merge_tag_participants, $booking['participants'], $text );
 						}
 
 						$custom_merge_tag_token = '{booking_token}';
-						if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_token ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$text     = str_replace( $custom_merge_tag_token, urlencode( $token ), $text );
 						}
 
 						$custom_merge_tag_cancel_url = '{booking_cancel_url}';
-						if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_cancel_url ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$cancel_url = '';
 							if ( ! empty( $token ) ) {
 								$cancel_url = self::cancel_url( $token );
@@ -539,7 +537,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 						$custom_merge_tag_barcode = '{booking_barcode_number}';
 						$custom_merge_tag_barcode_image = '{booking_barcode_image}';
-						if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_barcode ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$lastname = $booking['lastname'];
 							$barcode  = self::gform_entry_generate_barcode( $lastname, $entry_id );
 							if ( ! empty( $barcode ) ) {
@@ -556,12 +554,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						}
 
 						$custom_merge_tag_site_logo = '{site_logo}';
-						if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_site_logo ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$text = str_replace( $custom_merge_tag_site_logo, get_bloginfo( 'logo' ), $text );
 						}
 
 						$custom_merge_tag_barcode_logo = '{booking_barcode_logo}';
-						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
 
 							if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ) {
@@ -572,12 +570,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						}
 
 						$custom_merge_tag_site_name = '{site_name}';
-						if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_site_name ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$text = str_replace( $custom_merge_tag_site_name, get_bloginfo( 'name' ), $text );
 						}
 
 						$custom_merge_tag_place_name = '{place_name}';
-						if ( strpos( $text, $custom_merge_tag_place_name ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_place_name ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 
 							$place_name = get_bloginfo( 'name' );
 							if ( class_exists( 'RankMath\Helper' ) ) {
@@ -588,16 +586,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						}
 
 						$custom_merge_tag_block = '{booking_barcode_block}';
-						if ( strpos( $text, $custom_merge_tag_block ) !== false && ! empty( $entry ) && ! empty( $form ) ) {
+						if ( strpos( $text, $custom_merge_tag_block ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 
 							//$barcode_background_pixel_url = plugins_url( 'public/img/whitepixel.gif', dirname( __FILE__ ) );
 							$barcode_background_pixel_url = 'https://via.placeholder.com/1.png/fff/fff';
 
-							$block = '<div style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
+							$block = '<div id="booking_barcode_block" style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
 <div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="{booking_barcode_logo}" /></div>
 <div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;"><img style="background:white; max-width:100%;height:80px;display:block" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div><br>
-							<a href="{booking_barcode_image}">'.__('If you can\'t see the barcode, please access this page', 'tmsm-aquatonic-course-booking').'</a>'.$barcode_url.'
-';
+							<a href="{booking_barcode_image}" class="hide">'.__('If you can\'t see the barcode, please access this page', 'tmsm-aquatonic-course-booking').'</a>';
 
 							$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
 
@@ -611,10 +608,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 
 		}
-
-
-
-
 
 		return $text;
 	}
@@ -762,17 +755,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				if($field->inputName === 'booking_token'){
 					$field_token = $field;
 				}
-				if($field->cssClass === 'tmsm-aquatonic-course-summary'){
+				if( strpos($field['cssClass'], 'tmsm-aquatonic-course-summary') !== false ){
 					$field_summary = $field;
 				}
 
+
 			}
 
-			if(!empty($field_token) && !empty($field_summary)){
+			if(!empty($field_token) && !empty($field_summary) ){
 				$token = ( rgget( $field_token->inputName ) );
 				$field_summary->content = '';
+				$content_summary = null;
+				$content_barcode = null;
 				if(!empty($token)){
 					$booking = self::find_booking_with_token($token);
+
+					$entry = self::find_entry_with_token( $token );
+
 					if(!empty($booking)){
 
 
@@ -781,13 +780,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						$booking_start = wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $booking_start_object->getTimestamp() );
 						$booking_participants = $booking['participants'];
 						if($booking_status === 'cancelled'){
-							$content = __( 'This booking was already cancelled', 'tmsm-aquatonic-course-booking' );
+							$content_summary = __( 'This booking was already cancelled', 'tmsm-aquatonic-course-booking' );
 						}
 						else{
-							$content = sprintf(__('Do you want to cancel the following booking? Booking on %s for %d participants', 'tmsm-aquatonic-course-booking'), sanitize_text_field($booking_start), sanitize_text_field($booking_participants) );
+							//$content_summary = sprintf(__('Do you want to cancel the following booking? Booking on %s for %d participants', 'tmsm-aquatonic-course-booking'), sanitize_text_field($booking_start), sanitize_text_field($booking_participants) );
+							$content_summary = __( 'Do you want to cancel the following booking?', 'tmsm-aquatonic-course-booking' );
+
+
+
 						}
 
+						$content_barcode = '{booking_barcode_block}';
 
+						$content_barcode = apply_filters( 'gform_replace_merge_tags', $content_barcode, $form, $entry, false, false, false, null );
 
 
 					}
@@ -798,7 +803,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				else{
 					$content = __( 'The booking token was not found', 'tmsm-aquatonic-course-booking' );
 				}
-				$field_summary->content .= $content;
+				$field_summary->content .= $content_summary;
+				$form['description'] .= $content_barcode;
 
 			}
 		}
@@ -965,7 +971,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 
 		if ( $markup ) {
-			$notification['message'] .= '<script type="application/ld+json">' . wc_esc_json( wp_json_encode( $markup ), true ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$notification['message'] .= '<script type="application/ld+json">' .  wp_json_encode( $markup ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		//error_log($notification['message'] );
@@ -984,10 +990,28 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	public function find_booking_with_token(string $token){
 		global $wpdb;
 
-		//error_log('find_booking_with_token '. $token);
 		$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE token = %s", $token ), ARRAY_A );
 
 		return $booking;
+	}
+
+	/**
+	 * Find GF entry with Token
+	 *
+	 * @param string $token
+	 *
+	 * @return array
+	 */
+	public function find_entry_with_token(string $token){
+		global $wpdb;
+
+		$entry = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}gf_entry_meta WHERE meta_key = %s AND meta_value = %s", '_booking_token', $token ), ARRAY_A );
+		$entry_id = $entry['entry_id'];
+		if(!empty($entry_id)){
+			$entry = GFAPI::get_entry( $entry_id );
+		}
+
+		return $entry;
 	}
 
 	/**

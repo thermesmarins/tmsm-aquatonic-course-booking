@@ -1,5 +1,6 @@
 * Optimized email CSS
 * Booking confirmation email now has a link to access barcode
+* New cancel booking page, with barcode
 
 ### 1.6.1: June 22th, 2021
 * Remove error logs

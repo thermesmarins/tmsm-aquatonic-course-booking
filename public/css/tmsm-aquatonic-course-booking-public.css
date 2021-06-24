@@ -97,4 +97,27 @@
 .tmsm-aquatonic-course-form-add_wrapper {
   margin-bottom: 60px;
 }
+@media (min-width: 768px) {
+  .tmsm-aquatonic-course-form-cancel .form-header,
+  .tmsm-aquatonic-course-form-cancel .form-body,
+  .tmsm-aquatonic-course-form-cancel .gform_footer {
+    width: 48%;
+  }
+}
+@media (min-width: 768px) {
+  .tmsm-aquatonic-course-form-cancel .form-header {
+    float: left;
+    padding-right: 2%;
+  }
+}
+@media (min-width: 768px) {
+  .tmsm-aquatonic-course-form-cancel .form-body,
+  .tmsm-aquatonic-course-form-cancel .gform_footer {
+    float: right;
+    padding-left: 2%;
+  }
+}
+.tmsm-aquatonic-course-form-cancel #booking_barcode_block {
+  max-width: 100% !important;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */

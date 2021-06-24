@@ -637,7 +637,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					if($field['cssClass'] === 'tmsm-aquatonic-course-times'){
 						$times = true;
 					}
-					if($field['cssClass'] === 'tmsm-aquatonic-course-summary'){
+					if( strpos($field['cssClass'], 'tmsm-aquatonic-course-summary') !== false ){
 						$summary = true;
 					}
 					if($field['cssClass'] === 'tmsm-aquatonic-course-title'){
@@ -721,7 +721,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					if($field['inputName'] === 'booking_token'){
 						$token = true;
 					}
-					if($field['cssClass'] === 'tmsm-aquatonic-course-summary'){
+					if( strpos($field['cssClass'], 'tmsm-aquatonic-course-summary') !== false ){
 						$summary = true;
 					}
 
