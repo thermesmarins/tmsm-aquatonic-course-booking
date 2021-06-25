@@ -403,6 +403,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		?>
 		<select name="status">
 			<option value="all"<?php selected( 'all', $this->status ); ?>><?php echo esc_html__( 'Status', 'tmsm-aquatonic-course-booking' );?></option>
+			<option value="arrived"<?php selected( 'arrived', $this->status ); ?>><?php echo esc_html__( 'Arrived', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="active"<?php selected( 'active', $this->status ); ?>><?php echo esc_html__( 'Active', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="cancelled"<?php selected( 'cancelled', $this->status ); ?>><?php echo esc_html__( 'Cancelled', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="noshow"<?php selected( 'noshow', $this->status ); ?>><?php echo esc_html__( 'No-Show', 'tmsm-aquatonic-course-booking' );?></option>
