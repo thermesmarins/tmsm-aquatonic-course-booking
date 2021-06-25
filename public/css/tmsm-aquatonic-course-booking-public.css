@@ -94,7 +94,8 @@
 .tmsm-aquatonic-course-booking-pages .footer-below-wrapper {
   display: none;
 }
-.tmsm-aquatonic-course-form-add_wrapper {
+.tmsm-aquatonic-course-form-add_wrapper,
+.tmsm-aquatonic-course-form-cancel_wrapper {
   margin-bottom: 60px;
 }
 @media (min-width: 768px) {
