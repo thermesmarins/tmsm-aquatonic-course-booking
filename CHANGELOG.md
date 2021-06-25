@@ -1,5 +1,6 @@
 * Optimized forms CSS
 * Fixed status labels when WooCommerce is not enabled
+* Fix cancel form without explaination 
 
 ### 1.6.2: June 22th, 2021
 * Optimized email CSS

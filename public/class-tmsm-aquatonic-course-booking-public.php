@@ -797,11 +797,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 					}
 					else{
-						$content = __( 'This booking was not found', 'tmsm-aquatonic-course-booking' );
+						$content_summary = __( 'This booking was not found', 'tmsm-aquatonic-course-booking' );
 					}
 				}
 				else{
-					$content = __( 'The booking token was not found', 'tmsm-aquatonic-course-booking' );
+					$content_summary = __( 'The booking token was not found', 'tmsm-aquatonic-course-booking' );
 				}
 				$field_summary->content .= $content_summary;
 				$form['description'] .= $content_barcode;
