@@ -1294,24 +1294,24 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			'active' => [
 				'name' => __( 'Active', 'tmsm-aquatonic-course-booking' ),
 				'markas' => __( 'Mark as active', 'tmsm-aquatonic-course-booking' ),
-				'iconclass' => 'order-status status-on-hold status-active',
+				'iconclass' => 'booking-status booking-status-active',
 			],
 			'arrived' => [
 				'name' => __( 'Arrived', 'tmsm-aquatonic-course-booking' ),
 				'markas' => __( 'Arrived', 'tmsm-aquatonic-course-booking' ),
-				'iconclass' => 'order-status status-processing status-arrived',
-				'actionclass' => 'button wc-action-button wc-action-button-processing processing',
+				'iconclass' => 'booking-status booking-status-arrived',
+				'actionclass' => 'button',
 			],
 			'cancelled' => [
 				'name' => __( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
 				'markas' => __( 'Mark as cancelled', 'tmsm-aquatonic-course-booking' ),
-				'iconclass' => 'order-status status-failed status-cancelled',
-				'actionclass' => 'button wc-action-button wc-action-button-cancelled cancelled',
+				'iconclass' => 'booking-status booking-status-cancelled',
+				'actionclass' => 'button',
 			],
 			'noshow' => [
 				'name' => __( 'No-show', 'tmsm-aquatonic-course-booking' ),
 				'markas' => __( 'Mark as no-show', 'tmsm-aquatonic-course-booking' ),
-				'iconclass' => 'order-status status-pending status-noshow',
+				'iconclass' => 'booking-status booking-status-noshow',
 			],
 		];
 		return $statuses;
