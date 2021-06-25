@@ -83,10 +83,15 @@
 .tmsm-aquatonic-course-form-add .form-fields {
   overflow: visible;
 }
-.tmsm-aquatonic-course-form-add .form-actions,
+.tmsm-aquatonic-course-form-add .form-actions {
+  text-align: center;
+  display: block;
+}
+.tmsm-aquatonic-course-form-add .form-actions-previous {
+  display: none;
+}
 .tmsm-aquatonic-course-form-cancel .form-actions {
   display: inline-block;
-  margin-bottom: 10px;
 }
 .tmsm-aquatonic-course-booking-pages .footer-above-wrapper,
 .tmsm-aquatonic-course-booking-pages .elementor-location-footer,
@@ -120,5 +125,9 @@
 }
 .tmsm-aquatonic-course-form-cancel #booking_barcode_block {
   max-width: 100% !important;
+}
+.tmsm-aquatonic-course-summary {
+  font-size: 125%;
+  text-align: center;
 }
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */
