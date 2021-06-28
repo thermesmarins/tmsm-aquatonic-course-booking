@@ -452,7 +452,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
         $list.append( item.render().$el );
 
-        $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
+        //$('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
+        $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').hide().parent().next().show();
 
         console.log('WeekDayListView fetch:');
         TmsmAquatonicCourseApp.times.fetch({
@@ -473,7 +474,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
             console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
 
-            $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
+            $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next().hide();
+            console.log('parent:');
+            console.log($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next());
 
             object.refreshNextTimesButton();
 

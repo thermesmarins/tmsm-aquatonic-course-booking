@@ -199,6 +199,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			<select class="tmsm-aquatonic-course-booking-weekday-times list-unstyled" data-date="{{ data.date_computed }}" >
 				<option>{{ TmsmAquatonicCourseApp.i18n.loading }}</option>
 			</select>
+			<span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
 		</script>
 
 		<?php

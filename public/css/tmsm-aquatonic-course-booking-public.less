@@ -87,7 +87,6 @@
         width:  auto !important;
     }
 
-
 }
 
 .tmsm-aquatonic-course-form-add{
@@ -101,8 +100,43 @@
     .form-actions-previous{
         display: none;
     }
+
+    .glyphicon-refresh{
+        display: block;
+        margin-top: 18px;
+        margin-bottom: 12px;
+        font-size: 24px;
+        margin-left: 34px;
+        margin-right: 34px;
+    }
 }
 
+.glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
 .tmsm-aquatonic-course-form-cancel{
     .form-actions{
         display: inline-block;
