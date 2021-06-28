@@ -3,6 +3,7 @@
 * Fix cancel form without explaination 
 * Filter bookings by arrived status
 * Better UX
+* Display "Closed" when allotment is null
 
 ### 1.6.2: June 22th, 2021
 * Optimized email CSS

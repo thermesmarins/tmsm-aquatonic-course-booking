@@ -148,6 +148,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'birthdateformat' => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading' => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
 				'notimeslot' => __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
+				'closed' => __( 'Closed', 'tmsm-aquatonic-course-booking' ),
 				'pickatimeslot' => __( 'Pick a time slot', 'tmsm-aquatonic-course-booking' ),
 				'summary' => __( 'Course for %s participant(s) on %s at %s:%s', 'tmsm-aquatonic-course-booking' ),
 				'summarymomentdateformat' => __( 'MMMM DD, YYYY', 'tmsm-aquatonic-course-booking' ),
@@ -229,7 +230,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			<# if ( data.hourminutes != null) { #>
 				{{ data.hourminutes }}
 			<# } else { #>
-				{{  TmsmAquatonicCourseApp.i18n.notimeslot }}
+				{{ data.message }}
 			<# } #>
 
 		</script>
@@ -1852,6 +1853,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$user = wp_get_current_user();
 
 		$times = [];
+		$closed_dates = [];
 		$date = date('Y-m-d');
 		$participants = 0;
 
@@ -1887,6 +1889,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 
 			$capacity_forthedate_timeslots = self::allotment_timeslots_forthedate($date_with_dash);
+
+			// If no timeslot, assume the course is closed
+			if( array_sum($capacity_forthedate_timeslots) === 0){
+				array_push($closed_dates, $date_with_dash);
+			}
 
 			//usort($slots_in_opening_hours, function($a, $b) {
 			//	return strcmp($a['start'], $b['start']);
@@ -2014,16 +2021,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$times = array_values($slots_available);
 		}
 
-
-
 		if ( count( $times ) == 0) {
-			$errors[] = __( 'No time slot available for this day', 'tmsm-aquatonic-course-booking' );
+			$errors[] = __( 'No time slot found', 'tmsm-aquatonic-course-booking' );
 			$times[] = [
 				'date' => $date_with_dash,
 				'hour' => null,
 				'minutes' => null,
 				'hourminutes' => null,
 				'priority' => null,
+				'message' => in_array($date_with_dash, $closed_dates) ? __( 'Closed', 'tmsm-aquatonic-course-booking' ) : __( 'No time slot found', 'tmsm-aquatonic-course-booking' ),
 			];
 		}
 

@@ -466,7 +466,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
             // No results: remove the first option "Pick a timeslot" to let appear first "No timeslot available"
             if($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').length > 0){
-              if($.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.notimeslot){
+              if($.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.notimeslot || $.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.closed){
                 $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(0)').remove();
               }
             }
