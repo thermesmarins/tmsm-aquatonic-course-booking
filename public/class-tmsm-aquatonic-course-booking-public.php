@@ -596,7 +596,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$block = '<div id="booking_barcode_block" style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
 <div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="{booking_barcode_logo}" /></div>
 <div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;"><img style="background:white; max-width:100%;height:80px;display:block" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div><br>
-							<a href="{booking_barcode_image}" class="hide">'.__('If you can\'t see the barcode, please access this page', 'tmsm-aquatonic-course-booking').'</a>';
+							<a href="{booking_cancel_url}" class="hide">'.__('If you can\'t see the barcode, please access this page', 'tmsm-aquatonic-course-booking').'</a>';
 
 							$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
 
