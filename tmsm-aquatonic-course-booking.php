@@ -16,7 +16,7 @@
  * Plugin Name:       TMSM Aquatonic Course Booking
  * Plugin URI:        https://www.github.com/thermesmarins/tmsm-aquatonic-course-booking/
  * Description:       Aquatonic Booking
- * Version:           1.6.2
+ * Version:           1.6.3
  * Author:            Nicolas Mollet
  * Author URI:        https://github.com/nicomollet
  * License:           GPL-3.0
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.6.1' );
+define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.6.3' );
 
 /**
  * Current database schema version.
