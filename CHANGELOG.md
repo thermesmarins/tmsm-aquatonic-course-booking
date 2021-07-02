@@ -1,3 +1,4 @@
+### 1.6.4: July 2nd, 2021
 * Optimization preventing passing many days pages too fast (possibly causing serveur load)
 
 ### 1.6.3: June 30th, 2021
