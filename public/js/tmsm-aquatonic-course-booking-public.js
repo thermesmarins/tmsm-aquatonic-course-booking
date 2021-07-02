@@ -395,6 +395,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
     render: function() {
 
+      var tmpDaysPage = this.daysPage;
 
       console.warn(' TmsmAquatonicCourseApp.form_fields.step:'+ TmsmAquatonicCourseApp.form_fields.step);
       if(TmsmAquatonicCourseApp.form_fields.step != 2){
@@ -407,7 +408,10 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       this.collection.reset();
 
-      if(this.daysPage === 1){
+      $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
+      $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
+
+      /*if(tmpDaysPage === 1){
         $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
         console.log('premiere page je cache previous');
       }
@@ -416,12 +420,12 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
         console.log('autre page jaffiche previous');
       }
 
-      if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < this.daysPage){
+      if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < tmpDaysPage){
         $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
       }
       else{
         $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', false);
-      }
+      }*/
 
       var i = 0;
 
@@ -429,7 +433,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       TmsmAquatonicCourseApp.times_indexmax = 1;
       $('#tmsm-aquatonic-course-booking-next-times').hide();
 
-      for (i = (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+(this.daysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+7+(this.daysPage-1) * 7); i++) {
+      var loaded_days = 1;
+      for (i = (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+(tmpDaysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+7+(tmpDaysPage-1) * 7); i++) {
 
         this.collection.push( {
           date_label: moment().add(i, 'days').format('dddd Do MMMM'),
@@ -480,6 +485,27 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
             object.refreshNextTimesButton();
 
+            loaded_days++;
+            if(loaded_days == 7){
+              console.warn('ALl days loaded ****************');
+              console.warn('tmpDaysPage: ' + tmpDaysPage);
+
+              if(tmpDaysPage === 1){
+                $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
+                console.log('premiere page je cache previous');
+              }
+              else{
+                $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', false);
+                console.log('autre page jaffiche previous');
+              }
+
+              if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < tmpDaysPage){
+                $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
+              }
+              else{
+                $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', false);
+              }
+            }
 
           }
         });

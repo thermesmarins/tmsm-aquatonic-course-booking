@@ -1,3 +1,5 @@
+* Optimization preventing passing many days pages too fast (possibly causing serveur load)
+
 ### 1.6.3: June 30th, 2021
 * Optimized forms CSS
 * Fixed status labels when WooCommerce is not enabled
