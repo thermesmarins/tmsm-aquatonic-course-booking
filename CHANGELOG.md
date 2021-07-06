@@ -1,3 +1,4 @@
+### 1.7.0: July 6th, 2021
 * Refactoring of dashboard calculation, now calculated with cron event
 
 ### 1.6.4: July 2nd, 2021
