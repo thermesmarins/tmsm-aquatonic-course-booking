@@ -184,7 +184,6 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$sql .= in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		$sql .= ' LIMIT %d OFFSET %d';
 
-		print_r($sql);
 		$this->items = $wpdb->get_results( $wpdb->prepare( $sql, $this->per_page, $paged ), ARRAY_A );
 	}
 
