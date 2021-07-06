@@ -1,6 +1,7 @@
 * Store Aquos error in booking entry as _aquos_status
 * Bookings list now with phone number and barcode, but displayed on mouseover the full name
 * Bookings list now lists active and noshow bookings by default
+* Bookings list can be sorted by date_created
 
 ### 1.7.0: July 6th, 2021
 * Refactoring of dashboard calculation, now calculated with cron event

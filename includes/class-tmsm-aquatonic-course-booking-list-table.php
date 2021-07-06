@@ -93,6 +93,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		return array(
 			//'firstname' => array( 'firstname', false ),
 			//'firstname' => array( 'firstname', false ),
+			'date_created'    => array( 'date_created', true ),
 			'course_start'    => array( 'course_start', true ),
 			'booking_id'    => array( 'booking_id', false ),
 		);
