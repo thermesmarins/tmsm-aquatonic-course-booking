@@ -1979,6 +1979,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		//error_log('aquos_send_contacts_cron_end');
 	}
 
+
+
 	/**
 	 * Send contact data to Aquos
 	 *
@@ -1994,6 +1996,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$endpoint = $this->get_option('aquos_endpoint_contact');
 		$site_id = (int) $this->get_option('aquos_siteid');
 
+
 		if ( ! empty ( $endpoint ) && is_int( $site_id ) ) {
 			$data = [
 				'civilite'      => ( $booking['title'] == 1 ? 'M.' : 'Mme' ),
@@ -2004,6 +2007,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'telephone'     => $booking['phone'],
 				'id_site'       => (string) $site_id,
 			];
+
+			// Default status
+			$status = 'sent';
 
 			$body = json_encode($data);
 
@@ -2053,6 +2059,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				//if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
 				error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
 					absint( $response_code ) ) );
+				$status =  sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+					absint( $response_code ) );
 				//error_log(print_r($body, true));
 				//error_log(print_r($response_data, true));
 				//}
@@ -2061,6 +2069,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			if ( isset($response_data->Status) &&  $response_data->Status === 'false') {
 				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log(sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ));
+				$status = sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error );
 				//error_log(print_r($body, true));
 				//error_log(print_r($response_data, true));
 				//}
@@ -2071,6 +2080,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			if ( is_wp_error( $response ) ) {
 				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log('Error message: '. $response->get_error_message());
+				$status = 'is_wp_error ' . $response->get_error_message();
 				//error_log(print_r($body, true));
 				//error_log(print_r($response_data, true));
 				//}
@@ -2084,8 +2094,39 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				}
 			}
 
+			// Storing Aquos status in entry meta
+			$token = $booking['token'];
+			if( ! empty($token)){
+				$entry = self::find_entry_with_token($token);
+				if( ! empty( $entry )){
+					$entry_id = $entry['entry_id'];
+					if( !empty($entry_id)){
+						gform_update_meta( $entry_id, '_aquos_status', $status );
+					}
+				}
+
+			}
 
 		} // endpoint exists
+	}
+
+	/**
+	 * Find GF entry with Token
+	 *
+	 * @param string $token
+	 *
+	 * @return array
+	 */
+	public function find_entry_with_token(string $token){
+		global $wpdb;
+
+		$entry = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}gf_entry_meta WHERE meta_key = %s AND meta_value = %s", '_booking_token', $token ), ARRAY_A );
+		$entry_id = $entry['entry_id'];
+		if(!empty($entry_id)){
+			$entry = GFAPI::get_entry( $entry_id );
+		}
+
+		return $entry;
 	}
 
 	/**
