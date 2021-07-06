@@ -72,9 +72,10 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			//'cb'      => '<input type="checkbox">',
 			//'booking_id'      => esc_html__( 'ID', 'tmsm-aquatonic-course-booking' ),
 			'date_created'   => esc_html__( 'Date Created', 'tmsm-aquatonic-course-booking' ),
-			'firstname'   => esc_html__( 'Firstname', 'tmsm-aquatonic-course-booking' ),
-			'lastname'   => esc_html__( 'Lastname', 'tmsm-aquatonic-course-booking' ),
-			'email'   => esc_html__( 'Email', 'tmsm-aquatonic-course-booking' ),
+			'fullname'   => esc_html__( 'Full Name', 'tmsm-aquatonic-course-booking' ),
+			//'firstname'   => esc_html__( 'Firstname', 'tmsm-aquatonic-course-booking' ),
+			//'lastname'   => esc_html__( 'Lastname', 'tmsm-aquatonic-course-booking' ),
+			//'email'   => esc_html__( 'Email', 'tmsm-aquatonic-course-booking' ),
 			'participants' => esc_html__( 'Participants', 'tmsm-aquatonic-course-booking' ),
 			'course_start' => esc_html__( 'Course Start', 'tmsm-aquatonic-course-booking' ),
 			'status'  => esc_html__( 'Status', 'tmsm-aquatonic-course-booking' ),
@@ -221,6 +222,8 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			case 'email':
 			case 'participants':
 				return $item[ $column_name ];
+			case 'fullname':
+				return '<abbr title="'.esc_attr($item[ 'email' ] . '&#013;' . $item[ 'phone' ] . '&#013;' . $item[ 'barcode' ]).'">' . $item[ 'firstname' ] . ' ' . $item[ 'lastname' ] .  '</abbr>';
 			case 'status':
 				$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
 				return '<mark class="' . $statuses[ $item[ $column_name ] ]['iconclass'] . '"><span>' . $statuses[ $item[ $column_name ]]['name'] .' </span></mark>';

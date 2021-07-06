@@ -173,9 +173,7 @@
 			</div>
 		</form>
 
-		<?php
-		$bookings->display();
-		?>
+
 
 		<?php
 	}
