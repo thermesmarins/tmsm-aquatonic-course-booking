@@ -200,6 +200,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Send Aquos Contacts every 5 minutes
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'aquos_send_contacts_cron', 10 );
 
+		// Calculate dashboard data
+		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'dashboard_calculate_data', 50 );
+
 		// Ajax for change booking status
 		$this->loader->add_action( 'wp_ajax_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10 );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm_aquatonic_course_booking_change_status', $plugin_admin, 'booking_change_status', 10);

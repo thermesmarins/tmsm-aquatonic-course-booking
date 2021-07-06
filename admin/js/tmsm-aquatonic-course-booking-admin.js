@@ -14,7 +14,7 @@
   /**
    * Dashboard: Highlight same values in the dashboard table
    */
-  $('.settings_page_tmsm-aquatonic-course-booking-settings .table-dashboard td span').each(function( index ) {
+  $('.settings_page_tmsm-aquatonic-course-booking-settings .table-dashboard td span:not(.onlyadmin)').each(function( index ) {
     var lastClass = $(this).attr('class').split(' ').pop();
     $( this ).mouseover(function() {
       if(lastClass !== ''){
