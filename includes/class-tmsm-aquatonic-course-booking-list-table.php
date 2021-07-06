@@ -109,7 +109,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$s      = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // input var ok, CSRF ok.
 		$search_datecourse     = isset( $_GET['search_datecourse'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse'] ) ) : ''; // input var ok, CSRF ok.
 		$search_datecreated     = isset( $_GET['search_datecreated'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecreated'] ) ) : ''; // input var ok, CSRF ok.
-		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'all'; // input var ok, CSRF ok.
+		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'active-noshow'; // input var ok, CSRF ok.
 
 		$this->status = $status;
 
@@ -152,7 +152,12 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 		if ( 'all' !== $status ) {
 			$status = $wpdb->esc_like($status);
-			$where .= "AND " . "status = '{$status}' ";
+			if( $status === 'active-noshow'){
+				$where .= "AND " . "status IN('active', 'noshow') ";
+			}
+			else{
+				$where .= "AND " . "status = '{$status}' ";
+			}
 		}
 		if ( ! empty( $where ) ) {
 			$where = ' WHERE ' . $where;
@@ -179,6 +184,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$sql .= in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		$sql .= ' LIMIT %d OFFSET %d';
 
+		print_r($sql);
 		$this->items = $wpdb->get_results( $wpdb->prepare( $sql, $this->per_page, $paged ), ARRAY_A );
 	}
 
@@ -305,10 +311,11 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$link = add_query_arg( 'tab', $this->tab, $link );
 
 		$views = array(
-			'all'      => esc_html__( 'All', 'tmsm-aquatonic-course-booking' ),
-			'active'   => esc_html__( 'Active', 'tmsm-aquatonic-course-booking' ),
-			'cancelled' => esc_html__( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
-			'noshow' => esc_html__( 'No-show', 'tmsm-aquatonic-course-booking' ),
+			'all'           => esc_html__( 'All', 'tmsm-aquatonic-course-booking' ),
+			'active-noshow' => esc_html__( 'Active + No-Show', 'tmsm-aquatonic-course-booking' ),
+			'active'        => esc_html__( 'Active', 'tmsm-aquatonic-course-booking' ),
+			'cancelled'     => esc_html__( 'Cancelled', 'tmsm-aquatonic-course-booking' ),
+			'noshow'        => esc_html__( 'No-show', 'tmsm-aquatonic-course-booking' ),
 		);
 
 		$status_links = array();
@@ -406,6 +413,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		?>
 		<select name="status">
 			<option value="all"<?php selected( 'all', $this->status ); ?>><?php echo esc_html__( 'Status', 'tmsm-aquatonic-course-booking' );?></option>
+			<option value="active-noshow"<?php selected( 'active-noshow', $this->status ); ?>><?php echo esc_html__( 'Active + No-Show', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="arrived"<?php selected( 'arrived', $this->status ); ?>><?php echo esc_html__( 'Arrived', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="active"<?php selected( 'active', $this->status ); ?>><?php echo esc_html__( 'Active', 'tmsm-aquatonic-course-booking' );?></option>
 			<option value="cancelled"<?php selected( 'cancelled', $this->status ); ?>><?php echo esc_html__( 'Cancelled', 'tmsm-aquatonic-course-booking' );?></option>
