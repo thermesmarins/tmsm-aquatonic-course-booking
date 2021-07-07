@@ -258,6 +258,22 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Admin Page URL
+	 *
+	 * @return string
+	 */
+	private function admin_page_url(){
+
+		$screen = get_current_screen();
+		if(strpos($screen->base, 'toplevel' ) === false){
+			return 'options-general.php';
+		}
+		else{
+			return 'admin.php';
+		}
+	}
+
+	/**
 	 * Define what data to show on each column of the table
 	 *
 	 * @param  array  $item        Data.
@@ -273,7 +289,8 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			case 'participants':
 				return $item[ $column_name ];
 			case 'fullname':
-				return '<abbr title="'.esc_attr($item[ 'email' ] . '&#013;' . $item[ 'phone' ] . '&#013;' . $item[ 'barcode' ]).'">' . $item[ 'firstname' ] . ' ' . $item[ 'lastname' ] .  '</abbr>';
+				//return '<abbr title="'.esc_attr($item[ 'email' ] . '&#013;' . $item[ 'phone' ] . '&#013;' . $item[ 'barcode' ]).'">' . $item[ 'firstname' ] . ' ' . $item[ 'lastname' ] .  '</abbr>';
+				return '<a href="'.admin_url( self::admin_page_url(). '?page='.$this->page.'&tab=bookings&status=all&s='. $item['email']).'"><abbr title="'.esc_attr($item[ 'email' ] . '&#013;' . $item[ 'phone' ] . '&#013;' . $item[ 'barcode' ]).'">' . $item[ 'firstname' ] . ' ' . $item[ 'lastname' ] .  '</abbr></a>';
 			case 'status':
 				$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
 				return '<mark class="' . $statuses[ $item[ $column_name ] ]['iconclass'] . '"><span>' . $statuses[ $item[ $column_name ]]['name'] .' </span></mark>';
