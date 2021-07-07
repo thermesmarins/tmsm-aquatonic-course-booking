@@ -46,6 +46,13 @@
 				<?php _e( 'Settings', 'tmsm-aquatonic-course-booking' ); ?>
 			</a>
 		<?php } ?>
+
+		<a class="nav-tab <?php if ( $tab == 'stats' ) {
+			echo 'nav-tab-active';
+		} ?>" href="<?php echo self::admin_page_url(); ?>?page=tmsm-aquatonic-course-booking-settings&tab=stats">
+			<?php _e( 'Stats', 'tmsm-aquatonic-course-booking' ); ?>
+		</a>
+
 	</h2>
 
 	<?php
@@ -87,6 +94,42 @@
 
 			?></form>
 		<?php
+	}
+
+	if ( $tab == 'stats') {
+
+		$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
+
+
+		echo '
+
+
+		    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {"packages":["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.__('Number of bookings','tmsm-aquatonic-course-booking').'\'],
+          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
+          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_arrived().'],
+          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
+          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_cancelled().'],
+        ]);
+
+        var options = {
+        backgroundColor: \'transparent\',
+        is3D: true,
+          title: \''.__('Booking Status','tmsm-aquatonic-course-booking').'\'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));
+
+        chart.draw(data, options);
+      }
+    </script><div id="piechart" style="width: 900px; height: 500px;"></div>';
 	}
 
 	if ( $tab == 'dashboard' ) {

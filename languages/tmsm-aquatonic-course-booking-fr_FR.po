@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-07-06 16:05+0200\n"
-"PO-Revision-Date: 2021-07-06 16:06+0200\n"
+"POT-Creation-Date: 2021-07-07 13:20+0200\n"
+"PO-Revision-Date: 2021-07-07 13:21+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -316,8 +316,8 @@ msgid "Cancelled booking for %s %s at %s"
 msgstr "Annulation de la réservation pour %s %s le %s"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1278
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:237
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:240
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:282
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:285
 #: public/class-tmsm-aquatonic-course-booking-public.php:782
 #: public/class-tmsm-aquatonic-course-booking-public.php:917
 #, php-format
@@ -325,8 +325,9 @@ msgid "%s at %s"
 msgstr "%s à %s"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1302
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:315
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:417
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:116
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:360
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:462
 msgid "Active"
 msgstr "Active"
 
@@ -336,13 +337,15 @@ msgstr "Marquer comme active"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1307
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1308
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:416
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:117
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:461
 msgid "Arrived"
 msgstr "Arrivé"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1313
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:316
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:418
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:119
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:361
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:463
 msgid "Cancelled"
 msgstr "Annulé"
 
@@ -351,7 +354,7 @@ msgid "Mark as cancelled"
 msgstr "Annuler"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1319
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:317
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:362
 msgid "No-show"
 msgstr "No-show"
 
@@ -439,29 +442,52 @@ msgstr "Tableau de bord"
 msgid "Bookings"
 msgstr "Réservations"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:71
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:53
+msgid "Stats"
+msgstr "Stats"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:78
 #, php-format
 msgid "Dialog Insight API connection failed with error code: %s"
 msgstr "La connexion Dialog Insight a échoué avec le code erreur : %s"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:86
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:93
 msgid "Save options"
 msgstr "Enregistrer les options"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:105
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:115
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:81
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:459
+msgid "Status"
+msgstr "État de réservation"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:115
+msgid "Number of bookings"
+msgstr "Nombre de réservations"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:118
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:464
+msgid "No-Show"
+msgstr "No-Show"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:125
+msgid "Booking Status"
+msgstr "Statut de réservation"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:148
 #, php-format
 msgid "Next Refresh at %s in %s"
 msgstr "Prochaine actualisation à %s dans %s"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:112
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:155
 msgid "Force refresh attendance"
 msgstr "Forcer l’actualisation"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:151
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:194
 msgid "Aquatonic Attendance is not available"
 msgstr "Le cron TMSM Aquatonic Attendance n’est pas disponible"
 
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:167
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:210
 msgid "Filter"
 msgstr "Filtrer"
 
@@ -481,39 +507,30 @@ msgstr "Participants"
 msgid "Course Start"
 msgstr "Début"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:81
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:414
-msgid "Status"
-msgstr "État de réservation"
-
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:82
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:313
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:358
 msgid "All"
 msgstr "Tout"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:314
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:415
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:359
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:460
 msgid "Active + No-Show"
 msgstr "Actives + No-Show"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:392
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:437
 msgid "Name"
 msgstr "Nom"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:394
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:439
 msgid "Course Date"
 msgstr "Date du parcours"
 
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:396
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:441
 msgid "Creation Date"
 msgstr "Date de création"
-
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:419
-msgid "No-Show"
-msgstr "No-Show"
 
 #: includes/class-tmsm-aquatonic-course-booking-sanitize.php:183
 msgid "Specify the data type to sanitize."
@@ -918,9 +935,6 @@ msgstr "Mini tableau de bord"
 #~ msgctxt "date selection"
 #~ msgid "to"
 #~ msgstr "au"
-
-#~ msgid "Number of nights:"
-#~ msgstr "Nombre de nuits :"
 
 #~ msgid "Minimum stay:"
 #~ msgstr "Durée minimum :"

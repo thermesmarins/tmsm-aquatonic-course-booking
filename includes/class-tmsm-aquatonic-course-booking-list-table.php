@@ -200,6 +200,50 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get total number of items cancelled
+	 *
+	 * @return int
+	 */
+	public function get_total_items_cancelled() {
+		global $wpdb;
+		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='cancelled'" ;
+		return $wpdb->get_var( $sql_count );
+	}
+
+	/**
+	 * Get total number of items noshow
+	 *
+	 * @return int
+	 */
+	public function get_total_items_noshow() {
+		global $wpdb;
+		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='noshow'" ;
+		return $wpdb->get_var( $sql_count );
+	}
+
+	/**
+	 * Get total number of items active
+	 *
+	 * @return int
+	 */
+	public function get_total_items_active() {
+		global $wpdb;
+		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='active'" ;
+		return $wpdb->get_var( $sql_count );
+	}
+
+	/**
+	 * Get total number of items arrived
+	 *
+	 * @return int
+	 */
+	public function get_total_items_arrived() {
+		global $wpdb;
+		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='arrived'" ;
+		return $wpdb->get_var( $sql_count );
+	}
+
+	/**
 	 * Checkbox column
 	 *
 	 * @param  array $item Item.
