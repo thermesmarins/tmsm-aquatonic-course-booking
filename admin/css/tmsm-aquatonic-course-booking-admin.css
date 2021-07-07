@@ -281,4 +281,7 @@
 #tmsm-aquatonic-course-booking-settings-table .tablenav {
   clear: none;
 }
+#postbox-stats-listmostnoshow table {
+  border: none;
+}
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-admin.css.map */

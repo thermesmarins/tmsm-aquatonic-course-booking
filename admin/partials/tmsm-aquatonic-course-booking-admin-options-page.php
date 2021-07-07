@@ -98,6 +98,15 @@
 
 	if ( $tab == 'stats') {
 
+		?>
+	<div id="dashboard-widgets" class="metabox-holder">
+		<div id="postbox-container-1" class="postbox-container">
+			<div class="meta-box-sortables ui-sortable">
+		<div class="postbox">
+			<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Booking Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
+			<div class="inside">
+				<div class="main">
+					<?php
 		$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
 
 		echo '
@@ -126,8 +135,51 @@
 	
 	        chart.draw(data, options);
 	      }
-	    </script><div id="piechart" style="width: 900px; height: 500px;"></div>
+	    </script><div id="piechart" style="width: 500px; height: 400px;"></div>
     ';
+
+		?>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				<div id="postbox-container-2" class="postbox-container">
+					<div class="meta-box-sortables ui-sortable">
+
+						<div id="postbox-stats-listmostnoshow" class="postbox">
+							<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Customers with most no-shows (more than 4)','tmsm-aquatonic-course-booking' ); ?></h2></div>
+							<div class="insidee">
+								<div class="main">
+
+					<?php
+
+
+					$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table_Noshow();
+					$bookings->prepare_items();
+
+					?>
+
+					<form id="<?php echo esc_attr( $bookings->page ); ?>-filter" method="get" action="">
+						<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
+						<input type="hidden" name="tab" value="<?php echo esc_attr( $bookings->tab ); ?>"/>
+					</form>
+
+					<form id="tmsm-aquatonic-course-booking-settings-table" method="post" action="">
+						<div class="table-responsive">
+							<?php $bookings->display(); ?>
+						</div>
+					</form>
+								</div></div></div>
+
+
+
+				</div>
+				</div>
+				</div>
+			</div>
+
+	<?php
 	}
 
 	if ( $tab == 'dashboard' ) {

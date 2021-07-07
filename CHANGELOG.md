@@ -1,3 +1,5 @@
+* New stat: customers with most no-shows
+
 ### 1.7.1: July 7th, 2021
 * Store Aquos error in booking entry as _aquos_status
 * Bookings list now with phone number and barcode, but displayed on mouseover the full name
