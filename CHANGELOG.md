@@ -1,3 +1,4 @@
+### 1.7.2: July 8th, 2021
 * New stat: customers with most no-shows
 * Bookings list: click on customer name to display list of all bookings
 
