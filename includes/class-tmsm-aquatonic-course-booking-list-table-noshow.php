@@ -93,7 +93,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table_Noshow extends WP_List_Table {
 
 		$where = ' status = "noshow" ';
 		if ( ! empty( $where ) ) {
-			$where = ' WHERE ' . $where .  ' GROUP BY "email"';
+			$where = ' WHERE ' . $where .  ' GROUP BY email';
 		}
 
 		return $where;
@@ -109,9 +109,9 @@ class Tmsm_Aquatonic_Course_Booking_List_Table_Noshow extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'count'; // input var ok, CSRF ok.
 		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'asc'; // input var ok, CSRF ok.
 
-		$sql  = "SELECT *, COUNT(*) as count FROM `{$wpdb->prefix}aquatonic_course_booking`";
+		$sql  = "SELECT firstname, lastname, email, COUNT(*) as count FROM `{$wpdb->prefix}aquatonic_course_booking`";
 		$sql .= $this->get_where_query();
-		$sql .= ' HAVING count > 3 ORDER BY count ';
+		$sql .= ' HAVING count > 3 ORDER BY count DESC';
 		$sql .= ' LIMIT %d OFFSET %d';
 
 		$this->items = $wpdb->get_results( $wpdb->prepare( $sql, $this->per_page, $paged ), ARRAY_A );
@@ -162,7 +162,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table_Noshow extends WP_List_Table {
 			case 'count':
 				return $item[ $column_name ];
 			case 'fullname':
-				return '<a href="'.admin_url( self::admin_page_url(). '?page='.$this->page.'&tab=bookings&status=all&s='. $item['email']).'"><abbr title="'.esc_attr($item[ 'email' ] . '&#013;' . $item[ 'phone' ] . '&#013;' . $item[ 'barcode' ]).'">' . $item[ 'firstname' ] . ' ' . $item[ 'lastname' ] .  '</abbr></a>';
+				return '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
 			case 'status':
 				$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
 				return '<mark class="' . $statuses[ $item[ $column_name ] ]['iconclass'] . '"><span>' . $statuses[ $item[ $column_name ]]['name'] .' </span></mark>';

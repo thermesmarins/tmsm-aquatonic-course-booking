@@ -1254,7 +1254,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$booking = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE booking_id= %d ", $booking_id ), ARRAY_A );
 
 				$this->booking_mark_as_arrived($booking, $redirect_to_admin);
-				$message = esc_html__( 'Booking valid for %s %s at %s', 'tmsm-aquatonic-course-booking' );
+				$message = esc_html__( 'Booking valid for %s %s at %s for %s participant(s)', 'tmsm-aquatonic-course-booking' );
 
 			}
 
@@ -1279,7 +1279,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			wp_send_json(array(
 				'success' => true,
-				'message' => sprintf($message , $booking['firstname'], $booking['lastname'], $date) )
+				'message' => sprintf($message , $booking['firstname'], $booking['lastname'], $date, $booking['participants']) )
 			);
 		}
 		// Or redirect
