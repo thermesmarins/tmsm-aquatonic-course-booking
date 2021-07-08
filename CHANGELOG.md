@@ -1,3 +1,4 @@
+### 1.7.3: July 8th, 2021
 * Bookings list: Lastname in uppercase
 * Mark as arrived: display number of participants
 * Booking form validation: better validation of year of birth
