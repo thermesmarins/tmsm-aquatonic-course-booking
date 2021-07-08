@@ -1422,10 +1422,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function dashboard_calculate_data(){
 
-		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-			error_log('dashboard_calculate_data');
-		}
-
 		$bookings_of_the_day = $this->bookings_of_the_day();
 
 		$now              = new Datetime;

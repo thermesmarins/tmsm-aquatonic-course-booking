@@ -1,5 +1,6 @@
 * Bookings list: Lastname in uppercase
 * Mark as arrived: display number of participants
+* Booking form validation: better validation of year of birth
 
 ### 1.7.2: July 8th, 2021
 * New stat: customers with most no-shows

@@ -814,6 +814,32 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $form;
 	}
 
+	/**
+	 * Gravity Forms: Add date validation, compare year of birth to current year
+	 *
+	 * @param $result
+	 * @param $value
+	 * @param $form
+	 * @param $field
+	 *
+	 * @return mixed
+	 */
+	function gform_field_validation_date( $result, $value, $form, $field ) {
+
+		if ( $result['is_valid'] && $field->get_input_type() == 'date' && $field->cssClass === 'tmsm-aquatonic-course-birthdate') {
+			$date = GFCommon::parse_date( $value );
+
+			if ( ! GFCommon::is_empty_array( $date ) && checkdate( $date['month'], $date['day'], $date['year'] ) ) {
+				if($date['year'] < (date('Y') - 150 ) || $date['year'] > (date('Y') - 10 ) ) {
+					$result['is_valid'] = false;
+					$result['message'] = __( 'Year of birth is invalid', 'tmsm-aquatonic-course-booking' );
+				}
+			}
+		}
+
+		return $result;
+	}
+
 
 	/**
 	 * Booking Cancellation
