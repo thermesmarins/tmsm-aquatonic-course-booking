@@ -1,4 +1,5 @@
 * Booking form validation refactoring
+* Gravity Forms 2.5 compatibility: remove condition on submit button, update frontend optimizations
 
 ### 1.7.3: July 8th, 2021
 * Bookings list: Lastname in uppercase

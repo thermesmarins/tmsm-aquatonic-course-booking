@@ -773,43 +773,22 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
       TmsmAquatonicCourseApp.selectedDataList = new TmsmAquatonicCourseApp.SelectedDataView( { model: TmsmAquatonicCourseApp.selectedData } );
     //}
 
-    // Check Gravity Forms step
-    $(document).bind('gform_post_render', function(event, formId, currentPage){
-      console.warn('currentPage:'+currentPage);
-
-      // On step 2, load weekday times
-      TmsmAquatonicCourseApp.form_fields.step = currentPage;
-      if(TmsmAquatonicCourseApp.form_fields.step == 2){
-        TmsmAquatonicCourseApp.weekdaysList.render();
-      }
-
-      // Reset summary field
-      if($(TmsmAquatonicCourseApp.form_fields.summary_field).length > 0){
-        $(TmsmAquatonicCourseApp.form_fields.summary_field).html('');
-      }
-    });
-
-
-
   };
 
-  $( document ).ready( function() {
+  $(document).on('gform_post_render', function(event, form_id, current_page){
+    console.log('current_page:'+current_page);
 
-    if($('.tmsm-aquatonic-course-form-add_wrapper').length > 0){
+    // On step 2, load weekday times
+    TmsmAquatonicCourseApp.form_fields.step = current_page;
+    if(TmsmAquatonicCourseApp.form_fields.step == 2){
       TmsmAquatonicCourseApp.init();
     }
 
-  } );
-
-
-
+    // Reset summary field
+    if($(TmsmAquatonicCourseApp.form_fields.summary_field).length > 0){
+      $(TmsmAquatonicCourseApp.form_fields.summary_field).html('');
+    }
+  });
 
 })(jQuery, TmsmAquatonicCourseApp);
 
-// OptinMonster compatibility
-document.addEventListener('om.Scripts.init', function(evt) {
-  window._omapp.scripts.moment.status = 'loaded';
-  window._omapp.scripts.moment.object = window.moment ? window.moment : null;
-  window._omapp.scripts.momentTz.status = 'loaded';
-  window._omapp.scripts.momentTz.object = window.moment ? window.moment.tz : null;
-});
