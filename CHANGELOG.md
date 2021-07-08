@@ -1,3 +1,4 @@
+### 1.7.4: July 8th, 2021
 * Booking form validation refactoring
 * Gravity Forms 2.5 compatibility: remove condition on submit button, update frontend optimizations
 
