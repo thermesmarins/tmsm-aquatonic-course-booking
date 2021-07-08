@@ -232,26 +232,24 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_weekday_select' );
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'template_time_select' );
 
-
 		// Gravity Forms Hooks only for the selected form
-		$options = get_option($this->plugin_name . '-options');
-		if(!empty($options)){
-			$form_add_id = $options['gform_add_id'];
+		$options = get_option( $this->plugin_name . '-options' );
+		if ( ! empty( $options ) ) {
+			$form_add_id    = $options['gform_add_id'];
 			$form_cancel_id = $options['gform_cancel_id'];
-			if(!empty($form_add_id)){
+			if ( ! empty( $form_add_id ) ) {
 				//$this->loader->add_filter( 'gform_entry_post_save_'.$form_add_id, $plugin_public, 'gform_entry_post_save_booking', 20, 2 );
 				//$this->loader->add_action( 'gform_after_submission_'.$form_add_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
 				$this->loader->add_action( 'gform_entry_created', $plugin_public, 'gform_entry_created', 20, 2 );
-				$this->loader->add_action( 'gform_notification_'.$form_add_id, $plugin_public, 'gform_notification_booking', 20, 3 );
+				$this->loader->add_action( 'gform_notification_' . $form_add_id, $plugin_public, 'gform_notification_booking', 20, 3 );
+				$this->loader->add_filter( 'gform_field_validation_' . $form_add_id, $plugin_public, 'gform_field_validation_birthdate', 10, 4 );
 			}
-			if(!empty($form_cancel_id)){
-				$this->loader->add_filter( 'gform_pre_render_'.$form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
-				$this->loader->add_action( 'gform_after_submission_'.$form_cancel_id, $plugin_public, 'gform_after_submission_cancel', 20, 2 );
+			if ( ! empty( $form_cancel_id ) ) {
+				$this->loader->add_filter( 'gform_pre_render_' . $form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
+				$this->loader->add_action( 'gform_after_submission_' . $form_cancel_id, $plugin_public, 'gform_after_submission_cancel', 20, 2 );
 			}
-			$this->loader->add_filter( 'gform_pre_render_'.$form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
+			$this->loader->add_filter( 'gform_pre_render_' . $form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
 		}
-
-		$this->loader->add_filter( 'gform_field_validation', $plugin_public, 'gform_field_validation_date', 10, 4 );
 
 		// Ajax frontend
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
@@ -272,7 +270,6 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		// Misc
 		$this->loader->add_filter( 'body_class', $plugin_public, 'body_class_pages',10, 2);
-
 
 	}
 
