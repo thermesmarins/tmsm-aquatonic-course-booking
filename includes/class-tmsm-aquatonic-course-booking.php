@@ -250,6 +250,7 @@ class Tmsm_Aquatonic_Course_Booking {
 			}
 			$this->loader->add_filter( 'gform_pre_render_' . $form_cancel_id, $plugin_public, 'gform_pre_render_cancel', 20, 1 );
 		}
+		$this->loader->add_filter( 'gform_replace_merge_tags', $plugin_public, 'gform_replace_merge_tags_booking', 20, 7 );
 
 		// Ajax frontend
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
