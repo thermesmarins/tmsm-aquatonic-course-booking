@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-07-08 11:07+0200\n"
-"PO-Revision-Date: 2021-07-08 11:07+0200\n"
+"POT-Creation-Date: 2021-07-09 14:30+0200\n"
+"PO-Revision-Date: 2021-07-09 14:30+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -362,74 +362,74 @@ msgstr "No-show"
 msgid "Mark as no-show"
 msgstr "Marquer comme no-show"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1391
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2056
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2058
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1393
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2107
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2109
 #, php-format
 msgid "Error: Delivery URL returned response code: %s"
 msgstr "Erreur : URL de livraison a retourné le code : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1400
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1402
 #, php-format
 msgid "Aquos reached, with error message: %s"
 msgstr "Aquos atteint, avec le message d’erreur : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1514
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1565
 msgid "Capacity"
 msgstr "Capacité"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1553
-msgid "Subscribed Lesson Members"
-msgstr "Inscrits aux cours"
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1604
+msgid "Registered Lesson Members"
+msgstr "Personnes inscrites aux cours"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1571
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1894
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1622
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1945
 msgid "(Test Mode)"
 msgstr "(Mode test)"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1607
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1658
 msgid "Treatment+Course Allotment"
 msgstr "Allotement pour les soins+parcours"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1646
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1697
 msgid "Booking Allotments"
 msgstr "Allotement pour la réservation"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1684
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1735
 msgid "Ongoing Bookings"
 msgstr "Réservations en cours"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1715
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1766
 msgid "Ending Bookings"
 msgstr "Réservations qui terminent"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1746
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1797
 msgid "Starting Bookings"
 msgstr "Réservations qui débutent"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1777
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1828
 msgid "Free"
 msgstr "Libre"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1864
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1874
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1915
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1925
 msgid "Can Start"
 msgstr "Peut commencer (sans réservation)"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1880
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1931
 msgid "(Minimum Value of Free Row)"
 msgstr "(Valeur minimum de la ligne « Libre »)"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1889
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1940
 msgid "Real Time"
 msgstr "Temps réél"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1897
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1948
 msgid "Real time data is missing!"
 msgstr "Les données temps réel sont manquantes"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2067
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2068
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2118
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2119
 #, php-format
 msgid "Error message: %s"
 msgstr "Code erreur : %s"
@@ -550,7 +550,7 @@ msgstr "Spécifier de type de données à normaliser."
 msgid "Forgot data type"
 msgstr "Type de données oublié"
 
-#: includes/class-tmsm-aquatonic-course-booking.php:291
+#: includes/class-tmsm-aquatonic-course-booking.php:289
 msgid "Every 5 minutes"
 msgstr "Toutes les 5 minutes"
 
@@ -658,11 +658,11 @@ msgstr "Aucun créneau de fin pour calculer les créneaux"
 msgid "Mini Dashboard"
 msgstr "Mini tableau de bord"
 
+#~ msgid "Subscribed Lesson Members"
+#~ msgstr "Inscrits aux cours"
+
 #~ msgid "Count"
 #~ msgstr "Nombre de fois no-show"
-
-#~ msgid "Arrived Lesson Members"
-#~ msgstr "Personnes arrivées aux cours"
 
 #~ msgid "Firstname"
 #~ msgstr "Prénom"

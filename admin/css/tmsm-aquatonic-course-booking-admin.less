@@ -6,7 +6,7 @@
 @capacity: #5769d9;
 @allotment-different: #e8c4c4;
 @allotment: #a5a800;
-@lessons-subscribed: #99ec53;
+@lessons-registered: #99ec53;
 @lessons-arrived: #32dbb1;
 @treatment: #c6ac81;
 @treatment-different: #78dbd9;
@@ -24,7 +24,7 @@
         padding: 2px;
 
     }
-    .capacity-1, .realtime, .booking-starting, .booking-ending, .free, .lessons-subscribed, .treatment{
+    .capacity-1, .realtime, .booking-starting, .booking-ending, .free, .lessons-registered, .treatment{
         font-weight: bold;
     }
 
@@ -159,22 +159,22 @@
             color: darken(hsl(hue(@booking-ongoing), saturation(@booking-ongoing), lightness(@booking-ongoing)), 25%);
         }
     }
-    .lessons-subscribed{
-        color: @lessons-subscribed;
-        &.lessons-subscribed-2{
-            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 5%);
+    .lessons-registered{
+        color: @lessons-registered;
+        &.lessons-registered-2{
+            color: darken(hsl(hue(@lessons-registered), saturation(@lessons-registered), lightness(@lessons-registered)), 5%);
         }
-        &.lessons-subscribed-3{
-            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 10%);
+        &.lessons-registered-3{
+            color: darken(hsl(hue(@lessons-registered), saturation(@lessons-registered), lightness(@lessons-registered)), 10%);
         }
-        &.lessons-subscribed-4{
-            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 15%);
+        &.lessons-registered-4{
+            color: darken(hsl(hue(@lessons-registered), saturation(@lessons-registered), lightness(@lessons-registered)), 15%);
         }
-        &.lessons-subscribed-5{
-            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 20%);
+        &.lessons-registered-5{
+            color: darken(hsl(hue(@lessons-registered), saturation(@lessons-registered), lightness(@lessons-registered)), 20%);
         }
-        &.lessons-subscribed-6{
-            color: darken(hsl(hue(@lessons-subscribed), saturation(@lessons-subscribed), lightness(@lessons-subscribed)), 25%);
+        &.lessons-registered-6{
+            color: darken(hsl(hue(@lessons-registered), saturation(@lessons-registered), lightness(@lessons-registered)), 25%);
         }
     }
     .treatment{

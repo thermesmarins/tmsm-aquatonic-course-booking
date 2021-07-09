@@ -32,7 +32,7 @@
 .tmsm-aquatonic-course-booking-wrap .booking-starting,
 .tmsm-aquatonic-course-booking-wrap .booking-ending,
 .tmsm-aquatonic-course-booking-wrap .free,
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed,
+.tmsm-aquatonic-course-booking-wrap .lessons-registered,
 .tmsm-aquatonic-course-booking-wrap .treatment {
   font-weight: bold;
 }
@@ -138,22 +138,22 @@
 .tmsm-aquatonic-course-booking-wrap .booking-ongoing.booking-ongoing-6 {
   color: hsl(0, 59.42028986%, 15.58823529%);
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered {
   color: #99ec53;
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-2 {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered.lessons-registered-2 {
   color: hsl(92.54901961, 80.10471204%, 57.54901961%);
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-3 {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered.lessons-registered-3 {
   color: hsl(92.54901961, 80.10471204%, 52.54901961%);
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-4 {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered.lessons-registered-4 {
   color: hsl(92.54901961, 80.10471204%, 47.54901961%);
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-5 {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered.lessons-registered-5 {
   color: hsl(92.54901961, 80.10471204%, 42.54901961%);
 }
-.tmsm-aquatonic-course-booking-wrap .lessons-subscribed.lessons-subscribed-6 {
+.tmsm-aquatonic-course-booking-wrap .lessons-registered.lessons-registered-6 {
   color: hsl(92.54901961, 80.10471204%, 37.54901961%);
 }
 .tmsm-aquatonic-course-booking-wrap .treatment {

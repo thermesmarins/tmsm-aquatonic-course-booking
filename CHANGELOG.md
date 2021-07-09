@@ -1,4 +1,5 @@
 * Booking Form: Inverse the 2 steps how to: reorder fields, conditional logic (participants not empty) on continue button, remove conditional logic on submit button
+* Lessons: consider more time in the course, with two news settings, lessonbefore and lessonafter
 
 ### 1.7.4: July 8th, 2021
 * Booking form validation refactoring
