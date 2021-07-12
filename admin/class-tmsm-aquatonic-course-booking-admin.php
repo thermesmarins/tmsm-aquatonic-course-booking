@@ -1369,11 +1369,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function lessons_set_data(){
 
 		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-			error_log('lessons_set_data');
+			error_log('course lessons_set_data');
 		}
 
 		$endpoint = $this->get_option('aquos_endpoint_lessons');
-		$endpoint = 'https://resaparcours.aquatonic.fr/coursaquatique';
 
 		$site_id = (int) $this->get_option('aquos_siteid');
 		$tests_lessonsdate = $this->get_option('tests_lessonsdate');
@@ -1449,7 +1448,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 						$lesson_datetime_start = clone $lesson_datetime_object;
 						$lesson_datetime_start->modify( '-' . $this->get_option( 'lessonbefore' ) . ' minutes' );
 						$lesson_datetime_end = clone $lesson_datetime_object;
-						$lesson_datetime_end->modify( '+' . $this->get_option( 'lessonbefore' ) . ' minutes' )->modify( '+' . $response_lesson->duree . ' minutes' );
+						$lesson_datetime_end->modify( '+' . $this->get_option( 'lessonafter' ) . ' minutes' )->modify( '+' . $response_lesson->duree . ' minutes' );
 
 						$interval = DateInterval::createFromDateString( $this->slotsize_minutes() . ' minutes' );
 						$period   = new DatePeriod( $lesson_datetime_start, $interval, $lesson_datetime_end );

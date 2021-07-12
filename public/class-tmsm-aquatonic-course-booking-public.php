@@ -827,7 +827,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	function gform_field_validation_birthdate( $result, $value, $form, $field ) {
 
 		if ( $result['is_valid'] && $field->get_input_type() == 'date' && $field->cssClass === 'tmsm-aquatonic-course-birthdate') {
-			$date = GFCommon::parse_date( $value );
+			$date = GFCommon::parse_date( $value, $field->dateFormat );
 
 			if ( ! GFCommon::is_empty_array( $date ) && checkdate( $date['month'], $date['day'], $date['year'] ) ) {
 				if($date['year'] < (date('Y') - 150 ) || $date['year'] > (date('Y') - 10 ) ) {
