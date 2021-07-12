@@ -52,7 +52,6 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$this->process_bulk_action();
 		$this->set_items();
 
 		$total_items = $this->get_total_items();
@@ -85,6 +84,17 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get the name of the default primary column.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @return string Name of the default primary column, in this case, 'name'.
+	 */
+	protected function get_default_primary_column_name() {
+		return 'course_start';
+	}
+
+	/**
 	 * Get sortable columns
 	 *
 	 * @return array
@@ -93,9 +103,14 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		return array(
 			//'firstname' => array( 'firstname', false ),
 			//'firstname' => array( 'firstname', false ),
-			'date_created'    => array( 'date_created', true ),
-			'course_start'    => array( 'course_start', true ),
-			'booking_id'    => array( 'booking_id', false ),
+			'fullname'     => array( 'fullname', true ),
+			//'date_created' => array( 'date_created', true ),
+			//'course_start' => array( 'course_start', true ),
+			//'booking_id'   => array( 'booking_id', false ),
+
+			'date_created' => array( 'date_created', false),
+			'course_start' => array( 'course_start', false)
+
 		);
 	}
 
@@ -177,10 +192,14 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'course_start'; // input var ok, CSRF ok.
 		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'asc'; // input var ok, CSRF ok.
 
+		if($orderby === 'fullname'){
+			$orderby = 'CONCAT(firstname,lastname)';
+		}
+
 		$sql  = "SELECT * FROM `{$wpdb->prefix}aquatonic_course_booking`";
 		$sql .= $this->get_where_query();
 		$sql .= ' ORDER BY ';
-		$sql .= in_array( $orderby, $this->get_sortable_columns(), true ) ? $orderby : 'course_start';
+		$sql .= array_key_exists( $orderby, $this->get_sortable_columns()) || strpos($orderby, 'CONCAT') !== false ? $orderby : 'course_start';
 		$sql .= ' ';
 		$sql .= in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		$sql .= ' LIMIT %d OFFSET %d';
@@ -288,18 +307,32 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			case 'email':
 			case 'participants':
 				return $item[ $column_name ];
-			case 'fullname':
-				return '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
 			case 'status':
 				$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
 				return '<mark class="' . $statuses[ $item[ $column_name ] ]['iconclass'] . '"><span>' . $statuses[ $item[ $column_name ]]['name'] .' </span></mark>';
 			case 'course_start':
 				$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $item[ $column_name ], wp_timezone() );
 				return wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
-			case 'date_created':
-				$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $item[ $column_name ], wp_timezone() );
-				return wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
 		}
+	}
+
+	/**
+	 * Handles the fullname column
+	 *
+	 * @param object $item The current item object.
+	 */
+	public function column_fullname( $item ) {
+		echo '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
+	}
+
+	/**
+	 * Handles the date_created column
+	 *
+	 * @param object $item The current item object.
+	 */
+	public function column_date_created( $item ) {
+		$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $item[ 'date_created' ], wp_timezone() );
+		echo wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
 	}
 
 	/**
