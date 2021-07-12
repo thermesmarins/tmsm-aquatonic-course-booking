@@ -752,13 +752,21 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     });
   }
 
+  $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
+  //$('.tmsm-aquatonic-course-phone input').mask('+99-9999999999', {placeholder: ''});
+  $('.tmsm-aquatonic-course-phone input').mask('YZ0000000000', {placeholder: '__________', translation:  {
+    'Y': {pattern: /\+/, optional: true},
+    'Z': {pattern: /[0-9]/, optional: true}
+  }});
+
+
   /**
    * Set initial data into view and start recurring display updates.
    */
   TmsmAquatonicCourseApp.init = function() {
     console.log('TmsmAquatonicCourseApp.init');
 
-    $('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
+
 
     //if(TmsmAquatonicCourseApp.form_fields.step == 2 ){
       TmsmAquatonicCourseApp.times_per_page = 10;

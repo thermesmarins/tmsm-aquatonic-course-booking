@@ -1,5 +1,6 @@
 * Booking Form: Inverse the 2 steps how to: reorder fields, conditional logic (participants not empty) on continue button, remove conditional logic on submit button
 * Lessons: consider more time in the course, with two news settings, lessonbefore and lessonafter
+* Booking Form: Mask on phone number field allowing +33123456789 0123456789
 
 ### 1.7.4: July 8th, 2021
 * Booking form validation refactoring
