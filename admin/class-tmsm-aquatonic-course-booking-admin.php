@@ -1941,24 +1941,118 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		}
 
+		// Free
+
+		$dashboard[10][] = __( 'Free (alternative)', 'tmsm-aquatonic-course-booking' );
+
+
+		$counter = 0;
+		$free_alternative    = [];
+		foreach ( $period as $period_item ) {
+			$period_item->setTimezone( wp_timezone() );
+			$counter ++;
+			$cell = '';
+
+
+			// First "Free" column
+			if ( $counter === 1 ) {
+				$free_alternative[ $counter ] = (
+					$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
+					- $realtime
+					+ $plugin_public->get_participants_ending_forthetime( $period_item )
+					- $plugin_public->get_participants_starting_forthetime( $period_item )
+				);
+				$cell             .= '<span class="free free-' . $counter . '">'
+				                     . $free_alternative[ $counter ]
+				                     . '</span>';
+
+				$cell .= ' <span class="onlyadmin">('
+				         . '<span class="capacity capacity-' . $counter . '">'
+				         . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>'
+				         . '-' . '<span class="realtime">' . $realtime . '</span>'
+				         . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>'
+				         . '-' . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+				         . ')</span>';
+
+			} // Other "Free" columns
+			else {
+
+				$free_alternative[ $counter ] = ( $free_alternative[ ( $counter - 1 ) ]
+				                      + $plugin_public->get_participants_ending_forthetime( $period_item )
+				                      - $plugin_public->get_participants_starting_forthetime( $period_item )
+				                      + ( $capacity_timeslots_forthedate_difference[ $counter ] ?? 0 )
+				                      + ( $this->lessons_has_data() ? $lessons_registered_forthedate_counter[ ( $counter - 1 ) ] : 0 )
+				                      - ( $this->lessons_has_data() ? $lessons_registered_forthedate_counter[ $counter ] : 0 )
+				                      + ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter - 1 ] : 0 )
+				                      - ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
+				);
+				$cell             .= '<span class="free free-' . $counter . '">'
+				                     . $free[ $counter ] . '</span>';
+
+				$cell .= ' <span class="onlyadmin">('
+				         . '<span class="free free-' . ( $counter - 1 ) . '">'
+				         . $free_alternative[ ( $counter - 1 ) ]
+				         . '</span>'
+				         . '+'
+				         . '<span class="booking-ending booking-ending-' . $counter . '">'
+				         . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
+				         . '<span class="booking-starting booking-starting-' . $counter . '">'
+				         . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+				         . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] )
+						? '<span class="capacity-different capacity-different-' . $counter . '">'
+						  . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '' )
+				         . ( $this->lessons_has_data() ? '+' . '<span class="lessons-registered lessons-registered-'
+				                                         . ( $counter - 1 ) . '">'
+				                                         . $lessons_registered_forthedate_counter[ ( $counter - 1 ) ]
+				                                         . '</span>' : '' )
+				         . ( $this->lessons_has_data() ? '-' . '<span class="lessons-registered lessons-registered-'
+				                                         . $counter . '">'
+				                                         . $lessons_registered_forthedate_counter[ $counter ] . '</span>'
+						: '' )
+
+				         . ( ! empty( $treatments_timeslots_forthedate ) ? '+' . '<span class="treatment treatment-'
+				                                                           . ( $counter - 1 ) . '">'
+				                                                           . $treatments_timeslots_forthedate_counter[ $counter - 1 ] . '</span>'
+						: '' )
+				         . ( ! empty( $treatments_timeslots_forthedate ) ? '-' . '<span class="treatment treatment-'
+				                                                           . $counter . '">' . $treatments_timeslots_forthedate_counter[ $counter ]
+				                                                           . '</span>' : '' )
+
+
+				         . ')</span>';
+
+			}
+
+			$minidashboard[ $counter ]['free_alternative'] = $free_alternative[ $counter ];
+
+			if ( $free_alternative[ $counter ] < $canstart ) {
+				$canstart_counter = $counter;
+			}
+
+			$canstart                 = min( $canstart, $free_alternative[ $counter ] );
+
+			$dashboard[10][] = $cell;
+
+
+		}
+
 		// Can Start
 
-		$dashboard[10][] = __( 'Can Start', 'tmsm-aquatonic-course-booking' );
-
+		$dashboard[11][] = __( 'Can Start', 'tmsm-aquatonic-course-booking' );
 
 		$cell = '<span class="free free-' . $canstart_counter . '">' . $canstart . '</span>';
-		$dashboard[10][] = $cell;
+		$dashboard[11][] = $cell;
 
-		$dashboard[10][] = __( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' );
-		$dashboard[10][] = ' ';
-		$dashboard[10][] = ' ';
-		$dashboard[10][] = ' ';
-		$dashboard[10][] = ' ';
+		$dashboard[11][] = __( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' );
+		$dashboard[11][] = ' ';
+		$dashboard[11][] = ' ';
+		$dashboard[11][] = ' ';
+		$dashboard[11][] = ' ';
 
 
 		// Real Time
 
-		$dashboard[11][] = __( 'Real Time', 'tmsm-aquatonic-course-booking' );
+		$dashboard[12][] = __( 'Real Time', 'tmsm-aquatonic-course-booking' );
 
 		$cell = '';
 		$cell .= '<span class="realtime">' . $realtime . '</span>';
@@ -1968,12 +2062,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( empty( $realtime ) ) {
 			$cell = __( 'Real time data is missing!', 'tmsm-aquatonic-course-booking' );
 		}
-		$dashboard[11][] = $cell;
-		$dashboard[11][] = '';
-		$dashboard[11][] = '';
-		$dashboard[11][] = '';
-		$dashboard[11][] = '';
-		$dashboard[11][] = '';
+		$dashboard[12][] = $cell;
+		$dashboard[12][] = '';
+		$dashboard[12][] = '';
+		$dashboard[12][] = '';
+		$dashboard[12][] = '';
+		$dashboard[12][] = '';
 
 
 		update_option('tmsm-aquatonic-course-booking-minidashboard', $minidashboard);
