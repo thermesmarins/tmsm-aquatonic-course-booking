@@ -2,6 +2,7 @@
 * Lessons: consider more time in the course, with two news settings, lessonbefore and lessonafter
 * Booking Form: Mask on phone number field allowing +33123456789 0123456789
 * Bookings List: Sort by fullname, fix sorting by date
+* Removed date/phone masks, now done with Frontend Optimizations 1.3.8
 
 ### 1.7.4: July 8th, 2021
 * Booking form validation refactoring
