@@ -1987,7 +1987,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				                      - ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
 				);
 				$cell             .= '<span class="free free-' . $counter . '">'
-				                     . $free[ $counter ] . '</span>';
+				                     . $free_alternative[ $counter ] . '</span>';
 
 				$cell .= ' <span class="onlyadmin">('
 				         . '<span class="free free-' . ( $counter - 1 ) . '">'
