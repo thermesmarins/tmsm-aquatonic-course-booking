@@ -1,3 +1,6 @@
+### 1.7.6: July 15th, 2021
+* Alternative calculation of free place
+
 ### 1.7.5: July 13th, 2021
 * Booking Form: Inverse the 2 steps how to: reorder fields, conditional logic (participants not empty) on continue button, remove conditional logic on submit button
 * Lessons: consider more time in the course, with two news settings, lessonbefore and lessonafter
