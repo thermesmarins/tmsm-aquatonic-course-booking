@@ -1364,121 +1364,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
-	 * Call "Lessons" web service
-	 */
-	public function lessons_set_data(){
-
-		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-			error_log('course lessons_set_data');
-		}
-
-		$endpoint = $this->get_option('aquos_endpoint_lessons');
-
-		$site_id = (int) $this->get_option('aquos_siteid');
-		$tests_lessonsdate = $this->get_option('tests_lessonsdate');
-
-		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-			error_log('$tests_lessonsdate:'.$tests_lessonsdate);
-			error_log('$endpoint:'.$endpoint);
-			error_log('$site_id:'.$site_id);
-		}
-		if ( ! empty ( $endpoint ) && is_int( $site_id ) ) {
-			$data = [
-				'date'    => $tests_lessonsdate ?? date( 'Ymd' ),
-				'id_site' => $site_id,
-			];
-
-			$body = json_encode( $data );
-
-			$headers = [
-				'Content-Type' => 'application/json; charset=utf-8',
-				'X-Signature'  => $this->aquos_generate_signature( $body ),
-			];
-
-			$response      = wp_safe_remote_post(
-				$endpoint,
-				array(
-					'headers'     => $headers,
-					'body'        => $body,
-					'timeout'     => 20,
-					'data_format' => 'body',
-				)
-			);
-			$response_code = wp_remote_retrieve_response_code( $response );
-			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-				error_log(print_r($response, true));
-				error_log(print_r($response_data, true));
-			}
-
-			if ( $response_code >= 400 ) {
-
-				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-					error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
-						absint( $response_code ) ) );
-				}
-
-			}
-
-			if ( isset( $response_data->Status ) && $response_data->Status === 'false' ) {
-
-				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-					error_log( sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ) );
-				}
-
-			}
-
-			if ( is_wp_error( $response ) ) {
-
-				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-					error_log( 'Aquos reached, error message: ' . $response->get_error_message() );
-				}
-
-			}
-
-			$lessons = [];
-			if ( ! empty( $response_data ) ) {
-
-				$averagecourse = $this->get_option('courseaverage');
-
-				foreach($response_data as $response_lesson){
-					$lesson_datetime_object = DateTime::createFromFormat( 'Y-m-d H:i', $response_lesson->dateheure, wp_timezone() );
-					if( ! empty( $lesson_datetime_object )) {
-						$lesson_datetime_start = clone $lesson_datetime_object;
-						$lesson_datetime_start->modify( '-' . $this->get_option( 'lessonbefore' ) . ' minutes' );
-						$lesson_datetime_end = clone $lesson_datetime_object;
-						$lesson_datetime_end->modify( '+' . $this->get_option( 'lessonafter' ) . ' minutes' )->modify( '+' . $response_lesson->duree . ' minutes' );
-
-						$interval = DateInterval::createFromDateString( $this->slotsize_minutes() . ' minutes' );
-						$period   = new DatePeriod( $lesson_datetime_start, $interval, $lesson_datetime_end );
-						foreach ( $period as $period_item ) {
-							$period_item->setTimezone( wp_timezone() );
-
-							if ( isset( $lessons[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
-								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['registered'] += $response_lesson->inscrit;
-								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['arrived']    += $response_lesson->arrives;
-							} else {
-								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ] = [
-									'registered' => $response_lesson->inscrit,
-									'arrived'    => $response_lesson->arrives,
-								];
-							}
-
-						}
-					}
-
-				}
-
-			}
-
-			// Save data in option
-			update_option( 'tmsm-aquatonic-course-booking-lessons-data', $lessons );
-
-		}
-	}
-
-	/**
 	 * Get slotsize in minutes
 	 *
 	 * @return int
@@ -1622,7 +1507,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		// Lessons Registered
 		if ( $this->lessons_has_data() ) {
 
-			$dashboard[2][] = __( 'Registered Lesson Members', 'tmsm-aquatonic-course-booking' );
+			$dashboard[30][] = __( 'Registered Lesson Members', 'tmsm-aquatonic-course-booking' );
 
 			$counter                               = 0;
 			$lessons_registered_forthedate_counter = [];
@@ -1643,7 +1528,65 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
 				}
 
-				$dashboard[2][] = $cell;
+				$dashboard[30][] = $cell;
+
+			}
+		}
+
+		// Lessons Ending
+		if ( $this->lessons_has_data() ) {
+
+			$dashboard[31][] = __( 'Ending Lesson Members', 'tmsm-aquatonic-course-booking' );
+
+			$counter                               = 0;
+			$lessons_ending_forthedate_counter = [];
+			$period_for_lessons                    = ( $period_for_testing_lessons !== $period ? $period_for_testing_lessons : $period );
+
+			foreach ( $period_for_lessons as $period_item ) {
+				$period_item->setTimezone( wp_timezone() );
+				$counter ++;
+				$lessons_ending_forthedate_counter[ $counter ] = $this->lessons_ending_forthetime( $period_item );
+
+
+				$cell = '';
+				$cell .= '<span class="tooltip-trigger lessons-ending lessons-ending-' . $counter . '">'
+				         . $lessons_ending_forthedate_counter[ $counter ] . '</span>';
+
+				if ( $period_for_testing_lessons != $period ) {
+					$cell .= ' ';
+					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
+				}
+
+				$dashboard[31][] = $cell;
+
+			}
+		}
+
+		// Lessons Starting
+		if ( $this->lessons_has_data() ) {
+
+			$dashboard[32][] = __( 'Starting Lesson Members', 'tmsm-aquatonic-course-booking' );
+
+			$counter                               = 0;
+			$lessons_starting_forthedate_counter = [];
+			$period_for_lessons                    = ( $period_for_testing_lessons !== $period ? $period_for_testing_lessons : $period );
+
+			foreach ( $period_for_lessons as $period_item ) {
+				$period_item->setTimezone( wp_timezone() );
+				$counter ++;
+				$lessons_starting_forthedate_counter[ $counter ] = $this->lessons_starting_forthetime( $period_item );
+
+
+				$cell = '';
+				$cell .= '<span class="tooltip-trigger lessons-starting lessons-starting-' . $counter . '">'
+				         . $lessons_starting_forthedate_counter[ $counter ] . '</span>';
+
+				if ( $period_for_testing_lessons != $period ) {
+					$cell .= ' ';
+					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
+				}
+
+				$dashboard[32][] = $cell;
 
 			}
 		}
@@ -1676,7 +1619,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		// Treatments Capacity
 		if ( ! empty( $treatments_timeslots_forthedate ) ) {
 
-			$dashboard[4][] = __( 'Treatment+Course Allotment', 'tmsm-aquatonic-course-booking' );
+			$dashboard[40][] = __( 'Treatment+Course Allotment', 'tmsm-aquatonic-course-booking' );
 
 			$counter                                    = 0;
 			$treatments_timeslots_forthedate_counter    = [];
@@ -1708,14 +1651,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 				}
 
-				$dashboard[4][] = $cell;
+				$dashboard[40][] = $cell;
 
 			}
 
 		}
 		// Booking Allotments
 
-		$dashboard[5][] = __( 'Booking Allotments', 'tmsm-aquatonic-course-booking' );
+		$dashboard[50][] = __( 'Booking Allotments', 'tmsm-aquatonic-course-booking' );
 
 		$counter                                   = 0;
 		$allotment_timeslots_forthedate_counter    = [];
@@ -1747,13 +1690,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$allotment_timeslots_forthedate_difference[ $counter ] = $difference;
 
 			}
-			$dashboard[5][] = $cell;
+			$dashboard[50][] = $cell;
 
 		}
 
 		// Ongoing Bookings
 
-		$dashboard[6][] = __( 'Ongoing Bookings', 'tmsm-aquatonic-course-booking' );
+		$dashboard[60][] = __( 'Ongoing Bookings', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
@@ -1778,13 +1721,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 			$cell .= $bookings_inside;
 
-			$dashboard[6][] = $cell;
+			$dashboard[60][] = $cell;
 
 		}
 
 		// Ending Bookings
 
-		$dashboard[7][] = __( 'Ending Bookings', 'tmsm-aquatonic-course-booking' );
+		$dashboard[61][] = __( 'Ending Bookings', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
@@ -1808,14 +1751,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 			$cell .= $bookings_inside;
 
-			$dashboard[7][] = $cell;
+			$dashboard[61][] = $cell;
 
 
 		}
 
 		// Starting Bookings
 
-		$dashboard[8][] = __( 'Starting Bookings', 'tmsm-aquatonic-course-booking' );
+		$dashboard[62][] = __( 'Starting Bookings', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
@@ -1840,13 +1783,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 			$cell .= $bookings_inside;
 
-			$dashboard[8][] = $cell;
+			$dashboard[62][] = $cell;
 
 		}
 
 		// Free
 
-		$dashboard[9][] = __( 'Free', 'tmsm-aquatonic-course-booking' );
+		$dashboard[70][] = __( 'Free', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
@@ -1936,18 +1879,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$minidashboard[0]['date'] = esc_html__( 'Can Start', 'tmsm-aquatonic-course-booking' );
 			$minidashboard[0]['free'] = $canstart;
 
-			$dashboard[9][] = $cell;
+			$dashboard[70][] = $cell;
 
 
 		}
 
-		// Free
+		// Free alternative 1
 
-		$dashboard[10][] = __( 'Free (alternative)', 'tmsm-aquatonic-course-booking' );
+		$dashboard[81][] = __( 'Free (alternative 1)', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
-		$free_alternative    = [];
+		$free_alternative1    = [];
 		foreach ( $period as $period_item ) {
 			$period_item->setTimezone( wp_timezone() );
 			$counter ++;
@@ -1956,14 +1899,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			// First "Free" column
 			if ( $counter === 1 ) {
-				$free_alternative[ $counter ] = (
+				$free_alternative1[ $counter ] = (
 					$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
 					- $realtime
 					+ $plugin_public->get_participants_ending_forthetime( $period_item )
 					- $plugin_public->get_participants_starting_forthetime( $period_item )
 				);
 				$cell             .= '<span class="free free-' . $counter . '">'
-				                     . $free_alternative[ $counter ]
+				                     . $free_alternative1[ $counter ]
 				                     . '</span>';
 
 				$cell .= ' <span class="onlyadmin">('
@@ -1977,7 +1920,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			} // Other "Free" columns
 			else {
 
-				$free_alternative[ $counter ] = ( $free_alternative[ ( $counter - 1 ) ]
+				$free_alternative1[ $counter ] = ( $free_alternative1[ ( $counter - 1 ) ]
 				                      + $plugin_public->get_participants_ending_forthetime( $period_item )
 				                      - $plugin_public->get_participants_starting_forthetime( $period_item )
 				                      + ( $capacity_timeslots_forthedate_difference[ $counter ] ?? 0 )
@@ -1987,11 +1930,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				                      - ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
 				);
 				$cell             .= '<span class="free free-' . $counter . '">'
-				                     . $free_alternative[ $counter ] . '</span>';
+				                     . $free_alternative1[ $counter ] . '</span>';
 
 				$cell .= ' <span class="onlyadmin">('
 				         . '<span class="free free-' . ( $counter - 1 ) . '">'
-				         . $free_alternative[ ( $counter - 1 ) ]
+				         . $free_alternative1[ ( $counter - 1 ) ]
 				         . '</span>'
 				         . '+'
 				         . '<span class="booking-ending booking-ending-' . $counter . '">'
@@ -2023,36 +1966,131 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			}
 
-			$minidashboard[ $counter ]['free_alternative'] = $free_alternative[ $counter ];
+			//$minidashboard[ $counter ]['free_alternative'] = $free_alternative1[ $counter ];
 
-			if ( $free_alternative[ $counter ] < $canstart ) {
-				$canstart_counter = $counter;
+			if ( $free_alternative1[ $counter ] < $canstart ) {
+				//$canstart_counter = $counter;
 			}
 
-			$canstart                 = min( $canstart, $free_alternative[ $counter ] );
+			//$canstart                 = min( $canstart, $free_alternative1[ $counter ] );
 
-			$dashboard[10][] = $cell;
+			$dashboard[81][] = $cell;
+
+
+		}
+
+		// Free alternative 2
+
+		$dashboard[82][] = __( 'Free (alternative 2)', 'tmsm-aquatonic-course-booking' );
+
+
+		$counter = 0;
+		$free_alternative2    = [];
+		foreach ( $period as $period_item ) {
+			$period_item->setTimezone( wp_timezone() );
+			$counter ++;
+			$cell = '';
+
+
+			// First "Free" column
+			if ( $counter === 1 ) {
+				$free_alternative2[ $counter ] = (
+					$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
+					- $realtime
+					+ $plugin_public->get_participants_ending_forthetime( $period_item )
+					- $plugin_public->get_participants_starting_forthetime( $period_item )
+					+ ( $this->lessons_has_data() ? $lessons_ending_forthedate_counter[ ( $counter ) ] : 0 )
+					- ( $this->lessons_has_data() ? $lessons_starting_forthedate_counter[ ( $counter ) ] : 0 )
+				);
+				$cell             .= '<span class="free free-' . $counter . '">'
+				                     . $free_alternative2[ $counter ]
+				                     . '</span>';
+
+				$cell .= ' <span class="onlyadmin">('
+				         . '<span class="capacity capacity-' . $counter . '">'
+				         . $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] . '</span>'
+				         . '-' . '<span class="realtime">' . $realtime . '</span>'
+				         . '+' . '<span class="booking-ending booking-ending-' . $counter .'">' . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>'
+				         . '-' . '<span class="booking-starting booking-starting-' . $counter .'">' . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+				         . '+' . '<span class="lesson-ending lesson-ending-' . $counter .'">' . ( $this->lessons_has_data() ? $lessons_ending_forthedate_counter[ ( $counter ) ] : 0 ) . '</span>'
+				         . '-' . '<span class="lesson-starting lesson-starting-' . $counter .'">' . ( $this->lessons_has_data() ? $lessons_starting_forthedate_counter[ ( $counter ) ] : 0 ) . '</span>'
+				         . ')</span>';
+
+			} // Other "Free" columns
+			else {
+
+				$free_alternative2[ $counter ] = ( $free_alternative2[ ( $counter - 1 ) ]
+				                      + $plugin_public->get_participants_ending_forthetime( $period_item )
+				                      - $plugin_public->get_participants_starting_forthetime( $period_item )
+				                      + ( $capacity_timeslots_forthedate_difference[ $counter ] ?? 0 )
+                                      + ( $this->lessons_has_data() ? $lessons_ending_forthedate_counter[ ( $counter ) ] : 0 )
+                                      - ( $this->lessons_has_data() ? $lessons_starting_forthedate_counter[ ( $counter ) ] : 0 )
+				                      + ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter - 1 ] : 0 )
+				                      - ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
+				);
+				$cell             .= '<span class="free free-' . $counter . '">'
+				                     . $free_alternative2[ $counter ] . '</span>';
+
+				$cell .= ' <span class="onlyadmin">('
+				         . '<span class="free free-' . ( $counter - 1 ) . '">'
+				         . $free_alternative2[ ( $counter - 1 ) ]
+				         . '</span>'
+				         . '+'
+				         . '<span class="booking-ending booking-ending-' . $counter . '">'
+				         . $plugin_public->get_participants_ending_forthetime( $period_item ) . '</span>' . '-'
+				         . '<span class="booking-starting booking-starting-' . $counter . '">'
+				         . $plugin_public->get_participants_starting_forthetime( $period_item ) . '</span>'
+				         . ( isset( $capacity_timeslots_forthedate_difference[ $counter ] )
+						? '<span class="capacity-different capacity-different-' . $counter . '">'
+						  . $capacity_timeslots_forthedate_difference[ $counter ] . '</span>' : '' )
+
+				         . '+' . '<span class="lesson-ending lesson-ending-' . $counter .'">' . ( $this->lessons_has_data() ? $lessons_ending_forthedate_counter[ ( $counter ) ] : 0 ) . '</span>'
+				         . '-' . '<span class="lesson-starting lesson-starting-' . $counter .'">' . ( $this->lessons_has_data() ? $lessons_starting_forthedate_counter[ ( $counter ) ] : 0 ) . '</span>'
+
+
+				         . ( ! empty( $treatments_timeslots_forthedate ) ? '+' . '<span class="treatment treatment-'
+				                                                           . ( $counter - 1 ) . '">'
+				                                                           . $treatments_timeslots_forthedate_counter[ $counter - 1 ] . '</span>'
+						: '' )
+				         . ( ! empty( $treatments_timeslots_forthedate ) ? '-' . '<span class="treatment treatment-'
+				                                                           . $counter . '">' . $treatments_timeslots_forthedate_counter[ $counter ]
+				                                                           . '</span>' : '' )
+
+
+				         . ')</span>';
+
+			}
+
+			//$minidashboard[ $counter ]['free_alternative'] = $free_alternative2[ $counter ];
+
+			if ( $free_alternative2[ $counter ] < $canstart ) {
+				//$canstart_counter = $counter;
+			}
+
+			//$canstart                 = min( $canstart, $free_alternative2[ $counter ] );
+
+			$dashboard[82][] = $cell;
 
 
 		}
 
 		// Can Start
 
-		$dashboard[11][] = __( 'Can Start', 'tmsm-aquatonic-course-booking' );
+		$dashboard[90][] = __( 'Can Start', 'tmsm-aquatonic-course-booking' );
 
 		$cell = '<span class="free free-' . $canstart_counter . '">' . $canstart . '</span>';
-		$dashboard[11][] = $cell;
+		$dashboard[90][] = $cell;
 
-		$dashboard[11][] = __( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' );
-		$dashboard[11][] = ' ';
-		$dashboard[11][] = ' ';
-		$dashboard[11][] = ' ';
-		$dashboard[11][] = ' ';
+		$dashboard[90][] = __( '(Minimum Value of Free Row)', 'tmsm-aquatonic-course-booking' );
+		$dashboard[90][] = ' ';
+		$dashboard[90][] = ' ';
+		$dashboard[90][] = ' ';
+		$dashboard[90][] = ' ';
 
 
 		// Real Time
 
-		$dashboard[12][] = __( 'Real Time', 'tmsm-aquatonic-course-booking' );
+		$dashboard[100][] = __( 'Real Time', 'tmsm-aquatonic-course-booking' );
 
 		$cell = '';
 		$cell .= '<span class="realtime">' . $realtime . '</span>';
@@ -2062,12 +2100,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( empty( $realtime ) ) {
 			$cell = __( 'Real time data is missing!', 'tmsm-aquatonic-course-booking' );
 		}
-		$dashboard[12][] = $cell;
-		$dashboard[12][] = '';
-		$dashboard[12][] = '';
-		$dashboard[12][] = '';
-		$dashboard[12][] = '';
-		$dashboard[12][] = '';
+		$dashboard[100][] = $cell;
+		$dashboard[100][] = '';
+		$dashboard[100][] = '';
+		$dashboard[100][] = '';
+		$dashboard[100][] = '';
+		$dashboard[100][] = '';
 
 
 		update_option('tmsm-aquatonic-course-booking-minidashboard', $minidashboard);
@@ -2291,6 +2329,145 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return $entry;
 	}
 
+
+	/**
+	 * Call "Lessons" web service
+	 */
+	public function lessons_set_data(){
+
+		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+			error_log('course lessons_set_data');
+		}
+
+		$endpoint = $this->get_option('aquos_endpoint_lessons');
+
+		$site_id = (int) $this->get_option('aquos_siteid');
+		$tests_lessonsdate = $this->get_option('tests_lessonsdate');
+
+		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+			error_log('$tests_lessonsdate:'.$tests_lessonsdate);
+			error_log('$endpoint:'.$endpoint);
+			error_log('$site_id:'.$site_id);
+		}
+		if ( ! empty ( $endpoint ) && is_int( $site_id ) ) {
+			$data = [
+				'date'    => $tests_lessonsdate ?? date( 'Ymd' ),
+				'id_site' => $site_id,
+			];
+
+			$body = json_encode( $data );
+
+			$headers = [
+				'Content-Type' => 'application/json; charset=utf-8',
+				'X-Signature'  => $this->aquos_generate_signature( $body ),
+			];
+
+			$response      = wp_safe_remote_post(
+				$endpoint,
+				array(
+					'headers'     => $headers,
+					'body'        => $body,
+					'timeout'     => 20,
+					'data_format' => 'body',
+				)
+			);
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+				error_log(print_r($response, true));
+				error_log(print_r($response_data, true));
+			}
+
+			if ( $response_code >= 400 ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+						absint( $response_code ) ) );
+				}
+
+			}
+
+			if ( isset( $response_data->Status ) && $response_data->Status === 'false' ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( sprintf( __( 'Aquos reached, with error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ) );
+				}
+
+			}
+
+			if ( is_wp_error( $response ) ) {
+
+				if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+					error_log( 'Aquos reached, error message: ' . $response->get_error_message() );
+				}
+
+			}
+
+			$lessons = [];
+			if ( ! empty( $response_data ) ) {
+
+				$averagecourse = $this->get_option('courseaverage');
+				$response_data[] = (object)[
+					'dateheure' => '2021-07-16 16:15',
+					'duree' => 30,
+					'inscrit' => 24,
+					'arrives' => 21,
+					];
+
+				foreach($response_data as $response_lesson){
+					$lesson_datetime_object = DateTime::createFromFormat( 'Y-m-d H:i', $response_lesson->dateheure, wp_timezone() );
+
+
+
+					if( ! empty( $lesson_datetime_object )) {
+						$lesson_datetime_start = clone $lesson_datetime_object;
+						$lesson_datetime_start->modify( '-' . $this->get_option( 'lessonbefore' ) . ' minutes' );
+						$lesson_datetime_end = clone $lesson_datetime_object;
+						$lesson_datetime_end->modify( '+' . $this->get_option( 'lessonafter' ) . ' minutes' )->modify( '+' . $response_lesson->duree . ' minutes' );
+
+						$interval = DateInterval::createFromDateString( $this->slotsize_minutes() . ' minutes' );
+						$period   = new DatePeriod( $lesson_datetime_start, $interval, $lesson_datetime_end );
+
+						// Set starting & ending lessons
+						if ( isset( $lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ] ) ) {
+							$lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ]['starting'] += $response_lesson->inscrit;
+						} else {
+							$lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ] = ['starting' => $response_lesson->inscrit];
+						}
+						if ( isset( $lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ] ) ) {
+							$lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ]['ending'] += $response_lesson->inscrit;
+						} else {
+							$lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ] = ['ending' => $response_lesson->inscrit];
+						}
+
+						// Assigning lesson to each period for registered & arrived
+						foreach ( $period as $period_item ) {
+							$period_item->setTimezone( wp_timezone() );
+
+							if ( isset( $lessons[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
+								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['registered'] += $response_lesson->inscrit;
+								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['arrived']    += $response_lesson->arrives;
+							} else {
+								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ] = [
+									'registered' => $response_lesson->inscrit,
+									'arrived'    => $response_lesson->arrives,
+								];
+							}
+
+						}
+					}
+
+				}
+
+			}
+
+			// Save data in option
+			update_option( 'tmsm-aquatonic-course-booking-lessons-data', $lessons );
+
+		}
+	}
+
 	/**
 	 * Do we have lessons data?
 	 *
@@ -2334,6 +2511,57 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return $count;
 
 	}
+
+	/**
+	 * Get lessons starting number for the time
+	 *
+	 * @param DateTimeInterface $datetime
+	 *
+	 * @return int
+	 */
+	public function lessons_starting_forthetime( DateTimeInterface $datetime){
+
+		$count = 0;
+
+		if($this->lessons_has_data()){
+			$lessons_data = $this->lessons_get_data();
+			if(!empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )])){
+				if( ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]) && ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['starting'])){
+					$count = $lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['starting'];
+				}
+			}
+
+		}
+
+		return $count;
+
+	}
+
+	/**
+	 * Get lessons ending number for the time
+	 *
+	 * @param DateTimeInterface $datetime
+	 *
+	 * @return int
+	 */
+	public function lessons_ending_forthetime( DateTimeInterface $datetime){
+
+		$count = 0;
+
+		if($this->lessons_has_data()){
+			$lessons_data = $this->lessons_get_data();
+			if(!empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )])){
+				if( ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]) && ! empty($lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['ending'])){
+					$count = $lessons_data[$datetime->format( 'Y-m-d H:i:s' )]['ending'];
+				}
+			}
+
+		}
+
+		return $count;
+
+	}
+
 	/**
 	 * Get lessons arrived number for the time
 	 *

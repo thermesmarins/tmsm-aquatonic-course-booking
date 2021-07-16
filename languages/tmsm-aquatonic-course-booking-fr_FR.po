@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-07-13 16:52+0200\n"
-"PO-Revision-Date: 2021-07-13 16:54+0200\n"
+"POT-Creation-Date: 2021-07-16 15:50+0200\n"
+"PO-Revision-Date: 2021-07-16 15:50+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -384,81 +384,91 @@ msgstr "No-show"
 msgid "Mark as no-show"
 msgstr "Marquer comme no-show"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1418
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2222
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2224
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1471
+msgid "Capacity"
+msgstr "Capacité"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1510
+msgid "Registered Lesson Members"
+msgstr "Personnes inscrites aux cours"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1528
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1557
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1586
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2003
+msgid "(Test Mode)"
+msgstr "(Mode test)"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1539
+msgid "Ending Lesson Members"
+msgstr "Cours qui terminent"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1568
+msgid "Starting Lesson Members"
+msgstr "Cours qui débutent"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1622
+msgid "Treatment+Course Allotment"
+msgstr "Allotement pour les soins+parcours"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1661
+msgid "Booking Allotments"
+msgstr "Allotement pour la réservation"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1699
+msgid "Ongoing Bookings"
+msgstr "Réservations en cours"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1730
+msgid "Ending Bookings"
+msgstr "Réservations qui terminent"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1761
+msgid "Starting Bookings"
+msgstr "Réservations qui débutent"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1792
+msgid "Free"
+msgstr "Libre"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1879
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1984
+msgid "Can Start"
+msgstr "Peut commencer (sans réservation)"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1889
+msgid "Free (alternative)"
+msgstr "Libre (alternative)"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1989
+msgid "(Minimum Value of Free Row)"
+msgstr "(Valeur minimum de la ligne « Libre »)"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:1998
+msgid "Real Time"
+msgstr "Temps réél"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2006
+msgid "Real time data is missing!"
+msgstr "Les données temps réel sont manquantes"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2165
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2167
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2290
 #, php-format
 msgid "Error: Delivery URL returned response code: %s"
 msgstr "Erreur : URL de livraison a retourné le code : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1427
-#, php-format
-msgid "Aquos reached, with error message: %s"
-msgstr "Aquos atteint, avec le message d’erreur : %s"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1586
-msgid "Capacity"
-msgstr "Capacité"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1625
-msgid "Registered Lesson Members"
-msgstr "Personnes inscrites aux cours"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1643
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2060
-msgid "(Test Mode)"
-msgstr "(Mode test)"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1679
-msgid "Treatment+Course Allotment"
-msgstr "Allotement pour les soins+parcours"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1718
-msgid "Booking Allotments"
-msgstr "Allotement pour la réservation"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1756
-msgid "Ongoing Bookings"
-msgstr "Réservations en cours"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1787
-msgid "Ending Bookings"
-msgstr "Réservations qui terminent"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1818
-msgid "Starting Bookings"
-msgstr "Réservations qui débutent"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1849
-msgid "Free"
-msgstr "Libre"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1936
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2041
-msgid "Can Start"
-msgstr "Peut commencer (sans réservation)"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:1946
-msgid "Free (alternative)"
-msgstr "Libre (alternative)"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2046
-msgid "(Minimum Value of Free Row)"
-msgstr "(Valeur minimum de la ligne « Libre »)"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2055
-msgid "Real Time"
-msgstr "Temps réél"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2063
-msgid "Real time data is missing!"
-msgstr "Les données temps réel sont manquantes"
-
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2233
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2234
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2176
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2177
 #, php-format
 msgid "Error message: %s"
 msgstr "Code erreur : %s"
+
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2299
+#, php-format
+msgid "Aquos reached, with error message: %s"
+msgstr "Aquos atteint, avec le message d’erreur : %s"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:32
 msgid "Dashboard"
@@ -683,9 +693,6 @@ msgstr "Aucun créneau de fin pour calculer les créneaux"
 #: public/class-tmsm-aquatonic-course-booking-public.php:2290
 msgid "Mini Dashboard"
 msgstr "Mini tableau de bord"
-
-#~ msgid "Subscribed Lesson Members"
-#~ msgstr "Inscrits aux cours"
 
 #~ msgid "Count"
 #~ msgstr "Nombre de fois no-show"
