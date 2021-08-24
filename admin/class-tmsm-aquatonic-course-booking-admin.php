@@ -1444,10 +1444,19 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		//echo '</pre>';
 
 		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
+
+		$site_id = (int) $this->get_option('aquos_siteid');
+
+		// Temp fix for Saint-Malo camera wrong realtime data on 2021-08-05
+		if ( $site_id === 1 && date( 'Y-m-d' ) === '2021-08-05' ) {
+			$realtime += 32;
+		}
+		
 		$realtime = max( $realtime, 0 );
 		if ( ! empty( $this->get_option( 'tests_realtimeattendance' ) ) ) {
 			$realtime = $this->get_option( 'tests_realtimeattendance' );
 		}
+
 
 		$lessons_data = get_option( 'tmsm-aquatonic-course-booking-lessons-data' );
 
