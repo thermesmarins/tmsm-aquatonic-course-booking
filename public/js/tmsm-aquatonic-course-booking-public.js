@@ -308,8 +308,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       console.log('WeekDayListView initialize');
 
-      moment.locale(TmsmAquatonicCourseApp.locale);
-      console.log("moment", moment().format());
+      console.log('Change moment locale to TmsmAquatonicCourseApp.data.locale:' + TmsmAquatonicCourseApp.data.locale);
+      moment.locale(TmsmAquatonicCourseApp.data.locale);
       console.log("moment locale: "+ moment.locale());
 
       console.log("moment fromnow: "+ moment().fromNow());
@@ -766,6 +766,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   TmsmAquatonicCourseApp.init = function() {
     console.log('TmsmAquatonicCourseApp.init');
 
+    moment.locale('fr');
+    moment.locale('fr_FR');
+    moment.updateLocale('fr', null);
 
 
     //if(TmsmAquatonicCourseApp.form_fields.step == 2 ){

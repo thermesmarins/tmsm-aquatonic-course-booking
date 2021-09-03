@@ -367,15 +367,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$pages[] = ['value' => '', 'label' => __( 'None', 'tmsm-aquatonic-course-booking' )];
 
 		// Select frontend form
-		foreach (GFAPI::get_forms() as $form){
-			$forms[] = ['value' => $form['id'], 'label' => $form['title']];
-		}
+		if(class_exists('GFAPI')){
+			foreach (GFAPI::get_forms() as $form){
+				$forms[] = ['value' => $form['id'], 'label' => $form['title']];
+			}
 
-		// Select pages
-		foreach (get_pages(['sort_order' => 'DESC', 'sort_column' => 'date']) as $page){
-			$pages[] = ['value' => $page->ID, 'label' => $page->post_title];
-		}
+			// Select pages
+			foreach (get_pages(['sort_order' => 'DESC', 'sort_column' => 'date']) as $page){
+				$pages[] = ['value' => $page->ID, 'label' => $page->post_title];
+			}
 
+		}
 
 		add_settings_field(
 			'gform_add_id',
