@@ -2419,14 +2419,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			if ( ! empty( $response_data ) ) {
 
 				$averagecourse = $this->get_option('courseaverage');
-				$response_data[] = (object)[
-					'dateheure' => '2021-07-16 16:15',
-					'duree' => 30,
-					'inscrit' => 24,
-					'arrives' => 21,
-					];
 
 				foreach($response_data as $response_lesson){
+					error_log('response_lesson:');
+					error_log(print_r($response_lesson, true));
 					$lesson_datetime_object = DateTime::createFromFormat( 'Y-m-d H:i', $response_lesson->dateheure, wp_timezone() );
 
 
@@ -2456,7 +2452,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 						foreach ( $period as $period_item ) {
 							$period_item->setTimezone( wp_timezone() );
 
-							if ( isset( $lessons[ $period_item->format( 'Y-m-d H:i:s' ) ] ) ) {
+							if ( isset( $lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['registered'] ) ) {
 								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['registered'] += $response_lesson->inscrit;
 								$lessons[ $period_item->format( 'Y-m-d H:i:s' ) ]['arrived']    += $response_lesson->arrives;
 							} else {
