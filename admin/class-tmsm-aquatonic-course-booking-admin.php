@@ -1798,9 +1798,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		}
 
-		// Free
+		// Free (old alternative)
 
-		$dashboard[70][] = __( 'Free', 'tmsm-aquatonic-course-booking' );
+		/*$dashboard[70][] = __( 'Free', 'tmsm-aquatonic-course-booking' );
 
 
 		$counter = 0;
@@ -1893,12 +1893,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$dashboard[70][] = $cell;
 
 
-		}
+		}*/
 
-		// Free alternative 1
+		// Free alternative 1 (now default)
 
-		$dashboard[81][] = __( 'Free (alternative 1)', 'tmsm-aquatonic-course-booking' );
-
+		$dashboard[81][] = __( 'Free', 'tmsm-aquatonic-course-booking' );
 
 		$counter = 0;
 		$free_alternative1    = [];
@@ -1992,6 +1991,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Free alternative 2
 
+		/*
 		$dashboard[82][] = __( 'Free (alternative 2)', 'tmsm-aquatonic-course-booking' );
 
 
@@ -2083,7 +2083,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$dashboard[82][] = $cell;
 
 
-		}
+
+		}*/
 
 		// Can Start
 
@@ -2249,12 +2250,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					'sslverify'   => false,
 				)
 			);
-			//if($response){
-			//	error_log('response_received');
-			//}
+
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
-
 
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log('Aquos response:');
@@ -2267,35 +2265,25 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 
 			if ( $response_code >= 400 ) {
-				//if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+
 				error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
 					absint( $response_code ) ) );
 				$status =  sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
 					absint( $response_code ) );
-				//error_log(print_r($body, true));
-				//error_log(print_r($response_data, true));
-				//}
+
 			}
 
 			if ( isset($response_data->Status) &&  $response_data->Status === 'false') {
-				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+
 				error_log(sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error ));
 				$status = sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), $response_data->Error );
-				//error_log(print_r($body, true));
-				//error_log(print_r($response_data, true));
-				//}
-
 
 			}
 
 			if ( is_wp_error( $response ) ) {
-				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+
 				error_log('Error message: '. $response->get_error_message());
 				$status = 'is_wp_error ' . $response->get_error_message();
-				//error_log(print_r($body, true));
-				//error_log(print_r($response_data, true));
-				//}
-
 
 			}
 
@@ -2421,8 +2409,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$averagecourse = $this->get_option('courseaverage');
 
 				foreach($response_data as $response_lesson){
-					error_log('response_lesson:');
-					error_log(print_r($response_lesson, true));
+
 					$lesson_datetime_object = DateTime::createFromFormat( 'Y-m-d H:i', $response_lesson->dateheure, wp_timezone() );
 
 

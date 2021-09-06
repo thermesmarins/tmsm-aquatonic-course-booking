@@ -1,4 +1,5 @@
 * Fix cancel button in admin did not open the confirm prompt
+* Alternative 1 calculation now default
 
 ### 1.7.6: July 15th, 2021
 * Alternative calculation of free place
