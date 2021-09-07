@@ -1771,7 +1771,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$dashboard[62][] = __( 'Starting Bookings', 'tmsm-aquatonic-course-booking' );
 
-
 		$counter = 0;
 		foreach ( $period as $period_item ) {
 			$period_item->setTimezone( wp_timezone() );
@@ -1906,7 +1905,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$counter ++;
 			$cell = '';
 
-
 			// First "Free" column
 			if ( $counter === 1 ) {
 				$free_alternative1[ $counter ] = (
@@ -1915,6 +1913,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					+ $plugin_public->get_participants_ending_forthetime( $period_item )
 					- $plugin_public->get_participants_starting_forthetime( $period_item )
 				);
+
+				// Force value between 0 and capacity
+				$free_alternative1[ $counter ] = min($free_alternative1[ $counter ], $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]);
+				$free_alternative1[ $counter ] = max(0, $free_alternative1[ $counter ]);
+
 				$cell             .= '<span class="free free-' . $counter . '">'
 				                     . $free_alternative1[ $counter ]
 				                     . '</span>';
@@ -1939,6 +1942,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				                      + ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter - 1 ] : 0 )
 				                      - ( ! empty( $treatments_timeslots_forthedate ) ? $treatments_timeslots_forthedate_counter[ $counter ] : 0 )
 				);
+
+				// Force value between 0 and capacity
+				$free_alternative1[ $counter ] = min($free_alternative1[ $counter ], ( $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] ?? 0 ));
+				$free_alternative1[ $counter ] = max(0, $free_alternative1[ $counter ]);
+
 				$cell             .= '<span class="free free-' . $counter . '">'
 				                     . $free_alternative1[ $counter ] . '</span>';
 
@@ -1979,10 +1987,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			//$minidashboard[ $counter ]['free_alternative'] = $free_alternative1[ $counter ];
 
 			if ( $free_alternative1[ $counter ] < $canstart ) {
-				//$canstart_counter = $counter;
+				$canstart_counter = $counter;
 			}
 
-			//$canstart                 = min( $canstart, $free_alternative1[ $counter ] );
+			$canstart                 = min( $canstart, $free_alternative1[ $counter ] );
 
 			$dashboard[81][] = $cell;
 
