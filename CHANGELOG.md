@@ -1,9 +1,9 @@
-* Allow admins to book for up to 10 participants
+* Booking Form: Allow admins to book for up to 10 participants
 
 ### 1.7.7: September 7th, 2021
-* Fix cancel button in admin did not open the confirm prompt
-* Alternative 1 calculation now default
-* Free values can't be above capacity nor below 0
+* Bookings List: Fix cancel button in admin did not open the confirm prompt
+* Dashboard: Alternative 1 calculation now default
+* Dashboard: Free values can't be above capacity nor below 0
 
 ### 1.7.6: July 15th, 2021
 * Alternative calculation of free place
