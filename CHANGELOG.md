@@ -1,3 +1,5 @@
+* Allow admins to book for up to 10 participants
+
 ### 1.7.7: September 7th, 2021
 * Fix cancel button in admin did not open the confirm prompt
 * Alternative 1 calculation now default

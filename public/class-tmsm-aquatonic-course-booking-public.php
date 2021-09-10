@@ -741,13 +741,46 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
-	 * Gravity Forms: Pre Render Form Booking
+	 * Gravity Forms: Pre Render Booking Addition
 	 *
 	 * @param array $form
 	 *
 	 * @return array
 	 */
-	public function gform_pre_render_cancel($form){
+	public function gform_pre_render_add( array $form ): array {
+
+		$user = wp_get_current_user();
+
+		if($form['cssClass'] === 'tmsm-aquatonic-course-form-add'){
+
+			foreach($form['fields'] as $field){
+
+				if( strpos($field['cssClass'], 'tmsm-aquatonic-course-participants') !== false ){
+
+					// User has admin/editor/author role
+					if( ! ( $this->user_has_role(wp_get_current_user(), 'customer') || ! $user || is_wp_error( $user ) || !$user->ID ) ) {
+
+						// Allow to book for 10 participants
+						$field->rangeMax = 10;
+					}
+
+				}
+
+			}
+
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Gravity Forms: Pre Render Booking Cancellation
+	 *
+	 * @param array $form
+	 *
+	 * @return array
+	 */
+	public function gform_pre_render_cancel( array $form): array {
 
 		if($form['cssClass'] === 'tmsm-aquatonic-course-form-cancel'){
 
