@@ -1,3 +1,4 @@
+### 1.7.9: September 13th, 2021
 * Fix minidashboard missing values
 
 ### 1.7.8: September 10th, 2021
