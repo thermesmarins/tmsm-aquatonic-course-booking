@@ -1,3 +1,5 @@
+* Fix minidashboard missing values
+
 ### 1.7.8: September 10th, 2021
 * Booking Form: Allow admins to book for up to 10 participants
 

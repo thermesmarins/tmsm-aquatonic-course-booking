@@ -1984,7 +1984,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			}
 
-			//$minidashboard[ $counter ]['free_alternative'] = $free_alternative1[ $counter ];
+			$minidashboard[ $counter ]['free'] = $free_alternative1[ $counter ];
 
 			if ( $free_alternative1[ $counter ] < $canstart ) {
 				$canstart_counter = $counter;
