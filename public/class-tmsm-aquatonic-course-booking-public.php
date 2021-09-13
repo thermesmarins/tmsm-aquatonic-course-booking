@@ -857,7 +857,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return mixed
 	 */
-	function gform_field_validation_birthdate( $result, $value, $form, $field ) {
+	function gform_field_validation_add( $result, $value, $form, $field ) {
+
+		if ( $field->cssClass === 'tmsm-aquatonic-course-participants') {
+
+			$user = wp_get_current_user();
+
+			// User has admin/editor/author role
+			if( ! ( $this->user_has_role(wp_get_current_user(), 'customer') || ! $user || is_wp_error( $user ) || !$user->ID ) ) {
+				// Allow to book for 10 participants
+				$field->rangeMax = 10;
+
+				if( $value < $field->rangeMax){
+					$result['is_valid'] = true;
+				}
+
+			}
+
+		}
 
 		if ( $result['is_valid'] && $field->get_input_type() == 'date' && $field->cssClass === 'tmsm-aquatonic-course-birthdate') {
 			$date = GFCommon::parse_date( $value, $field->dateFormat );

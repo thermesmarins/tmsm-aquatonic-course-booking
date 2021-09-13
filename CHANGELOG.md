@@ -1,3 +1,5 @@
+* Fix allow admin up to 10 participants
+
 ### 1.7.9: September 13th, 2021
 * Fix minidashboard missing values
 
