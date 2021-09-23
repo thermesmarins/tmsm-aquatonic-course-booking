@@ -342,6 +342,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				//error_log('courseaverage: '.$this->get_option( 'courseaverage' ));
 				if(!empty($course_start)){
 					$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
+					if($objdate === false){
+						error_log('DateTime::createFromFormat false for $course_start: ' . $course_start . ' and $date:' . $date);
+					}
+
 					$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
 					$course_end = $objdate->format( 'Y-m-d H:i:s' );
 				}

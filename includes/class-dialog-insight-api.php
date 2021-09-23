@@ -136,19 +136,42 @@ class Dialog_Insight_API {
 			)
 		);
 
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$response_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( is_wp_error( $response ) || empty( $response['body'] ) ) {
+		if(empty($response)){
+			error_log( __( 'Web service is not available', 'tmsm-aquotonic-course-booking' ) );
+			throw new Exception( __( 'Web service is not available', 'tmsm-aquotonic-course-booking' ), wp_remote_retrieve_response_code( $response ) );
+		}
+		else{
 
-			throw new Exception( print_r( $response, true ), wp_remote_retrieve_response_code( $response ) );
-		} else {
-			$response_decode = json_decode( $response['body'] );
-			if ( ! empty( $response_decode->ErrorCode ) ) {
-				throw new Exception( $response_decode->ErrorCode, wp_remote_retrieve_response_code( $response ) );
+			if ( $response_code >= 400 ) {
+				error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquotonic-course-booking' ), absint( $response_code ) ) );
+				throw new Exception( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquotonic-course-booking' ), absint( $response_code ) ), $response_code );
+
 			}
 
+			if ( is_wp_error( $response ) ) {
+				error_log('Error message: '. $response->get_error_message());
+				throw new Exception( 'Error message: '. $response->get_error_message(), $response_code );
+			}
+
+			// No errors, success
+			if ( ! empty( $response_data->Status ) && $response_data->Status == 'true' ) {
+				if ( defined( 'TMSM_AQUOS_SPA_BOOKING_DEBUG' ) && TMSM_AQUOS_SPA_BOOKING_DEBUG ) {
+					error_log( 'Web service submission successful' );
+				}
+			}
+			// Some error detected
+			else{
+				if ( ! empty( $response_data->ErrorCode ) && ! empty( $response_data->ErrorMessage ) ) {
+					error_log( sprintf( __( 'Error code %s: %s', 'tmsm-aquotonic-course-booking' ), $response_data->ErrorCode, $response_data->ErrorMessage ) );
+					throw new Exception( sprintf( __( 'Error code %s: %s', 'tmsm-aquotonic-course-booking' ), $response_data->ErrorCode, $response_data->ErrorMessage ), wp_remote_retrieve_response_code( $response ) );
+				}
+			}
 		}
 
-		return json_decode( $response['body'] );
+		return $response_data;
 	}
 
 

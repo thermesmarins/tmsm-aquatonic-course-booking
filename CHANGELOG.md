@@ -1,3 +1,5 @@
+* Better error messages for Dialog Insight API
+
 ### 1.8.0: September 13th, 2021
 * Fix allow admin up to 10 participants
 
