@@ -1,4 +1,5 @@
 * Better error messages for Dialog Insight API
+* Hide Date and Times fields with CSS, need to make visible the fields in Gravity Forms field setup
 
 ### 1.8.0: September 13th, 2021
 * Fix allow admin up to 10 participants

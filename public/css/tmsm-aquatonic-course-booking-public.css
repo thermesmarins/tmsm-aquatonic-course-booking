@@ -162,7 +162,9 @@
   font-size: 125%;
   text-align: center;
 }
-.tmsm-aquatonic-course-times {
+.tmsm-aquatonic-course-times,
+.tmsm-aquatonic-course-date,
+.tmsm-aquatonic-course-hourminutes {
   display: none;
 }
 /*# sourceMappingURL=tmsm-aquatonic-course-booking-public.css.map */
