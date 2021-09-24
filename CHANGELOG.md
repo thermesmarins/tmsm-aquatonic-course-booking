@@ -1,3 +1,4 @@
+### 1.8.1: September 24th, 2021
 * API: Better error messages for Dialog Insight API
 * Booking Form: Hide Date and Times fields with CSS, need to make visible the fields in Gravity Forms field setup
 * Booking Form: Show summary for hint
