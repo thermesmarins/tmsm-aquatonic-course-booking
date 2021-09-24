@@ -863,6 +863,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	function gform_field_validation_add( $result, $value, $form, $field ) {
 
+		$date_empty = false;
+		if ( strpos($field->cssClass, 'tmsm-aquatonic-course-date') !== false ) {
+			if ( empty( $value ) ) {
+				$date_empty = true;
+			}
+		}
+
+		$times_empty = false;
+		if ( strpos($field->cssClass, 'tmsm-aquatonic-course-hourminutes') !== false ) {
+			if ( empty( $value[0] ) && empty( $value[1] ) ) {
+				$times_empty = true;
+			}
+		}
+
 		if ( $field->cssClass === 'tmsm-aquatonic-course-participants') {
 
 			$user = wp_get_current_user();

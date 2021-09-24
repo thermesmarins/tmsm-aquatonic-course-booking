@@ -1,5 +1,6 @@
-* Better error messages for Dialog Insight API
-* Hide Date and Times fields with CSS, need to make visible the fields in Gravity Forms field setup
+* API: Better error messages for Dialog Insight API
+* Booking Form: Hide Date and Times fields with CSS, need to make visible the fields in Gravity Forms field setup
+* Booking Form: Show summary for hint
 
 ### 1.8.0: September 13th, 2021
 * Fix allow admin up to 10 participants

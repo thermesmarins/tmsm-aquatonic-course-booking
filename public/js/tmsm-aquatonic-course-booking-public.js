@@ -273,7 +273,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     },
 
   } );
-  
+
   /**
    * WeekDay
    */
@@ -734,21 +734,62 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     }, 400);
   };
 
+  /**
+   * Set initial data into view and start recurring display updates.
+   */
+  TmsmAquatonicCourseApp.init = function() {
+    console.log('TmsmAquatonicCourseApp.init');
+
+    moment.locale('fr');
+    moment.locale('fr_FR');
+    moment.updateLocale('fr', null);
+
+    TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
+    if(TmsmAquatonicCourseApp.participants != ''){
+      $('.tmsm-aquatonic-course-times').show();
+      $('.tmsm-aquatonic-course-summary').show();
+    }
+    else{
+      $('.tmsm-aquatonic-course-times').hide();
+      $('.tmsm-aquatonic-course-summary').hide();
+    }
+
+    //if(TmsmAquatonicCourseApp.form_fields.step == 2 ){
+    TmsmAquatonicCourseApp.times_per_page = 10;
+    TmsmAquatonicCourseApp.times_page = 1;
+    TmsmAquatonicCourseApp.times_indexmax = 1;
+
+    TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
+    TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
+    TmsmAquatonicCourseApp.timesList = new TmsmAquatonicCourseApp.TimesListView( { collection: TmsmAquatonicCourseApp.times } );
+    TmsmAquatonicCourseApp.timesList.render();
+
+    TmsmAquatonicCourseApp.weekdays = new TmsmAquatonicCourseApp.WeekDayCollection();
+    TmsmAquatonicCourseApp.weekdays.reset( TmsmAquatonicCourseApp.data.times );
+    TmsmAquatonicCourseApp.weekdaysList = new TmsmAquatonicCourseApp.WeekDayListView( { collection: TmsmAquatonicCourseApp.weekdays } );
+    TmsmAquatonicCourseApp.weekdaysList.render();
+
+    TmsmAquatonicCourseApp.selectedData = new TmsmAquatonicCourseApp.SelectedDataModel();
+    TmsmAquatonicCourseApp.selectedDataList = new TmsmAquatonicCourseApp.SelectedDataView( { model: TmsmAquatonicCourseApp.selectedData } );
+    //}
+
+  };
+
+  $(document).on('gform_post_render', function(event, form_id, current_page){
+    console.log('optimizations gform_post_render');
+  });
 
   if ($('.tmsm-aquatonic-course-participants').length > 0) {
-    TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
+    console.log('exist participants');
+
+    if($('.tmsm-aquatonic-course-participants input').val() != ''){
+      console.log('defined participants');
+      TmsmAquatonicCourseApp.init();
+    }
+
     $('.tmsm-aquatonic-course-participants input').on('keyup input', function (e) {
-
       console.log('change participants');
-
-      TmsmAquatonicCourseApp.participants = $('.tmsm-aquatonic-course-participants input').val();
-      if(TmsmAquatonicCourseApp.participants != ''){
-        $('.tmsm-aquatonic-course-times').show();
-        TmsmAquatonicCourseApp.init();
-      }
-      else{
-        $('.tmsm-aquatonic-course-times').hide();
-      }
+      TmsmAquatonicCourseApp.init();
     });
   }
 
@@ -760,37 +801,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   }});*/
 
 
-  /**
-   * Set initial data into view and start recurring display updates.
-   */
-  TmsmAquatonicCourseApp.init = function() {
-    console.log('TmsmAquatonicCourseApp.init');
 
-    moment.locale('fr');
-    moment.locale('fr_FR');
-    moment.updateLocale('fr', null);
-
-
-    //if(TmsmAquatonicCourseApp.form_fields.step == 2 ){
-      TmsmAquatonicCourseApp.times_per_page = 10;
-      TmsmAquatonicCourseApp.times_page = 1;
-      TmsmAquatonicCourseApp.times_indexmax = 1;
-
-      TmsmAquatonicCourseApp.times = new TmsmAquatonicCourseApp.TimesCollection();
-      TmsmAquatonicCourseApp.times.reset( TmsmAquatonicCourseApp.data.times );
-      TmsmAquatonicCourseApp.timesList = new TmsmAquatonicCourseApp.TimesListView( { collection: TmsmAquatonicCourseApp.times } );
-      TmsmAquatonicCourseApp.timesList.render();
-
-      TmsmAquatonicCourseApp.weekdays = new TmsmAquatonicCourseApp.WeekDayCollection();
-      TmsmAquatonicCourseApp.weekdays.reset( TmsmAquatonicCourseApp.data.times );
-      TmsmAquatonicCourseApp.weekdaysList = new TmsmAquatonicCourseApp.WeekDayListView( { collection: TmsmAquatonicCourseApp.weekdays } );
-      TmsmAquatonicCourseApp.weekdaysList.render();
-
-      TmsmAquatonicCourseApp.selectedData = new TmsmAquatonicCourseApp.SelectedDataModel();
-      TmsmAquatonicCourseApp.selectedDataList = new TmsmAquatonicCourseApp.SelectedDataView( { model: TmsmAquatonicCourseApp.selectedData } );
-    //}
-
-  };
 
 
 })(jQuery, TmsmAquatonicCourseApp);
