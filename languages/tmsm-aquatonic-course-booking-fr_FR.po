@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-09-27 11:41+0200\n"
-"PO-Revision-Date: 2021-09-27 11:41+0200\n"
+"POT-Creation-Date: 2021-09-27 11:53+0200\n"
+"PO-Revision-Date: 2021-09-27 11:53+0200\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -530,9 +530,13 @@ msgid "Number"
 msgstr "Nombre"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:256
+msgid "Future Participants by date"
+msgstr "Participants futurs par date"
+
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:286
-msgid "Future Bookings by date"
-msgstr "Réservations futures par date"
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:78
+msgid "Participants"
+msgstr "Participants"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:323
 #, php-format
@@ -574,10 +578,6 @@ msgstr "Nombre de no-show"
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:73
 msgid "Date Created"
 msgstr "Date de création"
-
-#: includes/class-tmsm-aquatonic-course-booking-list-table.php:78
-msgid "Participants"
-msgstr "Participants"
 
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:79
 msgid "Course Start"

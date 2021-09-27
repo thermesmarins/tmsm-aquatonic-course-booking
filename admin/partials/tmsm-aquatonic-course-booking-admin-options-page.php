@@ -231,7 +231,7 @@
                                         title: '<?php echo esc_attr_e('Date', 'tmsm-aquatonic-course-booking');?>'
                                       },
                                       vAxis: {
-                                        title: '<?php echo esc_attr_e('Number', 'tmsm-aquatonic-course-booking');?>'
+                                        title: '<?php echo esc_attr_e('Bookings', 'tmsm-aquatonic-course-booking');?>'
                                       },
 
                                     };
@@ -253,7 +253,7 @@
 			<div id="postbox-container-4" class="postbox-container">
 				<div class="meta-box-sortables ui-sortable">
 					<div class="postbox" id="postbox-stats-listfuturedates">
-						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Future Bookings by date','tmsm-aquatonic-course-booking' ); ?></h2></div>
+						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Future Participants by date','tmsm-aquatonic-course-booking' ); ?></h2></div>
 						<div class="insidee">
 							<div class="main">
 
@@ -283,7 +283,7 @@
 										<tbody >
 										<tr>
 											<th scope="col" class="manage-column" >
-												<?php esc_html_e( 'Future Bookings by date','tmsm-aquatonic-course-booking' ); ?>
+												<?php esc_html_e( 'Participants','tmsm-aquatonic-course-booking' ); ?>
 											</th>
 												<?php
 												foreach($total_future_participants_by_coursestart_active as $date){
