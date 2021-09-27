@@ -263,6 +263,52 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get total number of items arrived by course start
+	 *
+	 * @return int
+	 */
+	public function get_total_past_bookings_by_coursestart_arrived() {
+		global $wpdb;
+		$results = "SELECT COUNT(*) as count, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='arrived' AND course_start < CURRENT_DATE() GROUP BY DATE(course_start)" ;
+		return $wpdb->get_results( $results );
+	}
+
+	/**
+	 * Get total number of items cancelled by course start
+	 *
+	 * @return int
+	 */
+	public function get_total_past_bookings_by_coursestart_cancelled() {
+		global $wpdb;
+		$results = "SELECT COUNT(*) as count, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='cancelled' AND course_start < CURRENT_DATE() GROUP BY DATE(course_start)" ;
+		return $wpdb->get_results( $results );
+	}
+
+	/**
+	 * Get total number of items noshow by course start
+	 *
+	 * @return int
+	 */
+	public function get_total_past_bookings_by_coursestart_noshow() {
+		global $wpdb;
+		$results = "SELECT COUNT(*) as count, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='noshow' AND course_start < CURRENT_DATE() GROUP BY DATE(course_start)" ;
+		return $wpdb->get_results( $results );
+	}
+
+
+	/**
+	 * Get total number of participants active by course start
+	 *
+	 * @return int
+	 */
+	public function get_total_future_participants_by_coursestart_active() {
+		global $wpdb;
+		$results = "SELECT SUM(participants) as participants, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='active' AND (course_start BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE(), INTERVAL 14 DAY)) GROUP BY DATE(course_start)" ;
+		return $wpdb->get_results( $results );
+	}
+
+
+	/**
 	 * Checkbox column
 	 *
 	 * @param  array $item Item.

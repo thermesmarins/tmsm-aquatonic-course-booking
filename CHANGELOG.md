@@ -1,3 +1,6 @@
+* New stat: Past Bookings by date and by type
+* New stat: Future Bookings by date
+
 ### 1.8.1: September 24th, 2021
 * API: Better error messages for Dialog Insight API
 * Booking Form: Hide Date and Times fields with CSS, need to make visible the fields in Gravity Forms field setup
