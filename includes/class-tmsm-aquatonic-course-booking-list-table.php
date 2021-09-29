@@ -265,7 +265,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	/**
 	 * Get total number of items arrived by course start
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public function get_total_past_bookings_by_coursestart_arrived() {
 		global $wpdb;
@@ -276,7 +276,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	/**
 	 * Get total number of items cancelled by course start
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public function get_total_past_bookings_by_coursestart_cancelled() {
 		global $wpdb;
@@ -287,7 +287,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	/**
 	 * Get total number of items noshow by course start
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public function get_total_past_bookings_by_coursestart_noshow() {
 		global $wpdb;
@@ -299,11 +299,26 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	/**
 	 * Get total number of participants active by course start
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public function get_total_future_participants_by_coursestart_active() {
 		global $wpdb;
-		$results = "SELECT SUM(participants) as participants, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='active' AND (course_start BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE(), INTERVAL 14 DAY)) GROUP BY DATE(course_start)" ;
+
+		$where = " status='active' ";
+
+		$search_datecourse     = isset( $_GET['search_datecourse'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse'] ) ) : ''; // input var ok, CSRF ok.
+
+		if ( empty( $search_datecourse ) ) {
+			$objdate = new Datetime();
+		}
+		else{
+			$objdate = \Datetime::createFromFormat('d/m/Y', $search_datecourse);
+		}
+		if ( ! empty( $objdate ) ) {
+			$where .= sprintf( " AND (course_start BETWEEN '%s' AND DATE_ADD('%s', INTERVAL 14 DAY))", $objdate->format( 'Y-m-d' ), $objdate->format( 'Y-m-d' ) );
+		}
+
+		$results = "SELECT SUM(participants) as participants, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE ".$where." GROUP BY DATE(course_start)" ;
 		return $wpdb->get_results( $results );
 	}
 

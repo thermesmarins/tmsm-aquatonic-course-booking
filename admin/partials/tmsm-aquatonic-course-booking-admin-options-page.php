@@ -257,6 +257,18 @@
 						<div class="insidee">
 							<div class="main">
 
+								<form method="get" action="">
+									<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
+									<input type="hidden" name="tab" value="stats"/>
+									<p class="search-box">
+										<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse" value="<?php
+										$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
+										echo $search_datecourse; ?>" />
+										<?php submit_button( __( 'Filter','tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
+									</p>
+								</form>
+
+
 								<?php
 								$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
 								$total_future_participants_by_coursestart_active = $bookings->get_total_future_participants_by_coursestart_active();
