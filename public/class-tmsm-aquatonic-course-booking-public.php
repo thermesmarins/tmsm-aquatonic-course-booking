@@ -886,7 +886,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				// Allow to book for 10 participants
 				$field->rangeMax = 10;
 
-				if( $value < $field->rangeMax){
+				if( $value <= $field->rangeMax){
 					$result['is_valid'] = true;
 				}
 

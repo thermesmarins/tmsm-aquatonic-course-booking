@@ -1,5 +1,6 @@
 * New stat: Past Bookings by date and by type
 * New stat: Future Bookings by date
+* Fix allow admin up to 10 participants (equal to 10)
 
 ### 1.8.1: September 24th, 2021
 * API: Better error messages for Dialog Insight API
