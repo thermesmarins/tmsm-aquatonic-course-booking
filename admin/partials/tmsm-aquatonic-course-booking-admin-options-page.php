@@ -103,7 +103,7 @@
 		<div id="postbox-container-1" class="postbox-container">
 			<div class="meta-box-sortables ui-sortable">
 		<div class="postbox">
-			<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Booking Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
+			<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Total Bookings by Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
 			<div class="inside">
 				<div class="main">
 					<?php
@@ -112,7 +112,7 @@
 		echo '
 	    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	    <script type="text/javascript">
-	      google.charts.load("current", {"packages":["corechart", "line"], "languages": "fr-FR"});
+	      google.charts.load("current", {"packages":["corechart", "line"], "locale": "fr-FR", "language": "fr-FR"});
 	      
 	      google.charts.setOnLoadCallback(drawChart);
 	
@@ -120,23 +120,22 @@
 	
 	        var data = google.visualization.arrayToDataTable([
 	          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.__('Number of bookings','tmsm-aquatonic-course-booking').'\'],
-	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_arrived().'],
-	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_cancelled().'],
-	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
-	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
+	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_bookings_arrived() . '],
+	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_bookings_cancelled() . '],
+	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_bookings_noshow() . '],
+	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_bookings_active() . '],
 	        ]);
 	
 	        var options = {
 	        backgroundColor: \'transparent\',
 	        is3D: true,
-	          title: \''.__('Booking Status','tmsm-aquatonic-course-booking').'\'
 	        };
 	
-	        var chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));
+	        var chart = new google.visualization.PieChart(document.getElementById(\'piechart_bookingsbystatus\'));
 	
 	        chart.draw(data, options);
 	      }
-	    </script><div id="piechart" style="width: 500px; height: 250px;"></div>
+	    </script><div id="piechart_bookingsbystatus" style="width: 500px; height: 250px;"></div>
     ';
 
 		?>
@@ -148,40 +147,38 @@
 		<div id="postbox-container-2" class="postbox-container">
 			<div class="meta-box-sortables ui-sortable">
 				<div class="postbox">
-					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Booking Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
+					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Total Participants by Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
 					<div class="inside">
 						<div class="main">
 							<?php
 							$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
 
 							echo '
-	    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	    <script type="text/javascript">
-	      google.charts.load("current", {"packages":["corechart", "line"], "languages": "fr-FR"});
+	      google.charts.load("current", {"packages":["corechart", "line"], "locale": "fr-FR", "language": "fr-FR"});
 	      
 	      google.charts.setOnLoadCallback(drawChart);
 	
 	      function drawChart() {
 	
 	        var data = google.visualization.arrayToDataTable([
-	          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.__('Number of bookings','tmsm-aquatonic-course-booking').'\'],
-	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_arrived().'],
-	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_cancelled().'],
-	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
-	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
+	          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.esc_attr__('Number of participants','tmsm-aquatonic-course-booking').'\'],
+	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_participants_arrived() . '],
+	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_participants_cancelled() . '],
+	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_participants_noshow() . '],
+	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_participants_active() . '],
 	        ]);
 	
 	        var options = {
 	        backgroundColor: \'transparent\',
 	        is3D: true,
-	          title: \''.__('Booking Status','tmsm-aquatonic-course-booking').'\'
 	        };
 	
-	        var chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));
+	        var chart = new google.visualization.PieChart(document.getElementById(\'piechart_participantsbystatus\'));
 	
 	        chart.draw(data, options);
 	      }
-	    </script><div id="piechart" style="width: 500px; height: 250px;"></div>
+	    </script><div id="piechart_participantsbystatus" style="width: 500px; height: 250px;"></div>
     ';
 
 							?>
@@ -229,7 +226,7 @@
 			<div id="postbox-container-3" class="postbox-container">
 				<div class="meta-box-sortables ui-sortable">
 					<div class="postbox">
-						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Past Bookings by date and by type','tmsm-aquatonic-course-booking' ); ?></h2></div>
+						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Past Bookings by date and by status','tmsm-aquatonic-course-booking' ); ?></h2></div>
 						<div class="inside">
 							<div class="main">
 								<div id="chart_div"></div>

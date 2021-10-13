@@ -54,7 +54,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 		$this->set_items();
 
-		$total_items = $this->get_total_items();
+		$total_items = $this->get_total_bookings();
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
@@ -208,58 +208,102 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get total number of items
+	 * Get total number of bookings
 	 *
 	 * @return int
 	 */
-	protected function get_total_items() {
+	protected function get_total_bookings() {
 		global $wpdb;
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking`" . $this->get_where_query();
-		return $wpdb->get_var( $sql_count );
+		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 
 	/**
-	 * Get total number of items cancelled
+	 * Get total number of bookings cancelled
 	 *
 	 * @return int
 	 */
-	public function get_total_items_cancelled() {
+	public function get_total_bookings_cancelled() {
 		global $wpdb;
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='cancelled'" ;
-		return $wpdb->get_var( $sql_count );
+		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 
 	/**
-	 * Get total number of items noshow
+	 * Get total number of participants cancelled
 	 *
 	 * @return int
 	 */
-	public function get_total_items_noshow() {
+	public function get_total_participants_cancelled() {
+		global $wpdb;
+		$sql_count = "SELECT SUM(participants) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='cancelled'" ;
+		return $wpdb->get_var( $sql_count ) ?? 0;
+	}
+
+	/**
+	 * Get total number of bookings noshow
+	 *
+	 * @return int
+	 */
+	public function get_total_bookings_noshow() {
 		global $wpdb;
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='noshow'" ;
-		return $wpdb->get_var( $sql_count );
+		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 
 	/**
-	 * Get total number of items active
+	 * Get total number of participants noshow
 	 *
 	 * @return int
 	 */
-	public function get_total_items_active() {
+	public function get_total_participants_noshow() {
+		global $wpdb;
+		$sql_count = "SELECT SUM(participants) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='noshow'" ;
+		return $wpdb->get_var( $sql_count ) ?? 0;
+	}
+
+	/**
+	 * Get total number of bookings active
+	 *
+	 * @return int
+	 */
+	public function get_total_bookings_active() {
 		global $wpdb;
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='active'" ;
-		return $wpdb->get_var( $sql_count );
+		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 
 	/**
-	 * Get total number of items arrived
+	 * Get total number of participants active
 	 *
 	 * @return int
 	 */
-	public function get_total_items_arrived() {
+	public function get_total_participants_active() {
+		global $wpdb;
+		$sql_count = "SELECT SUM(participants) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='active'" ;
+		return $wpdb->get_var( $sql_count ) ?? 0;
+	}
+
+	/**
+	 * Get total number of bookings arrived
+	 *
+	 * @return int
+	 */
+	public function get_total_bookings_arrived() {
 		global $wpdb;
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='arrived'" ;
-		return $wpdb->get_var( $sql_count );
+		return $wpdb->get_var( $sql_count ) ?? 0;
+	}
+
+	/**
+	 * Get total number of participants arrived
+	 *
+	 * @return int
+	 */
+	public function get_total_participants_arrived() {
+		global $wpdb;
+		$sql_count = "SELECT SUM(participants) FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE status='arrived'" ;
+		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 
 	/**
