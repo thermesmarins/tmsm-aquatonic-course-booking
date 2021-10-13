@@ -1453,7 +1453,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( $site_id === 1 && date( 'Y-m-d' ) === '2021-08-05' ) {
 			$realtime += 32;
 		}
-		
+		// Temp fix for Rennes camera wrong realtime data on 2021-10-12
+		if ( $site_id === 0 && date( 'Y-m-d' ) === '2021-10-12' ) {
+			$realtime += 8;
+		}
+
 		$realtime = max( $realtime, 0 );
 		if ( ! empty( $this->get_option( 'tests_realtimeattendance' ) ) ) {
 			$realtime = $this->get_option( 'tests_realtimeattendance' );

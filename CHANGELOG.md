@@ -1,3 +1,5 @@
+* Update graph colors
+
 ### 1.8.2: October 11th, 2021
 * New stat: Past Bookings by date and by type
 * New stat: Future Bookings by date

@@ -120,10 +120,10 @@
 	
 	        var data = google.visualization.arrayToDataTable([
 	          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.__('Number of bookings','tmsm-aquatonic-course-booking').'\'],
-	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
 	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_arrived().'],
-	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
 	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_cancelled().'],
+	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
+	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
 	        ]);
 	
 	        var options = {
@@ -145,7 +145,52 @@
 				</div>
 				</div>
 				</div>
-				<div id="postbox-container-2" class="postbox-container">
+		<div id="postbox-container-2" class="postbox-container">
+			<div class="meta-box-sortables ui-sortable">
+				<div class="postbox">
+					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Booking Status','tmsm-aquatonic-course-booking' ); ?></h2></div>
+					<div class="inside">
+						<div class="main">
+							<?php
+							$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
+
+							echo '
+	    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	    <script type="text/javascript">
+	      google.charts.load("current", {"packages":["corechart", "line"], "languages": "fr-FR"});
+	      
+	      google.charts.setOnLoadCallback(drawChart);
+	
+	      function drawChart() {
+	
+	        var data = google.visualization.arrayToDataTable([
+	          [\''.__('Status','tmsm-aquatonic-course-booking').'\', \''.__('Number of bookings','tmsm-aquatonic-course-booking').'\'],
+	          [\''.__('Arrived','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_arrived().'],
+	          [\''.__('Cancelled','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_cancelled().'],
+	          [\''.__('No-Show','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_noshow().'],
+	          [\''.__('Active','tmsm-aquatonic-course-booking').'\',      '.$bookings->get_total_items_active().'],
+	        ]);
+	
+	        var options = {
+	        backgroundColor: \'transparent\',
+	        is3D: true,
+	          title: \''.__('Booking Status','tmsm-aquatonic-course-booking').'\'
+	        };
+	
+	        var chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));
+	
+	        chart.draw(data, options);
+	      }
+	    </script><div id="piechart" style="width: 500px; height: 250px;"></div>
+    ';
+
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="postbox-container-3" class="postbox-container">
 					<div class="meta-box-sortables ui-sortable">
 
 						<div id="postbox-stats-listmostnoshow" class="postbox">
