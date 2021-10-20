@@ -1,3 +1,5 @@
+* Update DB version
+
 ### 1.8.3: October 20th, 2021
 * Update graph colors
 * New stat: total participants by status

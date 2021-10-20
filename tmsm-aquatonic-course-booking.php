@@ -40,7 +40,7 @@ define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.8.3' );
 /**
  * Current database schema version.
  */
-define( 'TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION', '3' );
+define( 'TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION', '4' );
 
 if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_PATH')){
 	define( 'TMSM_AQUATONIC_COURSE_BOOKING_PATH', plugin_dir_path( __FILE__ ) );
