@@ -646,6 +646,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$email = false;
 				$phone = false;
 				$birthdate = false;
+				$address = false;
 				$participants = false;
 				$times = false;
 				$summary = false;
@@ -660,6 +661,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					}
 					if($field['cssClass'] === 'tmsm-aquatonic-course-birthdate'){
 						$birthdate = true;
+					}
+					if($field['cssClass'] === 'tmsm-aquatonic-course-address'){
+						$address = true;
 					}
 					if($field['cssClass'] === 'tmsm-aquatonic-course-phone'){
 						$phone = true;
@@ -691,6 +695,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The birthdate field needs the `tmsm-aquatonic-course-birthdate` class', 'tmsm-aquatonic-course-booking'));
 				}
 
+				if( ! $address ){
+					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The address field needs the `tmsm-aquatonic-course-address` class', 'tmsm-aquatonic-course-booking'));
+				}
+
 				if( ! $phone ){
 					$wp_error->add('tmsm-aquatonic-course-booking-gform-add', __('The phone field needs the `tmsm-aquatonic-course-phone` class', 'tmsm-aquatonic-course-booking'));
 				}
@@ -712,12 +720,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				}
 			}
 
-
-
-
 		}
-
-
 
 
 		if ( isset( $wp_error ) && is_wp_error( $wp_error ) && $wp_error->has_errors()){

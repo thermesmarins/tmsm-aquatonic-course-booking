@@ -309,24 +309,25 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$date         = self::field_value_from_class( 'tmsm-aquatonic-course-date', $form['fields'], $entry );
 				$hourminutes  = self::field_value_from_class( 'tmsm-aquatonic-course-hourminutes', $form['fields'], $entry );
 				$title        = self::field_value_from_class( 'tmsm-aquatonic-course-title', $form['fields'], $entry );
+				$postalcode   = self::field_value_from_class( 'tmsm-aquatonic-course-address', $form['fields'], $entry, 'postalcode' );
+				$city         = self::field_value_from_class( 'tmsm-aquatonic-course-address', $form['fields'], $entry, 'city' );
 
 				$birthdate_computed = null;
 				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
 				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
-
-				/*error_log( 'field firstname value: ' . $firstname );
+				error_log( 'field firstname value: ' . $firstname );
 				error_log( 'field lastname value: ' . $lastname );
 				error_log( 'value birthdate value: ' . $birthdate );
 				error_log( 'field email value: ' . $email );
 				error_log( 'field phone value: ' . $phone );
+				error_log( 'field postalcode value: ' . $postalcode );
+				error_log( 'field city value: ' . $city );
 				error_log( 'field participants value: ' . $participants );
 				error_log( 'field date value: ' . $date );
 				error_log( 'field hourminutes value: ' . $hourminutes );
 				error_log( 'field course_start value: ' . $course_start );
-				error_log( 'token: ' . $token );*/
-
-
+				error_log( 'token: ' . $token );
 
 				// Convert birthdate
 				if(!empty($birthdate)){
@@ -360,11 +361,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				// Format data
 				if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
 					$table = $wpdb->prefix . 'aquatonic_course_booking';
-					$data = array(
+					$data  = array(
 						'firstname'    => $firstname,
 						'lastname'     => $lastname,
 						'email'        => $email,
 						'phone'        => $phone,
+						'postalcode'   => $postalcode,
+						'city'         => $city,
 						'birthdate'    => $birthdate_computed,
 						'participants' => $participants,
 						'status'       => 'active',
@@ -382,6 +385,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					}
 
 					$format = array(
+						'%s',
+						'%s',
 						'%s',
 						'%s',
 						'%s',
@@ -405,13 +410,15 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					}
 
 					// Add contact to Dialog Insight
-					$contact            = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
-					$contact->email     = $data['email'];
-					$contact->firstname = $data['firstname'];
-					$contact->lastname  = $data['lastname'];
-					$contact->birthdate = $birthdate_computed;
-					$contact->phone     = $data['phone'];
-					$contact->title     = $data['title'];
+					$contact             = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
+					$contact->email      = $data['email'];
+					$contact->firstname  = $data['firstname'];
+					$contact->lastname   = $data['lastname'];
+					$contact->birthdate  = $birthdate_computed;
+					$contact->postalcode = $data['postalcode'];
+					$contact->city       = $data['city'];
+					$contact->phone      = $data['phone'];
+					$contact->title      = $data['title'];
 
 					if($contact->add()){
 						// Add booking to Dialog Insight
@@ -1000,8 +1007,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		if(! empty($token)){
 			$booking = self::find_booking_with_token($token);
 
-			//error_log('find_booking_with_token:');
-			//error_log(print_r($booking, true));
+			if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+				error_log('find_booking_with_token:');
+				error_log(print_r($booking, true));
+			}
+
 			$lastname  = $booking['lastname'];
 			$firstname  = $booking['firstname'];
 			$participants  = $booking['participants'];
@@ -1116,12 +1126,27 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @param $find_class
 	 * @param $fields
 	 * @param $entry
+	 * @param $specialfield (address1, address2, postalcode, city, state, country)
 	 *
 	 * @return string
 	 */
-	static function field_value_from_class($find_class, $fields, $entry){
+	static function field_value_from_class( $find_class, $fields, $entry, $specialfield = null ): string {
 
-		return rgar($entry, self::field_id_from_class($find_class, $fields));
+		$id = self::field_id_from_class( $find_class, $fields );
+
+		$specialfield_ids = [
+			'address1'   => 1,
+			'address2'   => 2,
+			'city'       => 3,
+			'state'      => 4,
+			'postalcode' => 5,
+			'country'    => 6,
+		];
+		if ( isset( $specialfield_ids[ $specialfield ] ) ) {
+			$id .= '.' . $specialfield_ids[ $specialfield ];
+		}
+
+		return rgar( $entry, $id );
 
 	}
 

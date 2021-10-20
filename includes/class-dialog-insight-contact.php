@@ -35,6 +35,16 @@ class Dialog_Insight_Contact {
 	public $birthdate;
 
 	/**
+	 * @var      string    $postalcode
+	 */
+	public $postalcode;
+
+	/**
+	 * @var      string    $city
+	 */
+	public $city;
+
+	/**
 	 * @var      int    $title
 	 */
 	public $title;
@@ -112,6 +122,12 @@ class Dialog_Insight_Contact {
 		if(!empty($this->birthdate)){
 			$data['f_dateNaissance'] = self::format_birthdate($this->birthdate);
 		}
+		if(!empty($this->postalcode)){
+			$data['f_origine_codePostal'] = self::format_postalcode($this->postalcode);
+		}
+		if(!empty($this->city)){
+			$data['f_origine_ville'] = self::format_city($this->city);
+		}
 		if(!empty($this->phone)){
 			$data['f_MobilePhone'] = self::format_phone($this->phone);
 		}
@@ -176,6 +192,28 @@ class Dialog_Insight_Contact {
 	 */
 	static function format_birthdate( $birthdate){
 		return str_replace('-', '.', $birthdate);
+	}
+
+	/**
+	 * Format postalcode for Dialog Insight
+	 *
+	 * @param string $postalcode
+	 *
+	 * @return string
+	 */
+	static function format_postalcode( $postalcode){
+		return substr( $postalcode, 0, 20 );
+	}
+
+	/**
+	 * Format city for Dialog Insight
+	 *
+	 * @param string $postalcode
+	 *
+	 * @return string
+	 */
+	static function format_city( $city ){
+		return substr( $city, 0, 40 );
 	}
 
 	/**

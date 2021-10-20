@@ -1,5 +1,6 @@
 * Update graph colors
 * New stat: total participants by status
+* Booking Form: new fields postalcode and city (need to add the fields to the GF forms also)
 
 ### 1.8.2: October 11th, 2021
 * New stat: Past Bookings by date and by type

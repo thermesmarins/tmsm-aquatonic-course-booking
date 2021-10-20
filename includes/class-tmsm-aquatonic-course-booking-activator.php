@@ -84,6 +84,8 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
         lastname VARCHAR(50) NOT NULL,
         email VARCHAR(100) NOT NULL,
         phone VARCHAR(50) NOT NULL,
+        postalcode VARCHAR(20) NOT NULL,
+        city VARCHAR(40) NOT NULL,
         birthdate DATE DEFAULT NULL,
         participants TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
         course_start DATETIME NULL DEFAULT NULL,
