@@ -122,6 +122,16 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 		}
 
+		$user = wp_get_current_user();
+		// Is a customer
+		if( $this->user_has_role(wp_get_current_user(), 'customer') || !$user || is_wp_error( $user ) || !$user->ID ) {
+			$daysrangeto = floor( $this->get_option( 'hoursafter' ) / 24 );
+		}
+		// Is not a customer: admins can book at a later date
+		else{
+			$daysrangeto = 365;
+		}
+
 		// Javascript localization
 		$translation_array = array(
 			'data' => [
@@ -132,7 +142,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'rest_url' => get_rest_url(),
 				'canviewpriority' => current_user_can('edit_posts'),
 				'daysrangefrom' => $daysrangefrom,
-				'daysrangeto' => floor($this->get_option('hoursafter')/24),
+				'daysrangeto' => $daysrangeto,
 				'times' => [],
 			],
 			'form_fields' => [

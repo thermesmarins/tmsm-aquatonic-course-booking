@@ -1,3 +1,5 @@
+* Admins can book at a later date
+
 ### 1.8.4: October 20th, 2021
 * Update DB version
 

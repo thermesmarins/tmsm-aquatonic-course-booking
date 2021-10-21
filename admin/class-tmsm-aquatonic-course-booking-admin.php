@@ -1460,6 +1460,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( $site_id === 0 && date( 'Y-m-d' ) === '2021-10-12' ) {
 			$realtime += 8;
 		}
+		// Temp fix for Saint-Malo camera wrong realtime data on 2021-10-20
+		if ( $site_id === 1 && date( 'Y-m-d' ) === '2021-10-20' ) {
+			$realtime += 35;
+		}
 
 		$realtime = max( $realtime, 0 );
 		if ( ! empty( $this->get_option( 'tests_realtimeattendance' ) ) ) {
