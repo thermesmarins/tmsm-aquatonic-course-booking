@@ -5,6 +5,11 @@ class Dialog_Insight_Contact {
 
 
 	/**
+	 * @var      int    $title
+	 */
+	public $title;
+
+	/**
 	 * @var      string    $email
 	 */
 	public $email;
@@ -45,9 +50,10 @@ class Dialog_Insight_Contact {
 	public $city;
 
 	/**
-	 * @var      int    $title
+	 * @var      string    beneficiary
 	 */
-	public $title;
+	public $beneficiary;
+
 
 
 	public function __construct() {
@@ -176,6 +182,71 @@ class Dialog_Insight_Contact {
 		else{
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true && ! empty($result) && ! empty( $result->ErrorMessage )){
 				error_log( 'Dialog Insight contact not added, error: ' . $result->ErrorMessage );
+			}
+			return false;
+		}
+
+	}
+
+	/**
+	 * Update contact by ID
+	 *
+	 * @throws \Exception
+	 */
+	public function update_by_id( ){
+
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'Dialog Insight Update Contact by ID' );
+		}
+
+		$result_array = [];
+		$contact      = [];
+
+		$data = [
+			'f_beneficiaire_aquos_rennes' => $this->beneficiary,
+		];
+
+		$request = [
+			'Records' => [
+				[
+					'ID'   => [
+						'key_idContact' => $this->contact_id,
+					],
+					'Data' => $data,
+				],
+			],
+			'MergeOptions' => [
+				'AllowInsert'            => true,
+				'AllowUpdate'            => true,
+				'SkipDuplicateRecords'   => false,
+				'SkipUnmatchedRecords'   => false,
+				'ReturnRecordsOnSuccess' => false,
+				'ReturnRecordsOnError'   => false,
+				'FieldOptions'           => null,
+			],
+		];
+
+		try {
+			$result = \Dialog_Insight_API::request( $request, 'contacts', 'Merge' );
+		} catch (\Exception $exception) {
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'Dialog Insight Update Contact Error: ' . $exception->getMessage() );
+			}
+			return false;
+
+		}
+
+		if ( ! empty($result) && ! empty( $result->Success ) &&  $result->Success== true ) {
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'Dialog Insight updated added successfully' );
+			}
+			return true;
+		}
+		else{
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true && ! empty($result) && ! empty( $result->ErrorMessage )){
+				error_log( 'Dialog Insight contact not updated, error: ' . $result->ErrorMessage );
 			}
 			return false;
 		}

@@ -142,13 +142,22 @@ class Dialog_Insight_Booking {
 					'AllowUpdate'            => true,
 					'SkipDuplicateRecords'   => false,
 					'SkipUnmatchedRecords'   => false,
-					'ReturnRecordsOnSuccess' => false,
+					'ReturnRecordsOnSuccess' => true,
 					'ReturnRecordsOnError'   => false,
 					'FieldOptions'           => null,
 				],
 			];
 
 			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
+
+			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log( 'Booking found, assigning values' );
+				}
+				$booking          = $bookings->Records[0];
+				$this->contact_id = $booking->idContact ?? null;
+			}
+
 		}
 
 	}
