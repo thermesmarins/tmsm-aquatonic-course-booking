@@ -97,8 +97,146 @@
 	}
 
 	if ( $tab == 'stats') {
-
+	$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
 		?>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+      google.charts.load("current", {"packages":["corechart", "line"], "locale": "fr-FR", "language": "fr-FR"});
+
+
+	</script>
+	<div id="dashboard-widgets" class="metabox-holder columns-1">
+		<div id="postbox-container-4" class="postbox-container">
+			<div class="meta-box-sortables ui-sortable">
+				<div class="postbox" id="postbox-stats-listfuturedates">
+					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Future Participants by date','tmsm-aquatonic-course-booking' ); ?></h2></div>
+					<div class="insidee">
+						<div class="main">
+
+							<form method="get" action="">
+								<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
+								<input type="hidden" name="tab" value="stats"/>
+								<p class="search-box">
+									<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse" value="<?php
+									$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
+									echo $search_datecourse; ?>" />
+									<?php submit_button( __( 'Filter','tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
+								</p>
+							</form>
+
+
+							<?php
+							$total_future_participants_by_coursestart_active = $bookings->get_total_future_participants_by_coursestart_active();
+
+							?>
+							<div class="table-responsive">
+								<table class="wp-list-table widefat table-view-list settings_page_tmsm-aquatonic-course-booking-settings">
+									<thead>
+									<tr>
+										<th scope="col" class="manage-column column-primary"><?php esc_html_e( 'Date','tmsm-aquatonic-course-booking' ); ?></th>
+
+										<?php
+										foreach($total_future_participants_by_coursestart_active as $date){
+											$date_object = Datetime::createFromFormat( 'Y-m-d', $date->course_start);
+											$date_formatted = wp_date( 'D j M', $date_object->getTimestamp() );
+
+											echo '<td data-weekday="'.$date_object->format('N').'" '.(in_array($date_object->format('N') , [6, 7]) ? 'class="weekend alternate"' : '').'>'.$date_formatted.'</td>';
+										}
+										?>
+
+									</tr>
+									</thead>
+
+									<tbody >
+									<tr>
+										<th scope="col" class="manage-column" >
+											<?php esc_html_e( 'Participants','tmsm-aquatonic-course-booking' ); ?>
+										</th>
+										<?php
+										foreach($total_future_participants_by_coursestart_active as $date){
+											echo '<td>'.$date->participants.'</td>';
+										}
+										?>
+
+									</tr>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="dashboard-widgets" class="metabox-holder columns-1">
+		<div id="postbox-container-3" class="postbox-container">
+			<div class="meta-box-sortables ui-sortable">
+				<div class="postbox">
+					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Past Bookings by date and by status','tmsm-aquatonic-course-booking' ); ?></h2></div>
+					<div class="inside">
+						<div class="main">
+							<div id="chart_div"></div>
+							<?php
+							$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
+							$chart_rows = '';
+
+							$bookings_total_items_by_coursestart_arrived = $bookings->get_total_past_bookings_by_coursestart_arrived();
+							$bookings_total_items_by_coursestart_cancelled = $bookings->get_total_past_bookings_by_coursestart_cancelled();
+							$bookings_total_items_by_coursestart_noshow = $bookings->get_total_past_bookings_by_coursestart_noshow();
+
+							$bookings_array = [];
+							foreach ( $bookings_total_items_by_coursestart_arrived as $item ) {
+								$bookings_array[ $item->course_start ]['arrived'] = $item->count;
+							}
+							foreach ( $bookings_total_items_by_coursestart_cancelled as $item ) {
+								$bookings_array[ $item->course_start ]['cancelled'] = $item->count;
+							}
+							foreach ( $bookings_total_items_by_coursestart_noshow as $item ) {
+								$bookings_array[ $item->course_start ]['noshow'] = $item->count;
+							}
+							ksort($bookings_array);
+							foreach ( $bookings_array as $date => $values ) {
+								$date_array = explode('-', $date);
+								$chart_rows .= '[new Date('.$date_array[0] . ', ' . intval( $date_array[1] - 1 ) .', '.intval($date_array[2]).'), '. ( intval($values['arrived']) ?? 0 ) .', '.(intval($values['cancelled']) ?? 0) .', '. (intval($values['noshow']) ?? 0 ) .'],';
+							}
+							//print_r($bookings_array);
+							?>
+							<script>
+
+                              function drawCurveTypes() {
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('date', '<?php echo esc_attr_e('Date', 'tmsm-aquatonic-course-booking');?>');
+                                data.addColumn('number', '<?php echo esc_attr_e('Arrived', 'tmsm-aquatonic-course-booking');?>');
+                                data.addColumn('number', '<?php echo esc_attr_e('Cancelled', 'tmsm-aquatonic-course-booking');?>');
+                                data.addColumn('number', '<?php echo esc_attr_e('No-Show', 'tmsm-aquatonic-course-booking');?>');
+
+                                data.addRows([
+									<?php echo $chart_rows ; ?>
+                                ]);
+
+                                var options = {
+                                  hAxis: {
+                                    title: '<?php echo esc_attr_e('Date', 'tmsm-aquatonic-course-booking');?>'
+                                  },
+                                  vAxis: {
+                                    title: '<?php echo esc_attr_e('Bookings', 'tmsm-aquatonic-course-booking');?>'
+                                  },
+
+                                };
+
+                                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                                chart.draw(data, options);
+                              }
+                              google.charts.setOnLoadCallback(drawCurveTypes);
+
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="dashboard-widgets" class="metabox-holder">
 		<div id="postbox-container-1" class="postbox-container">
 			<div class="meta-box-sortables ui-sortable">
@@ -107,15 +245,11 @@
 			<div class="inside">
 				<div class="main">
 					<?php
-		$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
+
 
 		echo '
-	    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	    <script type="text/javascript">
-	      google.charts.load("current", {"packages":["corechart", "line"], "locale": "fr-FR", "language": "fr-FR"});
-	      
-	      google.charts.setOnLoadCallback(drawChart);
-	
+			<script>
+		google.charts.setOnLoadCallback(drawChart);
 	      function drawChart() {
 	
 	        var data = google.visualization.arrayToDataTable([
@@ -151,7 +285,6 @@
 					<div class="inside">
 						<div class="main">
 							<?php
-							$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
 
 							echo '
 	    <script type="text/javascript">
@@ -222,140 +355,9 @@
 
 				</div>
 
-		<div id="dashboard-widgets" class="metabox-holder columns-1">
-			<div id="postbox-container-3" class="postbox-container">
-				<div class="meta-box-sortables ui-sortable">
-					<div class="postbox">
-						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Past Bookings by date and by status','tmsm-aquatonic-course-booking' ); ?></h2></div>
-						<div class="inside">
-							<div class="main">
-								<div id="chart_div"></div>
-								<?php
-								$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
-								$chart_rows = '';
-
-								$bookings_total_items_by_coursestart_arrived = $bookings->get_total_past_bookings_by_coursestart_arrived();
-								$bookings_total_items_by_coursestart_cancelled = $bookings->get_total_past_bookings_by_coursestart_cancelled();
-								$bookings_total_items_by_coursestart_noshow = $bookings->get_total_past_bookings_by_coursestart_noshow();
-
-								$bookings_array = [];
-								foreach ( $bookings_total_items_by_coursestart_arrived as $item ) {
-									$bookings_array[ $item->course_start ]['arrived'] = $item->count;
-								}
-								foreach ( $bookings_total_items_by_coursestart_cancelled as $item ) {
-									$bookings_array[ $item->course_start ]['cancelled'] = $item->count;
-								}
-								foreach ( $bookings_total_items_by_coursestart_noshow as $item ) {
-									$bookings_array[ $item->course_start ]['noshow'] = $item->count;
-								}
-								ksort($bookings_array);
-								foreach ( $bookings_array as $date => $values ) {
-									$date_array = explode('-', $date);
-									$chart_rows .= '[new Date('.$date_array[0] . ', ' . intval( $date_array[1] - 1 ) .', '.intval($date_array[2]).'), '. ( intval($values['arrived']) ?? 0 ) .', '.(intval($values['cancelled']) ?? 0) .', '. (intval($values['noshow']) ?? 0 ) .'],';
-								}
-								//print_r($bookings_array);
-								?>
-								<script>
-
-                                  function drawCurveTypes() {
-                                    var data = new google.visualization.DataTable();
-                                    data.addColumn('date', '<?php echo esc_attr_e('Date', 'tmsm-aquatonic-course-booking');?>');
-                                    data.addColumn('number', '<?php echo esc_attr_e('Arrived', 'tmsm-aquatonic-course-booking');?>');
-                                    data.addColumn('number', '<?php echo esc_attr_e('Cancelled', 'tmsm-aquatonic-course-booking');?>');
-                                    data.addColumn('number', '<?php echo esc_attr_e('No-Show', 'tmsm-aquatonic-course-booking');?>');
-
-                                    data.addRows([
-										<?php echo $chart_rows ; ?>
-                                    ]);
-
-                                    var options = {
-                                      hAxis: {
-                                        title: '<?php echo esc_attr_e('Date', 'tmsm-aquatonic-course-booking');?>'
-                                      },
-                                      vAxis: {
-                                        title: '<?php echo esc_attr_e('Bookings', 'tmsm-aquatonic-course-booking');?>'
-                                      },
-
-                                    };
-
-                                    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                                    chart.draw(data, options);
-                                  }
-                                  google.charts.setOnLoadCallback(drawCurveTypes);
-
-								</script>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	<div id="dashboard-widgets" class="metabox-holder columns-1">
-			<div id="postbox-container-4" class="postbox-container">
-				<div class="meta-box-sortables ui-sortable">
-					<div class="postbox" id="postbox-stats-listfuturedates">
-						<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Future Participants by date','tmsm-aquatonic-course-booking' ); ?></h2></div>
-						<div class="insidee">
-							<div class="main">
-
-								<form method="get" action="">
-									<input type="hidden" name="page" value="<?php echo esc_attr( $bookings->page ); ?>"/>
-									<input type="hidden" name="tab" value="stats"/>
-									<p class="search-box">
-										<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse" value="<?php
-										$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
-										echo $search_datecourse; ?>" />
-										<?php submit_button( __( 'Filter','tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
-									</p>
-								</form>
 
 
-								<?php
-								$bookings = new Tmsm_Aquatonic_Course_Booking_List_Table();
-								$total_future_participants_by_coursestart_active = $bookings->get_total_future_participants_by_coursestart_active();
 
-								?>
-								<div class="table-responsive">
-									<table class="wp-list-table widefat table-view-list settings_page_tmsm-aquatonic-course-booking-settings">
-										<thead>
-										<tr>
-											<th scope="col" class="manage-column column-primary"><?php esc_html_e( 'Date','tmsm-aquatonic-course-booking' ); ?></th>
-
-												<?php
-												foreach($total_future_participants_by_coursestart_active as $date){
-													$date_object = Datetime::createFromFormat( 'Y-m-d', $date->course_start);
-													$date_formatted = wp_date( 'D j M', $date_object->getTimestamp() );
-
-													echo '<td data-weekday="'.$date_object->format('N').'" '.(in_array($date_object->format('N') , [6, 7]) ? 'class="weekend alternate"' : '').'>'.$date_formatted.'</td>';
-												}
-												?>
-
-										</tr>
-										</thead>
-
-										<tbody >
-										<tr>
-											<th scope="col" class="manage-column" >
-												<?php esc_html_e( 'Participants','tmsm-aquatonic-course-booking' ); ?>
-											</th>
-												<?php
-												foreach($total_future_participants_by_coursestart_active as $date){
-													echo '<td>'.$date->participants.'</td>';
-												}
-												?>
-
-										</tr>
-										</tbody>
-
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 			</div>
 
 	<?php
