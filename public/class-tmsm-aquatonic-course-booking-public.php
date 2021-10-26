@@ -371,13 +371,13 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				// Format data
 				if ( ! empty( $course_start ) && ! empty( $course_start ) ) {
 					$table = $wpdb->prefix . 'aquatonic_course_booking';
-					$data  = array(
-						'firstname'    => $firstname,
-						'lastname'     => $lastname,
-						'email'        => $email,
-						'phone'        => $phone,
-						'postalcode'   => $postalcode,
-						'city'         => $city,
+					$data = array(
+						'firstname'    => substr( $firstname, 0, 50 ),
+						'lastname'     => substr( $lastname, 0, 50 ),
+						'email'        => substr( $email, 0, 100 ),
+						'phone'        => substr( $phone, 0, 50 ),
+						'postalcode'   => substr( $postalcode, 0, 20 ),
+						'city'         => substr( $city, 0, 40 ),
 						'birthdate'    => $birthdate_computed,
 						'participants' => $participants,
 						'status'       => 'active',

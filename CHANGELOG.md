@@ -1,4 +1,5 @@
-* Reorder stats (tables at the top) 
+* Reorder stats (tables at the top)
+* Check bookings data fields length before submitting
 
 ### 1.8.5: October 21st, 2021
 * Admins can book at a later date
