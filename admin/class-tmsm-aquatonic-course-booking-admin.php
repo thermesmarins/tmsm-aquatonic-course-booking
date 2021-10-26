@@ -2331,6 +2331,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					if( !empty($entry_id)){
 						gform_update_meta( $entry_id, '_aquos_status', $status );
 					}
+					else{
+						error_log('entry_id not set'  . $token);
+						error_log(print_r( $entry, true));
+					}
+				}else{
+					error_log('entry not found for token'  . $token);
 				}
 
 			}
