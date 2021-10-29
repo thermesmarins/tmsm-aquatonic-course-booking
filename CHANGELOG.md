@@ -1,3 +1,4 @@
+### 1.8.6: October 29th, 2021
 * Reorder stats (tables at the top)
 * Check bookings data fields length before submitting
 * Booking Form: Allow admins to not fill email field
