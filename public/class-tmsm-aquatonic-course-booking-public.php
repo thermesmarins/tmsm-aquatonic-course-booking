@@ -430,7 +430,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$contact->phone      = $data['phone'];
 					$contact->title      = $data['title'];
 
-					if($contact->add()){
+					if ( ! empty( $contact->email ) && $contact->add() ) {
 						// Add booking to Dialog Insight
 						$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 						$booking->email        = $data['email'];
@@ -446,8 +446,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						$booking->add();
 
 					}
-
-
 
 				}
 			}
@@ -869,6 +867,36 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Gravity Form: Email not required for admins
+	 *
+	 * @param $form
+	 *
+	 * @return mixed
+	 */
+	function gform_email_notrequired( $form ) {
+
+		foreach( $form['fields'] as &$field ) {
+
+			if ( strpos($field['cssClass'], 'tmsm-aquatonic-course-email') !== false ) {
+				error_log('tmsm-aquatonic-course-email');
+				error_log(print_r($field, true));
+
+				$user = wp_get_current_user();
+				// User has admin/editor/author role (is not customer)
+				if( ! ( $this->user_has_role(wp_get_current_user(), 'customer') || ! $user || is_wp_error( $user ) || !$user->ID ) ) {
+					error_log('not customer');
+					$field['isRequired'] = false;
+
+				}
+			}
+
+		}
+
+		return $form;
+	}
+
+
+	/**
 	 * Gravity Forms: Add date validation, compare year of birth to current year
 	 *
 	 * @param $result
@@ -898,7 +926,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			$user = wp_get_current_user();
 
-			// User has admin/editor/author role
+			// User has admin/editor/author role (is not customer)
 			if( ! ( $this->user_has_role(wp_get_current_user(), 'customer') || ! $user || is_wp_error( $user ) || !$user->ID ) ) {
 				// Allow to book for 10 participants
 				$field->rangeMax = 10;
@@ -911,7 +939,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		}
 
-		if ( $result['is_valid'] && $field->get_input_type() == 'date' && $field->cssClass === 'tmsm-aquatonic-course-birthdate') {
+
+		if ( $result['is_valid'] && $field->get_input_type() === 'date' && $field->cssClass === 'tmsm-aquatonic-course-birthdate') {
 			$date = GFCommon::parse_date( $value, $field->dateFormat );
 
 			if ( ! GFCommon::is_empty_array( $date ) && checkdate( $date['month'], $date['day'], $date['year'] ) ) {

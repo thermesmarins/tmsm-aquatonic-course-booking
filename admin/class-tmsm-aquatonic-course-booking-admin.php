@@ -2238,7 +2238,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$site_id = (int) $this->get_option('aquos_siteid');
 
 
-		if ( ! empty ( $endpoint ) && is_int( $site_id ) ) {
+		if ( ! empty ( $endpoint ) && is_int( $site_id ) && ! empty( $booking['email'] ) ) {
 			$data = [
 				'civilite'      => ( $booking['title'] == 1 ? 'M.' : 'Mme' ),
 				'prenom'        => $booking['firstname'],
@@ -2327,7 +2327,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			if( ! empty($token)){
 				$entry = self::find_entry_with_token($token);
 				if( ! empty( $entry )){
-					$entry_id = $entry['entry_id'];
+					$entry_id = $entry['id'];
 					if( !empty($entry_id)){
 						gform_update_meta( $entry_id, '_aquos_status', $status );
 					}

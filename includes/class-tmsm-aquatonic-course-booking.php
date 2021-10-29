@@ -241,6 +241,10 @@ class Tmsm_Aquatonic_Course_Booking {
 				//$this->loader->add_filter( 'gform_entry_post_save_'.$form_add_id, $plugin_public, 'gform_entry_post_save_booking', 20, 2 );
 				//$this->loader->add_action( 'gform_after_submission_'.$form_add_id, $plugin_public, 'gform_after_submission_booking', 20, 2 );
 				$this->loader->add_filter( 'gform_pre_render_' . $form_add_id, $plugin_public, 'gform_pre_render_add', 20, 1 );
+				$this->loader->add_filter( 'gform_pre_render_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
+				$this->loader->add_filter( 'gform_pre_validation_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
+
+
 				$this->loader->add_action( 'gform_entry_created', $plugin_public, 'gform_entry_created', 20, 2 );
 				$this->loader->add_action( 'gform_notification_' . $form_add_id, $plugin_public, 'gform_notification_booking', 20, 3 );
 
