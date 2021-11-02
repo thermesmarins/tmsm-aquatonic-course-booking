@@ -1,3 +1,4 @@
+### 1.8.7: November 2nd, 2021
 * Booking Form: validate postal code field (only digits and 5 characters)
 * Booking Form: validate city field (cannot have digits)
 
