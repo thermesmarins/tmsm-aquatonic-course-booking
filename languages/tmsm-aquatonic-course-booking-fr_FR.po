@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-11-02 15:04+0100\n"
-"PO-Revision-Date: 2021-11-02 15:05+0100\n"
+"POT-Creation-Date: 2021-11-02 15:25+0100\n"
+"PO-Revision-Date: 2021-11-02 15:26+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -24,7 +24,7 @@ msgstr "Suppression de cette réservation ? Elle sera annulée définitivement.
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:118
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:122
-#: public/class-tmsm-aquatonic-course-booking-public.php:2451
+#: public/class-tmsm-aquatonic-course-booking-public.php:2459
 msgid "Aquatonic Course"
 msgstr "Parcours Aquatonic"
 
@@ -345,7 +345,7 @@ msgstr "Annulation de la réservation pour %s %s le %s"
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:420
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:440
 #: public/class-tmsm-aquatonic-course-booking-public.php:834
-#: public/class-tmsm-aquatonic-course-booking-public.php:1072
+#: public/class-tmsm-aquatonic-course-booking-public.php:1080
 #, php-format
 msgid "%s at %s"
 msgstr "%s à %s"
@@ -650,13 +650,13 @@ msgid "Loading"
 msgstr "Chargement"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:160
-#: public/class-tmsm-aquatonic-course-booking-public.php:2196
-#: public/class-tmsm-aquatonic-course-booking-public.php:2203
+#: public/class-tmsm-aquatonic-course-booking-public.php:2204
+#: public/class-tmsm-aquatonic-course-booking-public.php:2211
 msgid "No time slot found"
 msgstr "Aucune disponibilité"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:161
-#: public/class-tmsm-aquatonic-course-booking-public.php:2203
+#: public/class-tmsm-aquatonic-course-booking-public.php:2211
 msgid "Closed"
 msgstr "Fermé"
 
@@ -714,32 +714,36 @@ msgstr "Ce token de réservation n’a pas été trouvé"
 msgid "Year of birth is invalid"
 msgstr "L’année de naissance n’est pas valide"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:961
+#: public/class-tmsm-aquatonic-course-booking-public.php:963
 msgid "Postal code is invalid"
 msgstr "Le code postal n’est pas valide"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1094
+#: public/class-tmsm-aquatonic-course-booking-public.php:969
+msgid "City is invalid"
+msgstr "La ville n’est pas valide"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:1102
 #, php-format
 msgid "Aquatonic Course on %s for %d participants"
 msgstr "Parcours Aquatonic le %s pour %d participant(s)"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1358
+#: public/class-tmsm-aquatonic-course-booking-public.php:1366
 msgid "Token security is not valid"
 msgstr "Le jeton de sécurité n’est pas valide"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:1369
+#: public/class-tmsm-aquatonic-course-booking-public.php:1377
 msgid "Ajax referer is not valid"
 msgstr "Le référant ajax n’est pas valide"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:2081
+#: public/class-tmsm-aquatonic-course-booking-public.php:2089
 msgid "No first slot available to calculate all the slots"
 msgstr "Aucun créneau de départ pour calculer les créneaux"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:2086
+#: public/class-tmsm-aquatonic-course-booking-public.php:2094
 msgid "No end slot available to calculate all the slots"
 msgstr "Aucun créneau de fin pour calculer les créneaux"
 
-#: public/class-tmsm-aquatonic-course-booking-public.php:2434
+#: public/class-tmsm-aquatonic-course-booking-public.php:2442
 msgid "Mini Dashboard"
 msgstr "Mini tableau de bord"
 
