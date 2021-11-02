@@ -951,6 +951,26 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 		}
 
+		// Postal code and city validation must be digit only and 5 characters
+		if ( $result['is_valid'] && $field->get_input_type() === 'address' && $field->cssClass === 'tmsm-aquatonic-course-address') {
+
+			$postalcode_value = rgar( $value, $field->id . '.5' );
+			$city_value = rgar( $value, $field->id . '.3' );
+
+			// Postal code must be digit only and 5 characters
+			if ( ! ctype_digit( $postalcode_value ) || 5 !== strlen( $postalcode_value ) ) {
+				$result['is_valid'] = false;
+				$result['message']  .= ( !empty($result['message']) ? '<br>' : '' ) . __( 'Postal code is invalid', 'tmsm-aquatonic-course-booking' );
+			}
+
+			// City cannot contain digits
+			if ( preg_match( '/\\d/', $city_value ) > 0 ) {
+				$result['is_valid'] = false;
+				$result['message']  .= ( !empty($result['message']) ? '<br>' : '' ) . __( 'City is invalid', 'tmsm-aquatonic-course-booking' );
+			}
+
+		}
+
 		return $result;
 	}
 
