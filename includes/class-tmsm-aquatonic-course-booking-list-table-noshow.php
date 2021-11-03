@@ -162,7 +162,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table_Noshow extends WP_List_Table {
 			case 'count':
 				return $item[ $column_name ];
 			case 'fullname':
-				return '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
+				return '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;'  ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
 			case 'status':
 				$statuses = Tmsm_Aquatonic_Course_Booking_Admin::booking_statuses();
 				return '<mark class="' . $statuses[ $item[ $column_name ] ]['iconclass'] . '"><span>' . $statuses[ $item[ $column_name ]]['name'] .' </span></mark>';
