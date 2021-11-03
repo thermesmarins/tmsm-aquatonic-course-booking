@@ -622,6 +622,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$text = str_replace( $custom_merge_tag_block, $block, $text );
 						}
 
+						$custom_merge_tag_download_url = '{booking_download_link}';
+						if ( strpos( $text, $custom_merge_tag_download_url ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
+							$download_url = '';
+							if ( ! empty( $token ) ) {
+								$download_url = self::download_url( $token );
+							}
+							$download_link = '<a class="'.self::button_class_primary().'" href="'.$download_url.'">'.__('Download your booking', 'tmsm-aquatonic-course-booking') .'</a>';
+							$text = str_replace( $custom_merge_tag_download_url, $download_link, $text );
+						}
+
+
 					}
 
 				}
@@ -666,6 +677,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$barcode_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
 
 		return $barcode_url;
+	}
+
+	/**
+	 * Return PDF URL
+	 *
+	 * @param string $token
+	 *
+	 * @return string
+	 */
+	private function download_url(string $token){
+
+		$pdf_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-pdf&token='.$token;
+
+		return $pdf_url;
 	}
 
 	/**
@@ -755,6 +780,30 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 			die($exception->getMessage());
 		}
+
+		die();
+	}
+
+	/**
+	 * Generate booking PDF
+	 *
+	 */
+	public function generate_pdf(){
+		/*header('Content-Disposition: attachment; filename=' . urlencode($f));
+		header('Content-Type: application/force-download');
+		header('Content-Type: application/octet-stream');
+		header('Content-Type: application/download');
+		header('Content-Description: File Transfer');
+		header('Content-Length: ' . filesize($f));
+		echo file_get_contents($f);*/
+
+		header('Content-type:application/pdf');
+
+		// It will be called downloaded.pdf
+		header('Content-Disposition:attachment;filename=original.pdf');
+
+		// The PDF source is in original.pdf
+		readfile(TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'original.pdf');
 
 		die();
 	}

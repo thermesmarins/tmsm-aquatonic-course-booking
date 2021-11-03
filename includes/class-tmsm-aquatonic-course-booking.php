@@ -266,6 +266,10 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );
 
+		// PDF
+		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-generate-pdf', $plugin_public, 'generate_pdf', 10 );
+		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-generate-pdf', $plugin_public, 'generate_pdf', 10 );
+
 		// Ajax for mini dashboard
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-minidashboard', $plugin_public, 'minidashboard', 10 );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-minidashboard', $plugin_public, 'minidashboard', 10);
