@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-11-03 13:45+0100\n"
-"PO-Revision-Date: 2021-11-03 13:45+0100\n"
+"POT-Creation-Date: 2021-11-03 14:46+0100\n"
+"PO-Revision-Date: 2021-11-03 14:48+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -356,11 +356,11 @@ msgstr "%s à %s"
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:514
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:616
 msgid "Active"
-msgstr "Active"
+msgstr "Planifié"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1344
 msgid "Mark as active"
-msgstr "Marquer comme active"
+msgstr "Marquer comme planifiée"
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1348
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:1349
@@ -499,8 +499,8 @@ msgid "Save options"
 msgstr "Enregistrer les options"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:112
-msgid "Future Participants by date"
-msgstr "Participants futurs par date"
+msgid "Participants by date (arrived or active)"
+msgstr "Participants par date (arrivés et planifiés)"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:120
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:593
@@ -613,7 +613,7 @@ msgstr "Tout"
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:513
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:614
 msgid "Active + No-Show"
-msgstr "Actives + No-Show"
+msgstr "Planifiée + No-Show"
 
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:591
 msgid "Name"
@@ -746,6 +746,9 @@ msgstr "Aucun créneau de fin pour calculer les créneaux"
 #: public/class-tmsm-aquatonic-course-booking-public.php:2442
 msgid "Mini Dashboard"
 msgstr "Mini tableau de bord"
+
+#~ msgid "Future Participants by date"
+#~ msgstr "Participants futurs par date"
 
 #~ msgid "Number"
 #~ msgstr "Nombre"

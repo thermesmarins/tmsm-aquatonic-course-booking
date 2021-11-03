@@ -345,10 +345,10 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 *
 	 * @return array
 	 */
-	public function get_total_future_participants_by_coursestart_active() {
+	public function get_total_participants_by_coursestart_activearrived() {
 		global $wpdb;
 
-		$where = " status='active' ";
+		$where = " ( status='active' OR status='arrived' )";
 
 		$search_datecourse     = isset( $_GET['search_datecourse'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse'] ) ) : ''; // input var ok, CSRF ok.
 

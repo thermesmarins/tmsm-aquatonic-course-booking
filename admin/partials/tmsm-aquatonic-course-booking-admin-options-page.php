@@ -109,7 +109,7 @@
 		<div id="postbox-container-4" class="postbox-container">
 			<div class="meta-box-sortables ui-sortable">
 				<div class="postbox" id="postbox-stats-listfuturedates">
-					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Future Participants by date','tmsm-aquatonic-course-booking' ); ?></h2></div>
+					<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Participants by date (arrived or active)','tmsm-aquatonic-course-booking' ); ?></h2></div>
 					<div class="insidee">
 						<div class="main">
 
@@ -126,7 +126,7 @@
 
 
 							<?php
-							$total_future_participants_by_coursestart_active = $bookings->get_total_future_participants_by_coursestart_active();
+							$total_future_participants_by_coursestart_active = $bookings->get_total_participants_by_coursestart_activearrived();
 
 							?>
 							<div class="table-responsive">
