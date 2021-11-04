@@ -488,18 +488,20 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Allow the text to be filtered so custom merge tags can be replaced.
 	 *
-	 * @param $text
-	 * @param $form
-	 * @param $entry
-	 * @param $url_encode
-	 * @param $esc_html
-	 * @param $nl2br
-	 * @param $format
+	 * @param string $text The current text in which merge tags are being replaced.
+	 * @param array $form The current form.
+	 * @param array $entry The current entry.
+	 * @param bool $url_encode Whether or not to encode any URLs found in the replaced value.
+	 * @param bool $esc_html Whether or not to encode HTML found in the replaced value.
+	 * @param bool $nl2br Whether or not to convert newlines to break tags.
+	 * @param string $format Determines how the value should be formatted. Default is html.
 	 *
 	 * @return string
 	 * @throws \Picqer\Barcode\Exceptions\BarcodeException
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
+
+		error_log('gform_replace_merge_tags_booking');
 
 		$form_add_id = $this->get_option('gform_add_id');
 		$form_cancel_id = $this->get_option('gform_cancel_id');
@@ -517,7 +519,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		if(!empty($form_add_id) && !empty($form_cancel_id) && !empty( $entry ) ) {
+			error_log('1');
+
 			if($form['id'] == $form_add_id || $form['id'] == $form_cancel_id ){
+				error_log('2');
+
 				$token    = self::gform_entry_generate_token( $entry_id );
 				if( !empty($token)){
 					$booking = self::find_booking_with_token($token);
@@ -613,7 +619,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$barcode_background_pixel_url = 'https://via.placeholder.com/1.png/fff/fff';
 
 							$block = '<div id="booking_barcode_block" style="background:black;padding:10px 20px;border-radius:10px;text-align:center;max-width:400px; color:white;">
-<div style="display:inline-block;height:80px; width:80px;"><img style="max-width:100%; height:auto;" src="{booking_barcode_logo}" /></div>
+<img style="width:80px; height:auto;text-align:center;margin: 0 auto; display:inline-block" src="{booking_barcode_logo}" />
 <div style="margin:5px 0; color:white;">'.__('{place_name}<br>Aquatonic Course on {booking_date} at {booking_hourminutes}<br>{booking_participants} participant(s)', 'tmsm-aquatonic-course-booking').'</div><div style="background-color:white;background-image:url(\''. $barcode_background_pixel_url .'\');background-repeat:repeat;padding:10px 20px;border-radius:10px;"><img style="background:white; max-width:100%;height:80px;display:block" src="{booking_barcode_image}" /></div><span style="color:white;display:block;">{booking_barcode_number}</span></div><br>
 							<a href="{booking_cancel_url}" class="hide">'.__('If you can\'t see the barcode, please access this page', 'tmsm-aquatonic-course-booking').'</a>';
 
@@ -626,7 +632,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						if ( strpos( $text, $custom_merge_tag_download_url ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$download_url = '';
 							if ( ! empty( $token ) ) {
-								$download_url = self::download_url( $token );
+								$download_url = self::download_url( $token, $form['id'], $entry_id, $url_encode, $esc_html, $nl2br, $format );
 							}
 							$download_link = '<a class="'.self::button_class_primary().'" href="'.$download_url.'">'.__('Download your booking', 'tmsm-aquatonic-course-booking') .'</a>';
 							$text = str_replace( $custom_merge_tag_download_url, $download_link, $text );
@@ -674,7 +680,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	private function barcode_url(string $barcode){
 
-		$barcode_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode='.$barcode;
+		$barcode_url = esc_url( admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-barcode&barcode=' . sanitize_text_field( $barcode ) );
 
 		return $barcode_url;
 	}
@@ -683,12 +689,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * Return PDF URL
 	 *
 	 * @param string $token
+	 * @param string $form_id
+	 * @param string $entry_id
+	 * @param string $url_encode
+	 * @param string $esc_html
+	 * @param string $nl2br
+	 * @param string $format
 	 *
 	 * @return string
 	 */
-	private function download_url(string $token){
+	private function download_url(string $token, string $form_id, string $entry_id, string $url_encode, string $esc_html, string $nl2br, string $format){
 
-		$pdf_url = admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-pdf&token='.$token;
+		$pdf_url = esc_url( admin_url( 'admin-ajax.php' ) . '?action=tmsm-aquatonic-course-booking-generate-pdf&token=' . sanitize_text_field( $token ) .'&form_id='. sanitize_text_field($form_id) .'&entry_id=' . sanitize_text_field( $entry_id )  .'&url_encode=' . sanitize_text_field( $url_encode ) .'&esc_html=' . sanitize_text_field( $esc_html ) .'&nl2br=' . sanitize_text_field( $nl2br ) .'&format=' . sanitize_text_field( $format )
+		);
 
 		return $pdf_url;
 	}
@@ -786,7 +799,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 	/**
 	 * Generate booking PDF
-	 *
 	 */
 	public function generate_pdf(){
 		/*header('Content-Disposition: attachment; filename=' . urlencode($f));
@@ -797,13 +809,60 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		header('Content-Length: ' . filesize($f));
 		echo file_get_contents($f);*/
 
-		header('Content-type:application/pdf');
-
-		// It will be called downloaded.pdf
+		/*header('Content-type:application/pdf');
 		header('Content-Disposition:attachment;filename=original.pdf');
+		readfile(TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'original.pdf');*/
 
-		// The PDF source is in original.pdf
-		readfile(TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'original.pdf');
+
+		// Request data
+		$token = sanitize_text_field( $_REQUEST['token'] );
+		$form_id = sanitize_text_field( $_REQUEST['form_id'] );
+		$entry_id = sanitize_text_field( $_REQUEST['entry_id'] );
+		$url_encode = sanitize_text_field( $_REQUEST['url_encode'] );
+		$esc_html = sanitize_text_field( $_REQUEST['esc_html'] );
+		$nl2br = sanitize_text_field( $_REQUEST['nl2br'] );
+		$format = sanitize_text_field( $_REQUEST['format'] );
+
+		$form = GFAPI::get_form( $form_id );
+		$entry = GFAPI::get_entry( $entry_id );
+
+		// Find booking
+		if( !empty($token)) {
+			$booking = self::find_booking_with_token( $token );
+		}
+
+		// WooCommerce email settings
+		$text_color = get_option( 'woocommerce_email_text_color' ) ?? '#000000';
+		$image_header = get_option('woocommerce_email_header_image') ?? '';
+
+		// Build HTML
+		$block = '<div style="text-align:center; width:400px; margin: 0 auto;">{booking_barcode_block}</div>';
+
+		foreach($form['notifications'] as $notification){
+			if( strpos($notification['message'], '{booking_barcode_block}') !== false){
+				$block = $notification['message'];
+			}
+		}
+
+		if( ! empty ($image_header ) ){
+			$image_header = '<div style="text-align:center;"><img src="'.$image_header.'" style="display:inline-block; width: 50%;margin: 0 auto;"/></div><br>';
+		}
+
+		$block = $image_header . $block;
+		$block = apply_filters( 'gform_replace_merge_tags', $block, $form, $entry, $url_encode, $esc_html, $nl2br, $format );
+		$block = $format == 'html' && $nl2br ? nl2br( $block ) : $block;
+
+		// Create PDF
+		$pdf = new \Mpdf\Mpdf();
+		$stylesheet = '
+		body, a{color: $text_color; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+		.hide{display:none}
+		a{color:#000}
+		#booking_barcode_block{width:400px; margin: 0 auto;}
+		';
+		$pdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+		$pdf->WriteHTML($block);
+		$pdf->Output('file.pdf', \Mpdf\Output\Destination::DOWNLOAD);
 
 		die();
 	}
