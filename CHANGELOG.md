@@ -1,4 +1,5 @@
 * Tweak stat: participants by date can be found in the past
+* Download PDF of booking: add {booking_download_link} to confirmations
 
 ### 1.8.7: November 2nd, 2021
 * Booking Form: validate postal code field (only digits and 5 characters)
