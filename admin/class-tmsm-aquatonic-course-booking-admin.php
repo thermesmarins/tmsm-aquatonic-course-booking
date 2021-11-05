@@ -557,6 +557,55 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		$options[] = array( 'googlepaypasses_accountemail', 'text', '' );
+		$options[] = array( 'googlepaypasses_accountfilepath', 'text', '' );
+		$options[] = array( 'googlepaypasses_applicationname', 'text', '' );
+		$options[] = array( 'googlepaypasses_issuerid', 'text', '' );
+
+		add_settings_field(
+			'googlepaypasses_accountemail',
+			esc_html__( 'Account Email', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-googlepaypasses',
+			array(
+				'id' => 'googlepaypasses_accountemail',
+			)
+		);
+
+		add_settings_field(
+			'googlepaypasses_accountfilepath',
+			esc_html__( 'Account File Path', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-googlepaypasses',
+			array(
+				'id' => 'googlepaypasses_accountfilepath',
+			)
+		);
+
+		add_settings_field(
+			'googlepaypasses_applicationname',
+			esc_html__( 'Application Name', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-googlepaypasses',
+			array(
+				'id' => 'googlepaypasses_applicationname',
+			)
+		);
+
+		add_settings_field(
+			'googlepaypasses_issuerid',
+			esc_html__( 'Issuer ID', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-googlepaypasses',
+			array(
+				'id' => 'googlepaypasses_issuerid',
+			)
+		);
+
 	}
 
 	/**
@@ -597,6 +646,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-tests',
 			esc_html__( 'Tests', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'section_tests' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->plugin_name . '-googlepaypasses',
+			esc_html__( 'Google Pay Passes', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_googlepaypasses' ),
 			$this->plugin_name
 		);
 
@@ -1079,6 +1135,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$options[] = array( 'tests_lessonsdate', 'text', '' );
 		$options[] = array( 'tests_realtimeattendance', 'text', '' );
+
+		$options[] = array( 'googlepaypasses_accountemail', 'text', '' );
+		$options[] = array( 'googlepaypasses_accountfilepath', 'text', '' );
+		$options[] = array( 'googlepaypasses_applicationname', 'text', '' );
+		$options[] = array( 'googlepaypasses_issuerid', 'text', '' );
 
 		return $options;
 	}

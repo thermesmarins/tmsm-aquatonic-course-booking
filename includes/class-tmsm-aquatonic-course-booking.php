@@ -141,6 +141,16 @@ class Tmsm_Aquatonic_Course_Booking {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tmsm-aquatonic-course-booking-list-table-noshow.php';
 
 		/**
+		 * The classes for Google Pay Passes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayConfig.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayServices.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayWalletobjects.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayRestMethods.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayJwt.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/googlepaypass/GooglePayResourceDefinitions.php';
+
+		/**
 		 * The classes for Dialog Insight (booking & contact)
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-dialog-insight-api.php';

@@ -638,6 +638,25 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$text = str_replace( $custom_merge_tag_download_url, $download_link, $text );
 						}
 
+						$custom_merge_tag_googlepaypass = '{booking_googlepaypass}';
+						if ( strpos( $text, $custom_merge_tag_googlepaypass ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
+
+							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone());
+							$booking_end_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_end'], wp_timezone());
+
+							$booking['googlepay_date_start'] = $booking_start_object->format('c');
+							$booking['googlepay_date_end'] = $booking_end_object->format('c');
+							$barcode  = self::gform_entry_generate_barcode( $booking['lastname'], $entry_id );
+							$booking['barcode'] = $barcode;
+
+							$jwt = self::googlepaypass_jwt($booking);
+							$googlepaypass_link = '
+								<script src="https://apis.google.com/js/platform.js" type="text/javascript"></script>
+								<g:savetoandroidpay jwt="'.$jwt.'" height="standard" theme="dark" />
+							';
+							$text = str_replace( $custom_merge_tag_googlepaypass, $googlepaypass_link, $text );
+						}
+
 
 					}
 
@@ -650,6 +669,33 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		return $text;
 	}
 
+	/**
+	 * Get JWT token from Google Pay Passes
+	 *
+	 * @param $booking
+	 *
+	 * @return string
+	 */
+	private function googlepaypass_jwt($booking){
+
+		$verticalType = VerticalType::EVENTTICKET;
+		$vertical = "EVENTTICKET";
+
+		$classUid = 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['googlepay_date_start']);
+		$classId = sprintf("%s.%s" , ISSUER_ID, $classUid);
+
+		$objectUid= 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['token']);
+		$objectId = sprintf("%s.%s", ISSUER_ID, $objectUid);
+
+		$services = new GooglePayServices();
+
+		$skinnyJwt = $services->makeSkinnyJwt($verticalType, $classId, $objectId, $booking);
+
+		if ($skinnyJwt  != null){
+			return $skinnyJwt;
+		}
+		return '';
+	}
 
 	/**
 	 * Get booking cancel page URL
@@ -801,19 +847,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * Generate booking PDF
 	 */
 	public function generate_pdf(){
-		/*header('Content-Disposition: attachment; filename=' . urlencode($f));
-		header('Content-Type: application/force-download');
-		header('Content-Type: application/octet-stream');
-		header('Content-Type: application/download');
-		header('Content-Description: File Transfer');
-		header('Content-Length: ' . filesize($f));
-		echo file_get_contents($f);*/
-
-		/*header('Content-type:application/pdf');
-		header('Content-Disposition:attachment;filename=original.pdf');
-		readfile(TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'original.pdf');*/
-
-
 		// Request data
 		$token = sanitize_text_field( $_REQUEST['token'] );
 		$form_id = sanitize_text_field( $_REQUEST['form_id'] );
