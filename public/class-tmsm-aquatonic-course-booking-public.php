@@ -650,11 +650,14 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$booking['barcode'] = $barcode;
 
 							$jwt = self::googlepaypass_jwt($booking);
-							$googlepaypass_link = '
+							if( ! empty( $jwt ) ){
+								$googlepaypass_link = '
 								<script src="https://apis.google.com/js/platform.js" type="text/javascript"></script>
 								<g:savetoandroidpay jwt="'.$jwt.'" height="standard" theme="dark" />
 							';
-							$text = str_replace( $custom_merge_tag_googlepaypass, $googlepaypass_link, $text );
+								$text = str_replace( $custom_merge_tag_googlepaypass, $googlepaypass_link, $text );
+							}
+
 						}
 
 
@@ -681,19 +684,28 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$verticalType = VerticalType::EVENTTICKET;
 		$vertical = "EVENTTICKET";
 
-		$classUid = 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['googlepay_date_start']);
-		$classId = sprintf("%s.%s" , ISSUER_ID, $classUid);
+		// Check valid config
+		if(
+			! empty( $this->get_option('googlepaypasses_accountemail' ) )
+			&& ! empty( $this->get_option('googlepaypasses_issuerid' ) )
+			&& ! empty( $this->get_option('googlepaypasses_accountfilepath' ) )
+			&& ! empty( $this->get_option('googlepaypasses_applicationname' ) )
+			){
+			$classUid = 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['googlepay_date_start']);
+			$classId = sprintf("%s.%s" , ISSUER_ID, $classUid);
 
-		$objectUid= 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['token']);
-		$objectId = sprintf("%s.%s", ISSUER_ID, $objectUid);
+			$objectUid= 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['token']);
+			$objectId = sprintf("%s.%s", ISSUER_ID, $objectUid);
 
-		$services = new GooglePayServices();
+			$services = new GooglePayServices();
 
-		$skinnyJwt = $services->makeSkinnyJwt($verticalType, $classId, $objectId, $booking);
+			$skinnyJwt = $services->makeSkinnyJwt($verticalType, $classId, $objectId, $booking);
 
-		if ($skinnyJwt  != null){
-			return $skinnyJwt;
+			if ($skinnyJwt  != null){
+				return $skinnyJwt;
+			}
 		}
+
 		return '';
 	}
 

@@ -1,3 +1,5 @@
+* Check Google Pay Pass config before generating pass
+
 ### 1.8.8: November 15th, 2021
 * Tweak stat: participants by date can be found in the past
 * Download PDF of booking: add {booking_download_link} to confirmations
