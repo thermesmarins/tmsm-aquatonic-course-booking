@@ -485,6 +485,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		);
 
 		add_settings_field(
+			'dialoginsight_beneficiaryfield',
+			esc_html__( 'Dialog Insight Beneficiary Field', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_beneficiaryfield',
+				'description' => esc_html__( 'Beneficiary Field in Dialog Insight', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		add_settings_field(
 			'aquos_endpoint_contact',
 			esc_html__( 'Aquos Endpoint for Adding Contact', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_text' ),
@@ -1127,6 +1139,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'dialoginsight_idproject', 'text', '' );
 		$options[] = array( 'dialoginsight_relationaltableid', 'text', '' );
 		$options[] = array( 'dialoginsight_sourcecode', 'text', '' );
+		$options[] = array( 'dialoginsight_beneficiaryfield', 'text', '' );
 
 		$options[] = array( 'aquos_endpoint_lessons', 'text', '' );
 		$options[] = array( 'aquos_endpoint_contact', 'text', '' );
@@ -1150,7 +1163,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function dashboard_refresh(){
 		global $pagenow;
 		$screen = get_current_screen();
-		print_r($screen);
 		if( $pagenow === self::admin_page_url() && $screen && $screen->id === 'settings_page_tmsm-aquatonic-course-booking-settings' && empty($_REQUEST['tab']) ){
 			echo '<meta http-equiv="refresh" content="' . (MINUTE_IN_SECONDS * 5) . '; url='.self::admin_page_url().'?page=tmsm-aquatonic-course-booking-settings">';
 		}
@@ -1184,16 +1196,20 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 		$booking_dialoginsight->token = $booking['token'];
 		$booking_dialoginsight->status = 'arrived';
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('booking_mark_as_arrived');
+		}
 		try {
 			$booking_dialoginsight->update();
 
 			// Booking updated and contact_id found
 			if( ! empty($booking_dialoginsight->contact_id)){
+				error_log('contact_id found');
 
 				$contact = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
 				$contact->contact_id = $booking_dialoginsight->contact_id;
-				// $contact->beneficiary = 1;
-				// $contact->update_by_id(); TODO finish integration
+				$contact->beneficiary = 1;
+				$contact->update_by_id();
 			}
 
 		} catch (Exception $exception) {

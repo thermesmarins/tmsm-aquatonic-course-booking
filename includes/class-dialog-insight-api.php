@@ -10,6 +10,7 @@ class Dialog_Insight_API {
 
 	const ENDPOINT           = 'https://app.mydialoginsight.com/webservices/ofc4/';
 	const PLUGIN_NAME = 'tmsm-aquatonic-course-booking';
+
 	/**
 	 * Key ID.
 	 * @var string

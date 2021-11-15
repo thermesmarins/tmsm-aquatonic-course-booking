@@ -3,6 +3,7 @@ namespace Tmsm_Aquatonic_Course_Booking;
 
 class Dialog_Insight_Contact {
 
+	const PLUGIN_NAME = 'tmsm-aquatonic-course-booking';
 
 	/**
 	 * @var      int    $title
@@ -50,10 +51,9 @@ class Dialog_Insight_Contact {
 	public $city;
 
 	/**
-	 * @var      string    beneficiary
+	 * @var      string    $beneficiary
 	 */
 	public $beneficiary;
-
 
 
 	public function __construct() {
@@ -188,9 +188,11 @@ class Dialog_Insight_Contact {
 
 	}
 
+
 	/**
 	 * Update contact by ID
 	 *
+	 * @return bool
 	 * @throws \Exception
 	 */
 	public function update_by_id( ){
@@ -201,10 +203,16 @@ class Dialog_Insight_Contact {
 
 		$result_array = [];
 		$contact      = [];
-
-		$data = [
-			'f_beneficiaire_aquos_rennes' => $this->beneficiary,
+		$data         = [
+			'f_EMail' => $this->email,
 		];
+
+		if ($this->beneficiary == 1){
+			$beneficiaryfield = self::get_option( 'dialoginsight_beneficiaryfield' );
+			if( ! empty( $beneficiaryfield ) ){
+				$data['f_'.$beneficiaryfield] = 1;
+			}
+		}
 
 		$request = [
 			'Records' => [
@@ -298,7 +306,24 @@ class Dialog_Insight_Contact {
 		return str_replace(' ', '', trim( preg_replace( '/[^0-9\+\-\(\)\s]/', '-', preg_replace( '/[\x00-\x1F\x7F-\xFF]/', '', $phone ) ) ) );
 	}
 
+	/**
+	 * Get option
+	 * @param string $option_name
+	 *
+	 * @return null
+	 */
+	static function get_option($option_name = null){
 
+		$options = get_option(self::PLUGIN_NAME . '-options');
+
+		if(!empty($option_name)){
+			return $options[$option_name] ?? null;
+		}
+		else{
+			return $options;
+		}
+
+	}
 
 
 
