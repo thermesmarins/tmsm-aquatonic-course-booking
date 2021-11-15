@@ -1,5 +1,6 @@
 * Check Google Pay Pass config before generating pass
 * Check Google Pay Pass account file before generating pass
+* Fix Lessons data with time starting not at multiple of 15 minutes (5, 10, 20, 25 ...)
 
 ### 1.8.8: November 15th, 2021
 * Tweak stat: participants by date can be found in the past

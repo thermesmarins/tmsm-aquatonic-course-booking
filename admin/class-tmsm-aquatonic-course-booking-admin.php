@@ -1555,7 +1555,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 
-		$lessons_data = get_option( 'tmsm-aquatonic-course-booking-lessons-data' );
+		$lessons_data = self::lessons_get_data();
 
 		$dashboard[0][] = '';
 
@@ -2483,7 +2483,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
-				error_log(print_r($response, true));
+				//error_log(print_r($response, true));
 				error_log(print_r($response_data, true));
 			}
 
@@ -2516,12 +2516,29 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			if ( ! empty( $response_data ) ) {
 
 				$averagecourse = $this->get_option('courseaverage');
-
+				$notcompatible_slots = array(
+					'05' => '-5',
+					'10' => '+5',
+					'20' => '-5',
+					'25' => '+5',
+					'35' => '-5',
+					'40' => '+5',
+					'50' => '-5',
+					'55' => '+5',
+				);
 				foreach($response_data as $response_lesson){
 
 					$lesson_datetime_object = DateTime::createFromFormat( 'Y-m-d H:i', $response_lesson->dateheure, wp_timezone() );
 
+					$dateheure_every15minutes_minutesonly = substr($response_lesson->dateheure, -2, 2);
 
+					//error_log('response_lesson->dateheure:' . $response_lesson->dateheure);
+					//error_log('$dateheure_every15minutes_minutesonly:' . $dateheure_every15minutes_minutesonly);
+
+					if( array_key_exists($dateheure_every15minutes_minutesonly, $notcompatible_slots)){
+						//error_log('insidearray:' . $notcompatible_slots[$dateheure_every15minutes_minutesonly]);
+						$lesson_datetime_object->modify($notcompatible_slots[$dateheure_every15minutes_minutesonly] . ' minutes');
+					}
 
 					if( ! empty( $lesson_datetime_object )) {
 						$lesson_datetime_start = clone $lesson_datetime_object;
