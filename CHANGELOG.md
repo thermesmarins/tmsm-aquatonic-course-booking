@@ -1,4 +1,5 @@
 * Check Google Pay Pass config before generating pass
+* Check Google Pay Pass account file before generating pass
 
 ### 1.8.8: November 15th, 2021
 * Tweak stat: participants by date can be found in the past

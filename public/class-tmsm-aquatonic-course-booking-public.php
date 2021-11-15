@@ -690,6 +690,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			&& ! empty( $this->get_option('googlepaypasses_issuerid' ) )
 			&& ! empty( $this->get_option('googlepaypasses_accountfilepath' ) )
 			&& ! empty( $this->get_option('googlepaypasses_applicationname' ) )
+			&& file_exists( $this->get_option('googlepaypasses_accountfilepath' ) )
 			){
 			$classUid = 'course-'.sanitize_title_with_dashes(get_bloginfo( 'name' ).'-'.$booking['googlepay_date_start']);
 			$classId = sprintf("%s.%s" , ISSUER_ID, $classUid);
@@ -704,6 +705,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			if ($skinnyJwt  != null){
 				return $skinnyJwt;
 			}
+		}
+		else{
+			error_log( 'Google Pay Pass invalid configuration' );
 		}
 
 		return '';
