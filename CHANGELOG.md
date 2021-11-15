@@ -1,3 +1,4 @@
+### 1.8.9: November 15th, 2021
 * Check Google Pay Pass config before generating pass
 * Check Google Pay Pass account file before generating pass
 * Fix Lessons data with time starting not at multiple of 15 minutes (5, 10, 20, 25 ...)
