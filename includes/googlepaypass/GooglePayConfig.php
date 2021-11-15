@@ -3,20 +3,20 @@
 $pluginoptions = get_option( 'tmsm-aquatonic-course-booking' . '-options' );
 
 // Identifiers of Service account
-define('SERVICE_ACCOUNT_EMAIL_ADDRESS', $pluginoptions['accountemail']);  //CHANGEME
-define('SERVICE_ACCOUNT_FILE', '/app/aquatonic-5c6c665f8318.json');  //CHANGEME
+define('SERVICE_ACCOUNT_EMAIL_ADDRESS', $pluginoptions['googlepaypasses_accountemail']);
+define('SERVICE_ACCOUNT_FILE', $pluginoptions['googlepaypasses_accountfilepath']);
 
 // Used by the Google Pay API for Passes Client library
-define('APPLICATION_NAME', $pluginoptions['applicationname']); //CHANGEME
+define('APPLICATION_NAME', $pluginoptions['googlepaypasses_applicationname']);
 
 // Identifier of Google Pay API for Passes Merchant Center
-define('ISSUER_ID', $pluginoptions['issuerid']);  //CHANGEME
+define('ISSUER_ID', $pluginoptions['googlepaypasses_issuerid']);
 
 // Origin
 $urlparts = parse_url(home_url());
 $domain = $urlparts['host'];
 $scheme = $urlparts['scheme'];
-define('ORIGINS', $scheme . '://' . $domain);  //CHANGEME
+define('ORIGINS', $scheme . '://' . $domain);
 
 // Constants that are application agnostic. Used for JWT
 define('AUDIENCE', 'google');

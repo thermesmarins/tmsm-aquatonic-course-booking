@@ -1196,15 +1196,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 		$booking_dialoginsight->token = $booking['token'];
 		$booking_dialoginsight->status = 'arrived';
-		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-			error_log('booking_mark_as_arrived');
-		}
+
 		try {
 			$booking_dialoginsight->update();
 
 			// Booking updated and contact_id found
 			if( ! empty($booking_dialoginsight->contact_id)){
-				error_log('contact_id found');
 
 				$contact = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
 				$contact->contact_id = $booking_dialoginsight->contact_id;
