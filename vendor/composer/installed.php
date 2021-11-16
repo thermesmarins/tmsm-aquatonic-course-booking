@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.8.9',
-    'version' => '1.8.9.0',
+    'pretty_version' => '1.9.0',
+    'version' => '1.9.0.0',
     'aliases' => 
     array (
     ),
@@ -243,8 +243,8 @@
     ),
     'thermesmarins/tmsm-aquatonic-course-booking' => 
     array (
-      'pretty_version' => '1.8.9',
-      'version' => '1.8.9.0',
+      'pretty_version' => '1.9.0',
+      'version' => '1.9.0.0',
       'aliases' => 
       array (
       ),
