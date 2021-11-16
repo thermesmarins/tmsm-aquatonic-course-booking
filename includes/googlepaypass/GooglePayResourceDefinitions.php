@@ -205,11 +205,11 @@ class GooglePayResourceDefinitions {
 		$eventDateTime->setStart($ticketData['googlepay_date_start']);
 		$eventDateTime->setEnd($ticketData['googlepay_date_end']);
 
-		// Prepare your venur text
-		$textModulesData = new Google_Service_Walletobjects_TextModuleData();
+		// Prepare your venue text // TODO dynamize this data
+		/*$textModulesData = new Google_Service_Walletobjects_TextModuleData();
 		$textModulesData->setBody("Vous bénéficiez d’un accès prioritaire pendant 15 minutes. Au-delà, nous ne vous assurons pas de la disponibilité du Parcours.\r\n• Bonnets de bain obligatoires, en vente à l’accueil (3,5 €).\r\n• Le drap de bain est indispensable à la pratique du sauna.\r\n• Le short de bains de plage n’est pas autorisé.");
 		$textModulesData->setHeader(__('Prepare your venue', 'tmsm-aquatonic-course-booking'));
-		$textModulesDatas = array($textModulesData);
+		$textModulesDatas = array($textModulesData);*/
 
 		// Phone
 		if( ! empty($phone_number)){

@@ -1,3 +1,5 @@
+* Update translations
+
 ### 1.9.0: November 16th, 2021
 * Google Pay Pass: don't display errors on frontend
 * Google Pay Pass: fix logo path
