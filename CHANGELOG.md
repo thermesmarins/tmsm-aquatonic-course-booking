@@ -1,6 +1,9 @@
+* Google Pay Pass: don't display errors on frontend
+* Google Pay Pass: fix logo path
+
 ### 1.8.9: November 15th, 2021
-* Check Google Pay Pass config before generating pass
-* Check Google Pay Pass account file before generating pass
+* Google Pay Pass: check config before generating pass
+* Google Pay Pass: check account file before generating pass
 * Fix Lessons data with time starting not at multiple of 15 minutes (5, 10, 20, 25 ...)
 
 ### 1.8.8: November 15th, 2021

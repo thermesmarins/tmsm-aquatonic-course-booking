@@ -68,11 +68,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -104,11 +104,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -140,11 +140,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -176,11 +176,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -211,11 +211,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -247,11 +247,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -283,11 +283,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -319,11 +319,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -355,11 +355,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -390,11 +390,11 @@ class GooglePayRestMethods {
        } catch (Google_Service_Exception $gException)  {
            $response = $gException->getErrors();
            $response["code"] = $gException->getCode();
-           echo("\n>>>> [START] Google Server Error response:");
-           var_dump($response);
-           echo("\n>>>> [END] Google Server Error response\n");
+	       error_log("\n>>>> [START] Google Server Error response:");
+	       error_log(print_r($response, true));
+	       error_log("\n>>>> [END] Google Server Error response\n");
        } catch (Exception $e){
-           var_dump($e->getMessage());
+	       error_log(print_r($e->getMessage()));
        }
 
        return $response;
@@ -425,11 +425,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -460,11 +460,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -495,11 +495,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -530,11 +530,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -565,11 +565,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -600,11 +600,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -635,11 +635,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -670,11 +670,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -706,11 +706,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -742,11 +742,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -778,11 +778,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -814,11 +814,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -850,11 +850,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;
@@ -886,11 +886,11 @@ class GooglePayRestMethods {
         } catch (Google_Service_Exception $gException)  {
             $response = $gException->getErrors();
             $response["code"] = $gException->getCode();
-            echo("\n>>>> [START] Google Server Error response:");
-            var_dump($response);
-            echo("\n>>>> [END] Google Server Error response\n");
+	        error_log("\n>>>> [START] Google Server Error response:");
+	        error_log(print_r($response, true));
+	        error_log("\n>>>> [END] Google Server Error response\n");
         } catch (Exception $e){
-            var_dump($e->getMessage());
+	        error_log(print_r($e->getMessage()));
         }
 
         return $response;

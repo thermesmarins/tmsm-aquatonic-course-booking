@@ -587,10 +587,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 						$custom_merge_tag_barcode_logo = '{booking_barcode_logo}';
 						if ( strpos( $text, $custom_merge_tag_barcode_logo ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
-							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) );
+							$barcode_logo_url = plugins_url( 'public/img/barcode-logo.png', TMSM_AQUATONIC_COURSE_BOOKING_PLUGIN_FILE );
 
 							if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ) {
-								$barcode_logo_url = 'https://www.aquatonic.fr/logo-aquatonic-round-white.png';
+								$barcode_logo_url = 'https://www.aquatonic.fr/wp-content/plugins/tmsm-aquatonic-course-booking/public/img/barcode-logo.png';
 							}
 
 							$text = str_replace( $custom_merge_tag_barcode_logo, $barcode_logo_url, $text );
@@ -650,13 +650,14 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							$booking['barcode'] = $barcode;
 
 							$jwt = self::googlepaypass_jwt($booking);
+							$googlepaypass_link = '';
 							if( ! empty( $jwt ) ){
 								$googlepaypass_link = '
 								<script src="https://apis.google.com/js/platform.js" type="text/javascript"></script>
 								<g:savetoandroidpay jwt="'.$jwt.'" height="standard" theme="dark" />
 							';
-								$text = str_replace( $custom_merge_tag_googlepaypass, $googlepaypass_link, $text );
 							}
+							$text = str_replace( $custom_merge_tag_googlepaypass, $googlepaypass_link, $text );
 
 						}
 
@@ -680,7 +681,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @return string
 	 */
 	private function googlepaypass_jwt($booking){
-
+		if( defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG ){
+			error_log('googlepaypass_jwt:');
+		}
 		$verticalType = VerticalType::EVENTTICKET;
 		$vertical = "EVENTTICKET";
 

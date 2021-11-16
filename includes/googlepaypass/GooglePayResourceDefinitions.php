@@ -179,7 +179,7 @@ class GooglePayResourceDefinitions {
 			$logoUri->setUri('https://www.aquatonic.fr/wp-content/plugins/tmsm-aquatonic-course-booking/public/img/barcode-logo.png');
 		}
 		else{
-			$logoUri->setUri(plugins_url( 'public/img/barcode-logo.png', dirname( __FILE__ ) ));
+			$logoUri->setUri(plugins_url( 'public/img/barcode-logo.png', TMSM_AQUATONIC_COURSE_BOOKING_PLUGIN_FILE ));
 		}
 		$logoUri->setDescription(sprintf(__('%s logo', 'tmsm-aquatonic-course-booking'), $shop_name));
 		$logoImage = new Google_Service_Walletobjects_Image();

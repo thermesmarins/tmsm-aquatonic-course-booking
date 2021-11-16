@@ -48,6 +48,9 @@ if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_PATH')){
 if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_URL')){
 	define( 'TMSM_AQUATONIC_COURSE_BOOKING_URL', plugin_dir_url( __FILE__ ) );
 }
+if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_PLUGIN_FILE')){
+	define( 'TMSM_AQUATONIC_COURSE_BOOKING_PLUGIN_FILE', __FILE__ );
+}
 
 /**
  * The code that runs during plugin activation.
