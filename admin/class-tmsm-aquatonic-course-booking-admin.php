@@ -1497,6 +1497,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard    = array();
 		$canstart         = 200; // Fake number of persons that can start, high on purpose
 		$canstart_counter = null;
+		$history_item = [];
 
 		$second = $now->format( "s" );
 		if ( $second > 0 ) {
@@ -1793,10 +1794,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] = 0;
 			}
 			$allotment_timeslots_forthedate_counter[ $counter ] = $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ];
+			if($counter ===1){
+				$history_item['datetime'] = $period_item->format( 'Y-m-d H:i:s' );
+				$history_item['courseallotment'] = $allotment_timeslots_forthedate_counter[ $counter ];
+			}
 
 			if ( $counter != 1
-			     && $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $allotment_timeslots_forthedate_counter[ $counter
-			                                                                                                                             - 1 ] ) {
+			     && $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ] != $allotment_timeslots_forthedate_counter[ $counter - 1 ] ) {
 				$difference = ( ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
 				                  - $allotment_timeslots_forthedate_counter[ $counter - 1 ] ) >= 0 ? '+' : '' )
 				              . ( $allotment_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
@@ -1825,6 +1829,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			$cell .= '<span class="tooltip-trigger booking-ongoing booking-ongoing-' . $counter . '">'
 			         . $plugin_public->get_participants_ongoing_forthetime( $period_item ) . '</span>';
+			if($counter === 1){
+				$history_item['ongoingbookings'] = $plugin_public->get_participants_ongoing_forthetime( $period_item );
+			}
 
 			$bookings_inside = '';
 			foreach ( $bookings_of_the_day as $booking ) {
@@ -2013,12 +2020,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			// First "Free" column
 			if ( $counter === 1 ) {
+
 				$free_alternative1[ $counter ] = (
 					$capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]
 					- $realtime
 					+ $plugin_public->get_participants_ending_forthetime( $period_item )
 					- $plugin_public->get_participants_starting_forthetime( $period_item )
 				);
+				$history_item['free'] = $free_alternative1[ $counter ];
 
 				// Force value between 0 and capacity
 				$free_alternative1[ $counter ] = min($free_alternative1[ $counter ], $capacity_timeslots_forthedate[ $period_item->format( 'Y-m-d H:i:s' ) ]);
@@ -2097,6 +2106,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 
 			$canstart                 = min( $canstart, $free_alternative1[ $counter ] );
+			$history_item['canstart'] = $canstart;
 
 			$dashboard[81][] = $cell;
 
@@ -2226,6 +2236,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( empty( $realtime ) ) {
 			$cell = __( 'Real time data is missing!', 'tmsm-aquatonic-course-booking' );
 		}
+		$history_item['realtime'] = $realtime ?? 0;
+
 		$dashboard[100][] = $cell;
 		$dashboard[100][] = '';
 		$dashboard[100][] = '';
@@ -2233,11 +2245,61 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard[100][] = '';
 		$dashboard[100][] = '';
 
+		// Save History Item
+		error_log('$history_item');
+		error_log( print_r( $history_item, true ) );
+		self::dashboard_save_history_item($history_item);
 
+		// Save Dashboard data for use in the Dashboard
 		update_option('tmsm-aquatonic-course-booking-minidashboard', $minidashboard);
 		update_option('tmsm-aquatonic-course-booking-dashboard', $dashboard);
 
+	}
 
+	function dashboard_save_history_item($history_item){
+		global $wpdb;
+		$table = $wpdb->prefix . 'aquatonic_course_history';
+
+		$data = array(
+			'datetime'        => $history_item['datetime'],
+			'courseallotment' => $history_item['courseallotment'],
+			'ongoingbookings' => $history_item['ongoingbookings'],
+			'canstart'        => $history_item['canstart'],
+			'realtime'        => $history_item['realtime'],
+		);
+		$format = array(
+			'%s',
+			'%d',
+			'%d',
+			'%d',
+			'%d',
+		);
+
+		// Does this datetime already exist?
+		$field_name = 'datetime';
+		$prepared_statement = $wpdb->prepare( "SELECT {$field_name} FROM {$table} WHERE  {$field_name} = %s", $history_item['datetime'] );
+		$datetimes_found = $wpdb->get_col( $prepared_statement );
+		$datetime_found = null;
+		if( ! empty($datetimes_found)){
+			$datetime_found = $datetimes_found[0] ?? null;
+		}
+		if( ! empty( $datetime_found ) ){
+			// Update data into custom table
+			$where = [$field_name => $datetime_found];
+			$result_update = $wpdb->update( $table, $data, $where, $format );
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('History Item updated result: ' . $result_update);
+			}
+		}
+		else{
+			// Insert data into custom table
+			$result_insert = $wpdb->insert( $table, $data, $format );
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('History Item inserted result: ' . $result_insert);
+			}
+		}
+
+		return true;
 	}
 
 	/**
