@@ -66,15 +66,11 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 	private static function create_database_schema() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'aquatonic_course_booking'; // do not forget about tables prefix
-
 		$charset_collate = $wpdb->get_charset_collate();
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-		// NOTICE that:
-		// 1. each field MUST be in separate line
-		// 2. There must be two spaces between PRIMARY KEY and its name
-		//    Like this: PRIMARY KEY[space][space](id)
-		// otherwise dbDelta will not work
+		// Bookings table
+		$table_name = $wpdb->prefix . 'aquatonic_course_booking';
 		$sql = "CREATE TABLE " . $table_name . " (
         booking_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
         token VARCHAR(50) NOT NULL DEFAULT '',
@@ -95,10 +91,19 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
         status VARCHAR(10) NOT NULL DEFAULT 'active',
         PRIMARY KEY (booking_id)
         ) $charset_collate;";
+		dbDelta($sql);
 
-		// we do not execute sql directly
-		// we are calling dbDelta which cant migrate database
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		// History table
+		$table_name = $wpdb->prefix . 'aquatonic_course_history';
+		$sql = "CREATE TABLE " . $table_name . " (
+        history_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        datetime DATETIME NULL DEFAULT NULL,
+        canstart TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        courseallotment TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        realtime TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        ongoingbookings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+        PRIMARY KEY (history_id)
+        ) $charset_collate;";
 		dbDelta($sql);
 
 		// save current database version for later use (on upgrade)
