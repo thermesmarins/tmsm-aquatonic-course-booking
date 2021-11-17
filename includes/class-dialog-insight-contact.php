@@ -204,7 +204,6 @@ class Dialog_Insight_Contact {
 		$result_array = [];
 		$contact      = [];
 		$data         = [
-			'f_EMail' => $this->email,
 		];
 
 		if ($this->beneficiary == 1){
@@ -218,13 +217,13 @@ class Dialog_Insight_Contact {
 			'Records' => [
 				[
 					'ID'   => [
-						'key_idContact' => $this->contact_id,
+						'idContact' => $this->contact_id,
 					],
 					'Data' => $data,
 				],
 			],
 			'MergeOptions' => [
-				'AllowInsert'            => true,
+				'AllowInsert'            => false,
 				'AllowUpdate'            => true,
 				'SkipDuplicateRecords'   => false,
 				'SkipUnmatchedRecords'   => false,

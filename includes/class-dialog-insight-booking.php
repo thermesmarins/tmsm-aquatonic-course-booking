@@ -127,7 +127,7 @@ class Dialog_Insight_Booking {
 	 * @throws \Exception
 	 */
 	public function update(){
-
+		error_log( 'Booking update()' );
 		if( !empty($this->token) && !empty($this->status)){
 			$request = [
 				'Records' => [
@@ -155,10 +155,19 @@ class Dialog_Insight_Booking {
 
 			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
 				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log( 'Booking found, assigning values' );
 				}
-				$booking          = $bookings->Records[0];
-				$this->contact_id = $booking->idContact ?? null;
+				error_log( 'Booking found, assigning values' );
+
+				if(!empty($bookings->Records[0])){
+					$booking          = $bookings->Records[0];
+					if( ! empty($booking->Record)){
+						$booking_record          = $booking->Record;
+						if( !empty($booking_record->idContact)){
+							$this->contact_id = $booking_record->idContact ?? null;
+						}
+					}
+				}
+
 			}
 
 		}

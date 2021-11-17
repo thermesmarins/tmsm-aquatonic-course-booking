@@ -501,7 +501,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 */
 	public function gform_replace_merge_tags_booking( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ){
 
-		error_log('gform_replace_merge_tags_booking');
 
 		$form_add_id = $this->get_option('gform_add_id');
 		$form_cancel_id = $this->get_option('gform_cancel_id');
@@ -519,10 +518,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 
 		if(!empty($form_add_id) && !empty($form_cancel_id) && !empty( $entry ) ) {
-			error_log('1');
 
 			if($form['id'] == $form_add_id || $form['id'] == $form_cancel_id ){
-				error_log('2');
 
 				$token    = self::gform_entry_generate_token( $entry_id );
 				if( !empty($token)){
