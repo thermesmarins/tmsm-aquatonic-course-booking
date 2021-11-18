@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
 "POT-Creation-Date: 2021-11-18 17:01+0100\n"
-"PO-Revision-Date: 2021-11-18 17:01+0100\n"
+"PO-Revision-Date: 2021-11-18 17:23+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -510,7 +510,7 @@ msgstr "Aquos atteint, avec le message d’erreur : %s"
 
 #: admin/partials/history.php:9
 msgid "Allotment History by Slot"
-msgstr "Historique de l’allotement par créneau"
+msgstr "Historique de l’allotement ResaParcours par créneau"
 
 #: admin/partials/history.php:17
 msgid "Legend:"
@@ -518,19 +518,19 @@ msgstr "Légende :"
 
 #: admin/partials/history.php:18
 msgid "Possible Allotment Upgrade"
-msgstr "Amélioration possible de l’allotement du parcours"
+msgstr "Amélioration possible de l’allotement ResaParcours"
 
 #: admin/partials/history.php:19
 msgid "Allotment Poorly Filled"
-msgstr "Allotement parcours peu rempli"
+msgstr "Allotement ResaParcours peu rempli"
 
 #: admin/partials/history.php:20
 msgid "Allotment Medium Filled"
-msgstr "Allotement parcours moyennement rempli"
+msgstr "Allotement ResaParcours moyennement rempli"
 
 #: admin/partials/history.php:21
 msgid "Allotment Very Filled"
-msgstr "Allotement parcours très rempli"
+msgstr "Allotement ResaParcours très rempli"
 
 #: admin/partials/history.php:24
 msgid "Course Date (MM/DD/YYYY)"
@@ -551,11 +551,11 @@ msgstr "Date"
 
 #: admin/partials/history.php:41 includes/history-list-table.php:74
 msgid "Course Allotment"
-msgstr "Allotement du parcours"
+msgstr "Allotement ResaParcours"
 
 #: admin/partials/history.php:42
 msgid "Course participants"
-msgstr "Participants au parcours"
+msgstr "Participants ResaParcours"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:32
 msgid "Dashboard"

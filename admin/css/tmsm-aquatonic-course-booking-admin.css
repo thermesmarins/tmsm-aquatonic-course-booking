@@ -9,7 +9,7 @@
   margin-bottom: 4px;
 }
 #postbox-history .legend > span.legend-upgrade {
-  background: #f0f3fc;
+  background: #e3ebff;
 }
 #postbox-history .legend > span.legend-cool {
   background: #f1fce8;
@@ -25,7 +25,7 @@
   font-weight: normal;
 }
 .wp-list-table.tmsm-aquatonic-course-booking-history .canstart-upgradeyes {
-  background: #f0f3fc;
+  background: #e3ebff;
 }
 .wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-cool {
   background: #f1fce8;
