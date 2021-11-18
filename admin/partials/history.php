@@ -6,7 +6,7 @@ $history->prepare_items();
 	<div id="postbox-container-4" class="postbox-container">
 		<div class="meta-box-sortables ui-sortable">
 			<div class="postbox" id="postbox-history">
-				<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Participants by date (arrived or active)','tmsm-aquatonic-course-booking' ); ?></h2></div>
+				<div class="postbox-header"><h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'Allotment History by Slot','tmsm-aquatonic-course-booking' ); ?></h2></div>
 				<div class="insidee">
 					<div class="main">
 
@@ -39,7 +39,7 @@ $history->prepare_items();
 									<th scope="col"><?php esc_html_e( 'Real Time','tmsm-aquatonic-course-booking' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Can Start','tmsm-aquatonic-course-booking' ); ?></th>
 									<th scope="col"><?php esc_html_e( 'Course Allotment','tmsm-aquatonic-course-booking' ); ?></th>
-									<th scope="col"><?php esc_html_e( 'On going Bookings','tmsm-aquatonic-course-booking' ); ?></th>
+									<th scope="col"><?php esc_html_e( 'Course participants','tmsm-aquatonic-course-booking' ); ?></th>
 
 								</tr>
 								</thead>
@@ -57,7 +57,7 @@ $history->prepare_items();
 										if ( $history_item['canstart'] > 10 ) {
 											$upgrade = 'upgradeyes';
 										}
-										if ( $difference >= 7 ) {
+										if ( $difference >= 5 ) {
 											$color   = 'warning';
 											$upgrade = 'upgradeno';
 										}

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-11-18 16:51+0100\n"
-"PO-Revision-Date: 2021-11-18 16:52+0100\n"
+"POT-Creation-Date: 2021-11-18 17:01+0100\n"
+"PO-Revision-Date: 2021-11-18 17:01+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -488,30 +488,29 @@ msgstr "Temps réél"
 msgid "Real time data is missing!"
 msgstr "Les données temps réel sont manquantes"
 
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2482
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:2484
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2486
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2605
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2603
 #: includes/class-dialog-insight-api.php:150
 #: includes/class-dialog-insight-api.php:151
 #, php-format
 msgid "Error: Delivery URL returned response code: %s"
 msgstr "Erreur : URL de livraison a retourné le code : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2493
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2494
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2491
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2492
 #, php-format
 msgid "Error message: %s"
 msgstr "Code erreur : %s"
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2614
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2612
 #, php-format
 msgid "Aquos reached, with error message: %s"
 msgstr "Aquos atteint, avec le message d’erreur : %s"
 
 #: admin/partials/history.php:9
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:122
-msgid "Participants by date (arrived or active)"
-msgstr "Participants par date (arrivés et planifiés)"
+msgid "Allotment History by Slot"
+msgstr "Historique de l’allotement par créneau"
 
 #: admin/partials/history.php:17
 msgid "Legend:"
@@ -555,8 +554,8 @@ msgid "Course Allotment"
 msgstr "Allotement du parcours"
 
 #: admin/partials/history.php:42
-msgid "On going Bookings"
-msgstr "Réservations en cours"
+msgid "Course participants"
+msgstr "Participants au parcours"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:32
 msgid "Dashboard"
@@ -583,6 +582,10 @@ msgstr "La connexion Dialog Insight a échoué avec le code erreur : %s"
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:103
 msgid "Save options"
 msgstr "Enregistrer les options"
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:122
+msgid "Participants by date (arrived or active)"
+msgstr "Participants par date (arrivés et planifiés)"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:130
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:593
@@ -836,6 +839,9 @@ msgstr "Aucun créneau de fin pour calculer les créneaux"
 #: public/class-tmsm-aquatonic-course-booking-public.php:2596
 msgid "Mini Dashboard"
 msgstr "Mini tableau de bord"
+
+#~ msgid "On going Bookings"
+#~ msgstr "Réservations en cours"
 
 #~ msgid "On Going Bookings"
 #~ msgstr "Réservations en cours"

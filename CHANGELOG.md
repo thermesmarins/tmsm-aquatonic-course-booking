@@ -1,3 +1,6 @@
+TODO Export Json to Excel
+
+### 1.9.1: November 18th, 2021
 * Update translations
 * Fix update contacts by ID
 * New feature: save dashboard past history, see logs in the "History" tab

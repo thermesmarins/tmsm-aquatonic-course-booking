@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2021-11-18 16:51+0100\n"
+"POT-Creation-Date: 2021-11-18 17:00+0100\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -484,29 +484,28 @@ msgstr ""
 msgid "Real time data is missing!"
 msgstr ""
 
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2482
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:2484
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2486
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2605
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2603
 #: includes/class-dialog-insight-api.php:150
 #: includes/class-dialog-insight-api.php:151
 #, php-format
 msgid "Error: Delivery URL returned response code: %s"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2493
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2494
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2491
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2492
 #, php-format
 msgid "Error message: %s"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2614
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2612
 #, php-format
 msgid "Aquos reached, with error message: %s"
 msgstr ""
 
 #: admin/partials/history.php:9
-#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:122
-msgid "Participants by date (arrived or active)"
+msgid "Allotment History by Slot"
 msgstr ""
 
 #: admin/partials/history.php:17
@@ -551,7 +550,7 @@ msgid "Course Allotment"
 msgstr ""
 
 #: admin/partials/history.php:42
-msgid "On going Bookings"
+msgid "Course participants"
 msgstr ""
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:32
@@ -578,6 +577,10 @@ msgstr ""
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:103
 msgid "Save options"
+msgstr ""
+
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:122
+msgid "Participants by date (arrived or active)"
 msgstr ""
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:130
