@@ -1208,7 +1208,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
-		if ( ! empty( $booking['email'] ) ) {
+		if ( empty( $booking['email'] ) ) {
 			return;
 		}
 
@@ -1253,7 +1253,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	public function booking_mark_as_cancelled( $booking, $redirect_to_admin ){
 
 		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
-		if ( ! empty( $booking['email'] ) ) {
+		if ( empty( $booking['email'] ) ) {
 			return;
 		}
 
