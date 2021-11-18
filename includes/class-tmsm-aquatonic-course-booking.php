@@ -137,6 +137,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		/**
 		 * The class responsible for list table
 		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/history-list-table.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tmsm-aquatonic-course-booking-list-table.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-tmsm-aquatonic-course-booking-list-table-noshow.php';
 

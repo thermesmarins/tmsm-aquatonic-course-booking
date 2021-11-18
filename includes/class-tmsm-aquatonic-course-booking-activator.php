@@ -63,7 +63,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 	 *
 	 * @since    1.0.0
 	 */
-	private static function create_database_schema() {
+	public static function create_database_schema() {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();

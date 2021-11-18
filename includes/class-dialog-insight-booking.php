@@ -104,19 +104,19 @@ class Dialog_Insight_Booking {
 			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
 
 			if ( empty( $bookings ) ) {
-				//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 					error_log('Dialog Insight Add Record to Bookings Table : No response');
 					return false;
-				//}
+				}
 			}
 			return true;
 		}
 		else{
 
-			//if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log('Contact doesnt exist');
 				return false;
-			//}
+			}
 		}
 
 	}
@@ -127,7 +127,7 @@ class Dialog_Insight_Booking {
 	 * @throws \Exception
 	 */
 	public function update(){
-		error_log( 'Booking update()' );
+
 		if( !empty($this->token) && !empty($this->status)){
 			$request = [
 				'Records' => [
@@ -155,8 +155,8 @@ class Dialog_Insight_Booking {
 
 			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
 				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log( 'Booking found, assigning values' );
 				}
-				error_log( 'Booking found, assigning values' );
 
 				if(!empty($bookings->Records[0])){
 					$booking          = $bookings->Records[0];

@@ -169,9 +169,6 @@ class Dialog_Insight_Contact {
 
 		}
 
-		//error_log( '$contacts:' );
-		//error_log( print_r( $contacts, true ) );
-
 		if ( ! empty($result) && ! empty( $result->Success ) &&  $result->Success== true ) {
 
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){

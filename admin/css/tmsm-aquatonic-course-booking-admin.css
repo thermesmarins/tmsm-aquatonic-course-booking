@@ -1,3 +1,12 @@
+.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-cool {
+  background: #f1fce8;
+}
+.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-danger {
+  background: #fcf0f1;
+}
+.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-cool {
+  background: #f1fce8;
+}
 .tmsm-aquatonic-course-booking-wrap {
   /*.allotment-1{
         color: @allotment;

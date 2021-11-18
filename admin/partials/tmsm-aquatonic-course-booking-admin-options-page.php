@@ -53,6 +53,12 @@
 			<?php _e( 'Stats', 'tmsm-aquatonic-course-booking' ); ?>
 		</a>
 
+		<a class="nav-tab <?php if ( $tab == 'history' ) {
+			echo 'nav-tab-active';
+		} ?>" href="<?php echo self::admin_page_url(); ?>?page=tmsm-aquatonic-course-booking-settings&tab=history">
+			<?php _e( 'History', 'tmsm-aquatonic-course-booking' ); ?>
+		</a>
+
 	</h2>
 
 	<?php
@@ -60,6 +66,10 @@
 
 
 	$options       = get_option( $this->plugin_name . '-options' );
+
+	if ( $tab == 'history' ) {
+		require_once 'history.php';
+	}
 
 	if ( $tab == 'settings' ) {
 

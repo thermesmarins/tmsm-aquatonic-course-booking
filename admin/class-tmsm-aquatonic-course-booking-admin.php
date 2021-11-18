@@ -1203,6 +1203,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function booking_mark_as_arrived( $booking, $redirect_to_admin ){
 
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('booking_mark_as_arrived');
+		}
+
+		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
+		if ( ! empty( $booking['email'] ) ) {
+			return;
+		}
+
 		// Dialog Insight: Mark contact as customer if arrived
 		$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 		$booking_dialoginsight->token = $booking['token'];
@@ -1213,7 +1222,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			// Booking updated and contact_id found
 			if( ! empty($booking_dialoginsight->contact_id)){
-
 				$contact = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
 				$contact->contact_id = $booking_dialoginsight->contact_id;
 				$contact->beneficiary = 1;
@@ -1243,6 +1251,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * @return WP_Error
 	 */
 	public function booking_mark_as_cancelled( $booking, $redirect_to_admin ){
+
+		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
+		if ( ! empty( $booking['email'] ) ) {
+			return;
+		}
 
 		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 			error_log('booking_mark_as_cancelled');
@@ -2246,9 +2259,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard[100][] = '';
 
 		// Save History Item
-		error_log('$history_item');
-		error_log( print_r( $history_item, true ) );
-		self::dashboard_save_history_item($history_item);
+		if( get_option('tmsm-aquatonic-course-booking-db-version') === TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION){
+			self::dashboard_save_history_item($history_item);
+		}
+		else{
+
+			// Update database schema before adding history items in new table
+			Tmsm_Aquatonic_Course_Booking_Activator::create_database_schema();
+		}
 
 		// Save Dashboard data for use in the Dashboard
 		update_option('tmsm-aquatonic-course-booking-minidashboard', $minidashboard);
@@ -2260,6 +2278,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		global $wpdb;
 		$table = $wpdb->prefix . 'aquatonic_course_history';
 
+		// Don't store in history if course is not opened
+		if( $history_item['courseallotment'] == 0){
+			return;
+		}
+
+		// Preapre data
 		$data = array(
 			'datetime'        => $history_item['datetime'],
 			'courseallotment' => $history_item['courseallotment'],
@@ -2286,17 +2310,22 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if( ! empty( $datetime_found ) ){
 			// Update data into custom table
 			$where = [$field_name => $datetime_found];
-			$result_update = $wpdb->update( $table, $data, $where, $format );
+			$result = $wpdb->update( $table, $data, $where, $format );
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-				error_log('History Item updated result: ' . $result_update);
+				error_log('History Item updated result: ' . $result);
 			}
 		}
 		else{
 			// Insert data into custom table
-			$result_insert = $wpdb->insert( $table, $data, $format );
+			$result = $wpdb->insert( $table, $data, $format );
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-				error_log('History Item inserted result: ' . $result_insert);
+				error_log('History Item inserted result: ' . $result);
 			}
+		}
+
+		// Log last query error
+		if( $result == 0 && $wpdb->last_error && defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('Last error: ' . $wpdb->last_error);
 		}
 
 		return true;

@@ -1035,13 +1035,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		foreach( $form['fields'] as &$field ) {
 
 			if ( strpos($field['cssClass'], 'tmsm-aquatonic-course-email') !== false ) {
-				error_log('tmsm-aquatonic-course-email');
-				error_log(print_r($field, true));
 
 				$user = wp_get_current_user();
 				// User has admin/editor/author role (is not customer)
 				if( ! ( $this->user_has_role(wp_get_current_user(), 'customer') || ! $user || is_wp_error( $user ) || !$user->ID ) ) {
-					error_log('not customer');
 					$field['isRequired'] = false;
 
 				}
