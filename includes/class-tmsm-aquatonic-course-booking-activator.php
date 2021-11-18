@@ -107,6 +107,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
 		dbDelta($sql);
 
 		// save current database version for later use (on upgrade)
+		error_log('updating database version to '. TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
 		update_option('tmsm-aquatonic-course-booking-db-version', TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
 
 	}

@@ -72,7 +72,7 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 			'realtime' => esc_html__( 'Real Time', 'tmsm-aquatonic-course-booking' ),
 			'canstart'   => esc_html__( 'Can Start', 'tmsm-aquatonic-course-booking' ),
 			'courseallotment' => esc_html__( 'Course Allotment', 'tmsm-aquatonic-course-booking' ),
-			'ongoingbookings'  => esc_html__( 'On Going Bookings', 'tmsm-aquatonic-course-booking' ),
+			'ongoingbookings'  => esc_html__( 'On Going Participants', 'tmsm-aquatonic-course-booking' ),
 		);
 		return $columns;
 	}

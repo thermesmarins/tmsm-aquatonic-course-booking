@@ -2259,8 +2259,6 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard[100][] = '';
 
 		// Save History Item
-		error_log('get_option(tmsm-aquatonic-course-booking-db-version):' . get_option('tmsm-aquatonic-course-booking-db-version'));
-		error_log('TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION:' . TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
 		if( get_option('tmsm-aquatonic-course-booking-db-version') == TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION){
 			self::dashboard_save_history_item($history_item);
 		}
@@ -2276,8 +2274,16 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 	}
 
+	/**
+	 * Save history itme to history table
+	 *
+	 * @param $history_item
+	 *
+	 * @return bool|void
+	 */
 	function dashboard_save_history_item($history_item){
 		global $wpdb;
+
 		$table = $wpdb->prefix . 'aquatonic_course_history';
 
 		// Don't store in history if course is not opened
@@ -2326,8 +2332,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		}
 
 		// Log last query error
-		if( $result == 0 && $wpdb->last_error && defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-			error_log('Last error: ' . $wpdb->last_error);
+		if( $result == 0 && $wpdb->last_error){
+			error_log('History Item Last Error: ' . $wpdb->last_error);
 		}
 
 		return true;
