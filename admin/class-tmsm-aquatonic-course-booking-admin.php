@@ -2259,12 +2259,14 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard[100][] = '';
 
 		// Save History Item
-		if( get_option('tmsm-aquatonic-course-booking-db-version') === TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION){
+		error_log('get_option(tmsm-aquatonic-course-booking-db-version):' . get_option('tmsm-aquatonic-course-booking-db-version'));
+		error_log('TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION:' . TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION);
+		if( get_option('tmsm-aquatonic-course-booking-db-version') == TMSM_AQUATONIC_COURSE_BOOKING_DB_VERSION){
 			self::dashboard_save_history_item($history_item);
 		}
 		else{
-
 			// Update database schema before adding history items in new table
+			require_once TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'includes/class-tmsm-aquatonic-course-booking-activator.php';
 			Tmsm_Aquatonic_Course_Booking_Activator::create_database_schema();
 		}
 

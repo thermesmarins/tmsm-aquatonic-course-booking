@@ -57,7 +57,7 @@ if(! defined('TMSM_AQUATONIC_COURSE_BOOKING_PLUGIN_FILE')){
  * This action is documented in includes/class-tmsm-aquatonic-course-booking-activator.php
  */
 function activate_tmsm_aquatonic_course_booking() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-tmsm-aquatonic-course-booking-activator.php';
+	require_once TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'includes/class-tmsm-aquatonic-course-booking-activator.php';
 	Tmsm_Aquatonic_Course_Booking_Activator::activate();
 }
 
@@ -66,7 +66,7 @@ function activate_tmsm_aquatonic_course_booking() {
  * This action is documented in includes/class-tmsm-aquatonic-course-booking-deactivator.php
  */
 function deactivate_tmsm_aquatonic_course_booking() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-tmsm-aquatonic-course-booking-deactivator.php';
+	require_once TMSM_AQUATONIC_COURSE_BOOKING_PATH . 'includes/class-tmsm-aquatonic-course-booking-deactivator.php';
 	Tmsm_Aquatonic_Course_Booking_Deactivator::deactivate();
 }
 
