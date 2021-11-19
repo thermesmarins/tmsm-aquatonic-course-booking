@@ -1,4 +1,4 @@
-TODO Export Json to Excel
+TODO Export Json to Excel @see https://www.freakyjolly.com/create-and-download-xsl-excel-from-json-response-data-in-webpage/
 
 ### 1.9.1: November 18th, 2021
 * Update translations
