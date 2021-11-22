@@ -1,5 +1,7 @@
 TODO Export Json to Excel @see https://www.freakyjolly.com/create-and-download-xsl-excel-from-json-response-data-in-webpage/
 
+* History: weekend in blog, display day name
+
 ### 1.9.1: November 18th, 2021
 * Update translations
 * Fix update contacts by ID

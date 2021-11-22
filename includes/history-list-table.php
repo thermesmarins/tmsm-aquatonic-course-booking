@@ -221,7 +221,16 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 				return $item[ $column_name ];
 			case 'datetime' :
 				$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $item[ $column_name ], wp_timezone() );
-				return wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), get_option('date_format'), get_option('time_format') ) , $objdate->getTimestamp() );
+				$output = '';
+				if ( in_array( $objdate->format( 'N' ), [ 6, 7 ] ) ) {
+					$output .= '<b>';
+				}
+				$output .= wp_date( sprintf( __( '%s at %s', 'tmsm-aquatonic-course-booking' ), 'l j F Y', get_option( 'time_format' ) ),
+					$objdate->getTimestamp() );
+				if ( in_array( $objdate->format( 'N' ), [ 6, 7 ] ) ) {
+					$output .= '<b>';
+				}
+				return $output;
 
 		}
 	}
