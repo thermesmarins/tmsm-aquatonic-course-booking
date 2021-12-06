@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.9.1' );
+define( 'TMSM_AQUATONIC_COURSE_BOOKING_VERSION', '1.9.2' );
 
 /**
  * Current database schema version.
