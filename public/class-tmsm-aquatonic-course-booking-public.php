@@ -392,6 +392,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'token'        => $token,
 						'barcode'      => $barcode,
 						'title'        => $title,
+						'self'        => $bookingfor === 'self',
 					);
 
 					if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
@@ -414,6 +415,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 						'%d',
 						'%s',
 						'%s',
+						'%d',
 						'%d',
 					);
 
@@ -1169,19 +1171,16 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		];
 
 		// Update data into custom table
+		$booking = self::find_booking_with_token($token);
 		$wpdb->update( $table, $data, $where, $format );
 
-		$data = [
-			'token'  => $token,
-			'status' => 'cancelled',
-		];
-
-
-		// Update booking in Dialog Insight
-		$booking = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
-		$booking->token = $token;
-		$booking->status = 'cancelled';
-		$booking->update();
+		if( $booking['self'] == 1 ){
+			// Update booking in Dialog Insight
+			$booking_dialoginsight = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
+			$booking_dialoginsight->token = $token;
+			$booking_dialoginsight->status = 'cancelled';
+			$booking_dialoginsight->update();
+		}
 
 	}
 

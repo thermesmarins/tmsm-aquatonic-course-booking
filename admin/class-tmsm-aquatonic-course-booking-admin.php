@@ -1180,7 +1180,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
-	 * Mark Bookings as No SHow
+	 * Mark Bookings as No Show
 	 */
 	public function bookings_mark_as_noshow(){
 		global $wpdb;
@@ -1209,6 +1209,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
 		if ( empty( $booking['email'] ) ) {
+			return;
+		}
+
+		// Don't call Dialog Insight if booking is not for self
+		if ( $booking['self'] == 0 ) {
 			return;
 		}
 
@@ -1254,6 +1259,11 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Don't call Dialog Insight if booking has no email since booking was not created in the relational table
 		if ( empty( $booking['email'] ) ) {
+			return;
+		}
+
+		// Don't call Dialog Insight if booking is not for self
+		if ( $booking['self'] == 0 ) {
 			return;
 		}
 

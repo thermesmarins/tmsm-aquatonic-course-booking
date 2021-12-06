@@ -1,6 +1,9 @@
 TODO Export Json to Excel @see https://www.freakyjolly.com/create-and-download-xsl-excel-from-json-response-data-in-webpage/
 
 * History: weekend in blog, display day name
+* Booking Form: New field "for" (self, other) that disables Dialog Insight integration (no contact added, no booking added)
+* Tweak: Forms need to be updated with this field and logic conditions (class name: tmsm-aquatonic-course-for)
+* Database version 6 
 
 ### 1.9.1: November 18th, 2021
 * Update translations
