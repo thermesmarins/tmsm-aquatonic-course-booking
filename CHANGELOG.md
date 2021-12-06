@@ -1,5 +1,7 @@
 TODO Export Json to Excel @see https://www.freakyjolly.com/create-and-download-xsl-excel-from-json-response-data-in-webpage/
 
+* Quick fix for history table only listing 200 items
+
 ### 1.9.2: December 6th, 2021
 * History: weekend in blog, display day name
 * Booking Form: New field "for" (self, other) that disables Dialog Insight integration (no contact added, no booking added)

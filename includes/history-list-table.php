@@ -25,7 +25,7 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 	 *
 	 * @var integer
 	 */
-	protected $per_page = 200;
+	protected $per_page = 1000000;
 
 	/**
 	 * Status (All/Active/Inactive)
