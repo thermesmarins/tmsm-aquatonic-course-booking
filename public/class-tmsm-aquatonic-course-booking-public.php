@@ -311,6 +311,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				}
 
 				// Get entry data
+				$bookingfor     = self::field_value_from_class( 'tmsm-aquatonic-course-for', $form['fields'], $entry );
 				$lastname     = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
 				$firstname    = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
 				$email        = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
@@ -326,19 +327,22 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$birthdate          = sanitize_text_field( self::field_value_from_class( 'tmsm-aquatonic-course-birthdate', $form['fields'], $entry ) );
 				$course_start       = sanitize_text_field( $date . ' ' . $hourminutes . ':00' );
 
-				error_log( 'field firstname value: ' . $firstname );
-				error_log( 'field lastname value: ' . $lastname );
-				error_log( 'value birthdate value: ' . $birthdate );
-				error_log( 'field email value: ' . $email );
-				error_log( 'field phone value: ' . $phone );
-				error_log( 'field postalcode value: ' . $postalcode );
-				error_log( 'field city value: ' . $city );
-				error_log( 'field participants value: ' . $participants );
-				error_log( 'field date value: ' . $date );
-				error_log( 'field hourminutes value: ' . $hourminutes );
-				error_log( 'field course_start value: ' . $course_start );
-				error_log( 'token: ' . $token );
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true) {
+					error_log( 'field for value: ' . $bookingfor );
+					error_log( 'field firstname value: ' . $firstname );
+					error_log( 'field lastname value: ' . $lastname );
+					error_log( 'value birthdate value: ' . $birthdate );
+					error_log( 'field email value: ' . $email );
+					error_log( 'field phone value: ' . $phone );
+					error_log( 'field postalcode value: ' . $postalcode );
+					error_log( 'field city value: ' . $city );
+					error_log( 'field participants value: ' . $participants );
+					error_log( 'field date value: ' . $date );
+					error_log( 'field hourminutes value: ' . $hourminutes );
+					error_log( 'field course_start value: ' . $course_start );
+					error_log( 'token: ' . $token );
 
+				}
 				// Convert birthdate
 				if(!empty($birthdate)){
 					$objdate = DateTime::createFromFormat( 'Y-m-d', $birthdate );
@@ -430,7 +434,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$contact->phone      = $data['phone'];
 					$contact->title      = $data['title'];
 
-					if ( ! empty( $contact->email ) && $contact->add() ) {
+					// Only insert into Dialog Insight if user has email, and booking is for self
+					if ( ! empty( $contact->email ) && $bookingfor === 'self' && $contact->add() ) {
 						// Add booking to Dialog Insight
 						$booking               = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Booking();
 						$booking->email        = $data['email'];

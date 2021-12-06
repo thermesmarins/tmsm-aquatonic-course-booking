@@ -75,6 +75,7 @@ class Tmsm_Aquatonic_Course_Booking_Activator {
         booking_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
         token VARCHAR(50) NOT NULL DEFAULT '',
         barcode VARCHAR(25) NOT NULL DEFAULT '',
+        self TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
         title TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
         firstname VARCHAR(50) NOT NULL,
         lastname VARCHAR(50) NOT NULL,
