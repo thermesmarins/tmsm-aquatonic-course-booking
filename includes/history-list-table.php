@@ -107,15 +107,26 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 	protected function get_where_query() {
 		global $wpdb;
 
-		$search_datecourse     = isset( $_GET['search_datecourse'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse'] ) ) : ''; // input var ok, CSRF ok.
+		$default_search_datecourse_begin = new \DateTime();
+		$default_search_datecourse_begin->modify('-7 days');
+		$default_search_datecourse_end = new \DateTime();
+
+		$search_datecourse_begin     = isset( $_GET['search_datecourse_begin'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse_begin'] ) ) : $default_search_datecourse_begin->format('d/m/Y'); // input var ok, CSRF ok.
+		$search_datecourse_end     = isset( $_GET['search_datecourse_end'] ) ? sanitize_text_field( wp_unslash( $_GET['search_datecourse_end'] ) ) : $default_search_datecourse_end->format('d/m/Y'); // input var ok, CSRF ok.
 
 		$where = '1 ';
 		$where_and = ' AND ( 1 ';
 
-		if ( ! empty( $search_datecourse ) ) {
-			$objdate = \Datetime::createFromFormat('d/m/Y', $search_datecourse);
+		if ( ! empty( $search_datecourse_begin ) ) {
+			$objdate = \Datetime::createFromFormat('d/m/Y', $search_datecourse_begin);
 			if(!empty($objdate)){
-				$where_and .= sprintf( " AND DATE(datetime) = '%s'", $objdate->format('Y-m-d') );
+				$where_and .= sprintf( " AND DATE(datetime) >= '%s'", $objdate->format('Y-m-d') );
+			}
+		}
+		if ( ! empty( $search_datecourse_end ) ) {
+			$objdate = \Datetime::createFromFormat('d/m/Y', $search_datecourse_end);
+			if(!empty($objdate)){
+				$where_and .= sprintf( " AND DATE(datetime) <= '%s'", $objdate->format('Y-m-d') );
 			}
 		}
 
@@ -266,17 +277,17 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 		echo '<div class="alignleft actions tablenav top">';
 
 		$s      = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // input var ok, CSRF ok.
-		$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
+		$search_datecourse_begin = isset( $_REQUEST['search_datecourse_begin'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse_begin'] ) ) : '';
 
 		if ( empty( $s ) && ! $this->has_items() ) {
 			//return;
 		}
 
-		//print_r('$search_datecourse:'.$search_datecourse);
+		//print_r('$search_datecourse_begin:'.$search_datecourse_begin);
 		//print_r('$search_datecreated:'.$search_datecreated);
-		if ( empty( $search_datecourse ) && empty( $search_datecreated ) && empty( $s ) ) {
+		if ( empty( $search_datecourse_begin ) && empty( $search_datecreated ) && empty( $s ) ) {
 			$objdate = new Datetime();
-			$search_datecourse = $objdate->format('d/m/Y');
+			$search_datecourse_begin = $objdate->format('d/m/Y');
 		}
 
 		$input_id = $input_id . '-search-input';
@@ -299,7 +310,7 @@ class Tmsm_Aquatonic_Course_History_List_Table extends WP_List_Table {
 
 			<input type="search" minlength="3" placeholder="<?php echo esc_attr__( 'Name', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 
-			<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="search_datecourse" value="<?php echo $search_datecourse; ?>" />
+			<input type="search" placeholder="<?php echo esc_attr__( 'Course Date', 'tmsm-aquatonic-course-booking' ); ?>" id="<?php echo esc_attr( $input_id ); ?>" name="search_datecourse_begin" value="<?php echo $search_datecourse_begin; ?>" />
 
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
 		</p>

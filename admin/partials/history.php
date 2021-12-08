@@ -21,9 +21,12 @@ $history->prepare_items();
 								<span class="legend-danger"><?php echo esc_html__( 'Allotment Very Filled', 'tmsm-aquatonic-course-booking' ); ?></span>
 							</p>
 							<p class="search-box">
-								<input type="search" placeholder="<?php echo esc_attr__( 'Course Date (MM/DD/YYYY)', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse" value="<?php
-								$search_datecourse = isset( $_REQUEST['search_datecourse'] ) ? esc_attr( wp_unslash( $_REQUEST['search_datecourse'] ) ) : '';
-								echo $search_datecourse; ?>" />
+								<input type="search" placeholder="<?php echo esc_attr__( 'From (MM/DD/YYYY)', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse_begin" value="<?php
+								$search_datecourse_begin = isset( $_REQUEST['search_datecourse_begin'] ) ? esc_html( wp_unslash( $_REQUEST['search_datecourse_begin'] ) ) : '';
+								echo $search_datecourse_begin; ?>" />
+								<input type="search" placeholder="<?php echo esc_attr__( 'To (MM/DD/YYYY)', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse_end" value="<?php
+								$search_datecourse_end = isset( $_REQUEST['search_datecourse_end'] ) ? esc_html( wp_unslash( $_REQUEST['search_datecourse_end'] ) ) : '';
+								echo $search_datecourse_end; ?>" />
 								<?php submit_button( __( 'Filter','tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
 							</p>
 						</form>
