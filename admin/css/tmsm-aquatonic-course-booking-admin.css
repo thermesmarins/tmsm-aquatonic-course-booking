@@ -20,20 +20,20 @@
 #postbox-history .legend > span.legend-danger {
   background: #fcf0f1;
 }
-.wp-list-table.tmsm-aquatonic-course-booking-history .realtime {
+#tmsm-aquatonic-course-booking-history .realtime {
   color: inherit;
   font-weight: normal;
 }
-.wp-list-table.tmsm-aquatonic-course-booking-history .canstart-upgradeyes {
+#tmsm-aquatonic-course-booking-history .canstart-upgradeyes {
   background: #e3ebff;
 }
-.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-cool {
+#tmsm-aquatonic-course-booking-history .ongoingbookings-cool {
   background: #f1fce8;
 }
-.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-danger {
+#tmsm-aquatonic-course-booking-history .ongoingbookings-danger {
   background: #fcf0f1;
 }
-.wp-list-table.tmsm-aquatonic-course-booking-history .ongoingbookings-warning {
+#tmsm-aquatonic-course-booking-history .ongoingbookings-warning {
   background: #fcf9e8;
 }
 .tmsm-aquatonic-course-booking-wrap {
@@ -58,6 +58,12 @@
             color: darken(hsl(hue(@allotment-different), saturation(@allotment-different), lightness(@allotment-different)), 25%);
         }
     }*/
+}
+.tmsm-aquatonic-course-booking-wrap .search-box {
+  padding: 10px;
+}
+.tmsm-aquatonic-course-booking-wrap .search-box * {
+  vertical-align: baseline;
 }
 .tmsm-aquatonic-course-booking-wrap .table-dashboard td {
   font-size: 14px;

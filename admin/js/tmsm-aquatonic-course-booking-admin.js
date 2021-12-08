@@ -10,7 +10,6 @@
     }
   });
 
-
   /**
    * Dashboard: Highlight same values in the dashboard table
    */
@@ -31,7 +30,7 @@
   });
 
   /*
-   * Refresh counter
+   * Dashboard: Refresh counter
    */
   var refreshCounter = $('#refresh-counter');
   var remainingTimeMillisecond = refreshCounter.attr('data-time') * 1000; //multiply by 1000 because javascript timestamps are in ms
@@ -48,16 +47,14 @@
     }
   });
 
-  /**
-   * Dashboard: Highlight same values in the dashboard table
+  /*
+   * History: Save History XLS
    */
-  /*$('.settings_page_tmsm-aquatonic-course-booking-settings .tooltip-trigger').each(function( index ) {
-    console.log('.tooltip-trigger');
-    $( this ).mouseover(function() {
-          $(this).next('.tooltip-content').addClass('tooltip-active');
-    }).mouseout(function() {
-        $(this).next('.tooltip-content').removeClass('tooltip-active');
-    });
-  });*/
+  $("#tmsm-aquatonic-course-booking-history-savexls").click(function(){
+    console.log('button save-xls');
+    var wb = XLSX.utils.table_to_book(document.getElementById('tmsm-aquatonic-course-booking-history'));
+    XLSX.writeFile(wb, "export.xlsx");
+  });
+
 
 })( jQuery );

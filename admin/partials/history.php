@@ -2,6 +2,14 @@
 $history = new Tmsm_Aquatonic_Course_History_List_Table();
 $history->prepare_items();
 ?>
+<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+  var createXLSLFormatObj = [];
+
+  /* XLS Head Columns */
+  var xlsHeader = ["datetime", "realtime", "canstart", "courseallotment", "ongoingbookings"];
+  var xlsRows = [];
+</script>
 <div id="dashboard-widgets" class="metabox-holder columns-1">
 	<div id="postbox-container-4" class="postbox-container">
 		<div class="meta-box-sortables ui-sortable">
@@ -27,7 +35,8 @@ $history->prepare_items();
 								<input type="search" placeholder="<?php echo esc_attr__( 'To (MM/DD/YYYY)', 'tmsm-aquatonic-course-booking' ); ?>" name="search_datecourse_end" value="<?php
 								$search_datecourse_end = isset( $_REQUEST['search_datecourse_end'] ) ? esc_html( wp_unslash( $_REQUEST['search_datecourse_end'] ) ) : '';
 								echo $search_datecourse_end; ?>" />
-								<?php submit_button( __( 'Filter','tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
+								<?php submit_button( __( 'Filter', 'tmsm-aquatonic-course-booking' ), '', '', false, array( 'id' => 'search-submit' ) ); ?>
+								<button type="button" class="button" id="tmsm-aquatonic-course-booking-history-savexls"><?php _e( 'Save XLS', 'tmsm-aquatonic-course-booking' ); ?></button>
 							</p>
 						</form>
 
@@ -35,7 +44,7 @@ $history->prepare_items();
 
 						?>
 						<div class="table-responsive">
-							<table class="wp-list-table widefat striped table-view-list tmsm-aquatonic-course-booking-history">
+							<table class="wp-list-table widefat striped table-view-list " id="tmsm-aquatonic-course-booking-history">
 								<thead>
 								<tr>
 									<th scope="col" class="manage-column column-primary"><?php esc_html_e( 'Date','tmsm-aquatonic-course-booking' ); ?></th>
@@ -51,6 +60,7 @@ $history->prepare_items();
 								<?php
 								foreach($history->items as $history_item){
 									echo '<tr>';
+									$values = [];
 									foreach($history->get_columns() as $column_key => $column_name ){
 
 										$difference = $history_item[ 'courseallotment' ] - $history_item[ 'ongoingbookings' ];
@@ -79,16 +89,33 @@ $history->prepare_items();
 
 										echo $history->column_default($history_item, $column_key);
 										echo '</td>';
+										$values[$column_key] = $history->column_default($history_item, $column_key);
 									}
 
 
-									echo '</tr>';
+									echo '</tr>
+									<script>
+									xlsRows.push('.json_encode($values).');
+									</script>
+									';
 								}
 								?>
 								</tbody>
 
 
 							</table>
+							<script>
+                              /*var filename = "write.xlsx";
+                              var ws_name = "SheetJS";
+                              var wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(xlsRows);
+                              XLSX.utils.book_append_sheet(wb, ws, ws_name);
+                              XLSX.writeFile(wb, filename);*/
+
+                              //wb.SheetNames.push("Test Sheet2");
+
+
+							</script>
+
 						</div>
 					</div>
 				</div>

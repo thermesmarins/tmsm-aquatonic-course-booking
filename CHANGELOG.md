@@ -1,7 +1,7 @@
-TODO Export Json to Excel @see https://www.freakyjolly.com/create-and-download-xsl-excel-from-json-response-data-in-webpage/
-
+### 1.9.3: December 8th, 2021
 * History: quick fix for history table only listing 200 items
-* History: allow to filter by begin/end dates 
+* History: allow to filter by begin/end dates
+* History: save results as Excel
 
 ### 1.9.2: December 6th, 2021
 * History: weekend in blog, display day name
