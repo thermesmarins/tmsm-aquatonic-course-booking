@@ -95,3 +95,23 @@ function run_tmsm_aquatonic_course_booking() {
 
 }
 run_tmsm_aquatonic_course_booking();
+
+/**
+ * [openingdays_left] dynamically display the number of days after which it is no longer possible to book.
+ *
+ * Work with "hoursafter", convert hours to days
+ *
+ * @since    1.0.0
+ */
+function openingdays_left(){
+	$remain = floor( get_option( 'hoursafter' ) / 24 );
+	if($remain > 1 ){
+		return $daysremain = "<div class=\"event\">Les réservations sont disponibles pour les <b>($remain)</b> prochains jours.</div>";
+	}else if ($remain ==1){
+		$remain = floor( get_option( 'hoursafter' ) );
+		return $daysremain = "<div class=\"event\">Les réservations se terminent dans <b>($remain)</b> heures. </div>";
+	}else{
+		return $daysremain = "<div class=\"event\">Les réservations ne sont pas disponible actuellement.</div>";
+	}
+}
+add_shortcode( 'dayseft','openingdays_left');
