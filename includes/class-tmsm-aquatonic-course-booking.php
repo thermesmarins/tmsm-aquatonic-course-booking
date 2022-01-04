@@ -293,6 +293,8 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Misc
 		$this->loader->add_filter( 'body_class', $plugin_public, 'body_class_pages',10, 2);
 
+		//
+		$this->loader->add_filter( 'init', $plugin_public, 'register_shortcodes_remainingdays_left',10, 2);
 	}
 
 
