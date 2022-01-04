@@ -2617,47 +2617,53 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function register_shortcodes_remainingdays_left() {
+	public function register_shortcodes() {
 
-		add_shortcode( 'tmsm-aquatonic-course-booking-remainingdays_left', array( $this, 'remainingdays_left' ) );
+		add_shortcode( 'tmsm_aquatonic_course_booking_remainingdays_left', array( $this, 'shortcode_remainingdays_left' ) );
 
 	}
 
 	/**
-	 * [openingdays_left] dynamically display the number of days after which it is no longer possible to book.
+	 * [shortcode_remainingdays_left] dynamically display the number of days after which it is no longer possible to book.
 	 *
 	 * Work with "hoursafter", convert hours to days
 	 *
 	 * @since    1.0.0
 	 */
-	public function remainingdays_left() {
+	public function shortcode_remainingdays_left() {
 
 		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
-			$date_now          = new Datetime();
+			$date_today        = new Datetime();
 			$date_booking_open = DateTime::createFromFormat( 'Y-m-d', $this->get_option( 'blockedbeforedate' ) );
-			$intvl             = $date_now->diff( $date_booking_open );
-			// Total amount of days before "blockedbeforedate"
-			$remain                      = $intvl->days;
-			$date_now_timestamp          = $date_now->getTimestamp();
-			$date_booking_open_timestamp = $date_booking_open->getTimestamp();
-			if ( $date_now_timestamp < $date_booking_open_timestamp ) {
-				if ( $remain > 1 ) {
-					$daysremain = __( "<div class=\"event\">Booking will be availlable in <b>$remain</b> days. </div>" );
-				} elseif ( $remain == 1 ) {
-					$daysremain = __( "<div class=\"event\">Booking will be availlable tomorow</div>" );
-				} else {
-					$daysremain = "";
-				}
-			} elseif ( $date_now_timestamp > $date_booking_open_timestamp ) {
-				$daysremain = "";
-			}
+			$difference   = $date_today->diff( $date_booking_open );
+			$difference_days            = $difference->format( "%r%a" );
+			$difference_hours = $difference->h;
+			$difference_hours = $difference_hours + ($difference->days*24);
 
-			return $daysremain;
-		} else {
-			$daysremain = "";
+			if ( $difference_days > 1 ) {
+				$outpout = __( "Booking will be availlable in $difference_days days." );
+
+			} elseif ( $difference_days == 1 ) {
+				$outpout = __( "Booking will be availlable tomorow" );
+			} elseif ( $difference_days < 0 ) {
+				if ( ( $difference_hours * - 1 ) < $this->get_option( 'hoursafter' ) ) {
+					$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
+					$daysleft  = floor( $hoursleft / 24 );
+					if ( $daysleft = 0 ) {
+						$outpout = __( "Booking is availlable for $hoursleft hours." );
+					} elseif ( $daysleft > 0 ) {
+						$outpout = __( "Booking is availlable for $daysleft days." );
+					} else {
+						$outpout = "";
+					}
+				}
+            } elseif ($difference_days == 0){
+				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
+				$outpout = __( "Booking will be availlable in $hoursleft hours." );
+			}
 		}
 
-		return $daysremain;
+		return $outpout;
 	}
 
 	/**
