@@ -2662,7 +2662,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @since    1.0.0
 	 */
 	public function register_shortcodes_remainingdays_left() {
-		add_shortcode( 'tmsm-aquatonic-course-booking-openingdays', 'remainingdays_left()');
+		add_shortcode( 'tmsm-aquatonic-course-booking-openingdays', 'remainingdays_left');
 	}
 	/**
 	 * [openingdays_left] dynamically display the number of days after which it is no longer possible to book.
