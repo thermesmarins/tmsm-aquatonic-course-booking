@@ -2631,20 +2631,26 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * @since    1.0.0
 	 */
 	public function remainingdays_left() {
-		$date_now = new Datetime();
-		$date_booking_open = DateTime::createFromFormat( 'Y-m-d', $this->get_option( 'blockedbeforedate' ) );
-		$intvl             = $date_now->diff( $date_booking_open );
+        $date_now = new Datetime();
+        $date_booking_open = DateTime::createFromFormat( 'Y-m-d', $this->get_option( 'blockedbeforedate' ) );
+        $intvl = $date_now->diff( $date_booking_open );
 		// Total amount of days before "blockedbeforedate"
 		$remain = $intvl->days;
-		//	var_dump($remain);
-		if ( $remain > 1 ) {
-			$daysremain = __( "<div class=\"event\">Booking will be availlable in <b>$remain</b> days. </div>" );
-		} elseif ( $remain == 1 ) {
-			$daysremain = __( "<div class=\"event\">Booking will be availlable tomorow</div>" );
-		} else {
-			$daysremain = "fdghdfghdfhdfghfdh";
-		}
-
+		$date_now_timestamp = $date_now->getTimestamp();
+		$date_booking_open_timestamp = $date_booking_open->getTimestamp();
+        if ($date_now_timestamp < $date_booking_open_timestamp ) {
+	        if ( $remain > 1 ) {
+		        $daysremain = __( "<div class=\"event\">Booking will be availlable in <b>$remain</b> days. </div>" );
+	        } elseif ( $remain == 1 ) {
+		        $daysremain = __( "<div class=\"event\">Booking will be availlable tomorow</div>" );
+	        } else {
+		        $daysremain = "";
+	        }
+        }
+        elseif ($date_now_timestamp > $date_booking_open_timestamp ) {
+	        $daysremain = "";
+        }
+        var_dump($date_booking_open);
 		return $daysremain;
 	}
 
