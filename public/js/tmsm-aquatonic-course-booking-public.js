@@ -477,26 +477,26 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
               }
             }
 
-            console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
+            //console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
 
             $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next().hide();
-            console.log('parent:');
-            console.log($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next());
+            //console.log('parent:');
+            //console.log($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next());
 
             object.refreshNextTimesButton();
 
             loaded_days++;
             if(loaded_days == 7){
-              console.warn('ALl days loaded ****************');
-              console.warn('tmpDaysPage: ' + tmpDaysPage);
+              //console.warn('ALl days loaded ****************');
+              //console.warn('tmpDaysPage: ' + tmpDaysPage);
 
               if(tmpDaysPage === 1){
                 $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
-                console.log('premiere page je cache previous');
+                //console.log('premiere page je cache previous');
               }
               else{
                 $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', false);
-                console.log('autre page jaffiche previous');
+                //console.log('autre page jaffiche previous');
               }
 
               if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < tmpDaysPage){
