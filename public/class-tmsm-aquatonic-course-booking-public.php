@@ -2636,20 +2636,22 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$date_today        = new Datetime();
 			$date_booking_open = DateTime::createFromFormat( 'Y-m-d', $this->get_option( 'blockedbeforedate' ) );
 			$difference   = $date_today->diff( $date_booking_open );
-			$difference_days            = $difference->format( "%r%a" );
+            $difference_days            = intval($difference->format( "%r%a" ));
 			$difference_hours = $difference->h;
 			$difference_hours = $difference_hours + ($difference->days*24);
-
+            //           var_dump($difference_hours);
+            //            var_dump($difference_days);
+            //         var_dump(intval($this->get_option( 'hoursafter' )));
 			if ( $difference_days > 1 ) {
 				$outpout = __( "Booking will be available in $difference_days days." );
 
 			} elseif ( $difference_days == 1 ) {
 				$outpout = __( "Booking will be available tomorow" );
 			} elseif ( $difference_days < 0 ) {
-				if ( ( $difference_hours * - 1 ) < $this->get_option( 'hoursafter' ) ) {
-					$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
-					$daysleft  = floor( $hoursleft / 24 );
-					if ( $daysleft = 0 ) {
+				if ( ( $difference_hours ) < intval($this->get_option( 'hoursafter' )) ) {
+					$hoursleft = intval($this->get_option( 'hoursafter' ) ) - ( $difference_hours );
+					$daysleft  = intval(floor( $hoursleft / 24 ));
+					if ( $daysleft == 0 ) {
 						$outpout = __( "Booking is available for $hoursleft hours." );
 					} elseif ( $daysleft > 0 ) {
 						$outpout = __( "Booking is available for $daysleft days." );
@@ -2658,7 +2660,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					}
 				}
             } elseif ($difference_days == 0){
-				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
+				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
 				$outpout = __( "Booking will be available in $hoursleft hours." );
 			}
 		}
