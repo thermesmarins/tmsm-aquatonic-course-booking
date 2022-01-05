@@ -2634,39 +2634,35 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
 			$date_today        = new Datetime();
-			$date_booking_open = DateTime::createFromFormat( 'Y-m-d', $this->get_option( 'blockedbeforedate' ) );
+			$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ));
 			$difference        = $date_today->diff( $date_booking_open );
 			$difference_days   = intval( $difference->format( "%r%a" ) );
 			$difference_hours  = $difference->h;
 			$difference_hours  = $difference_hours + ( $difference->days * 24 );
+			$minutesleft = $difference->i;
 			if ( $difference_days > 1 ) {
 				$outpout = printf(esc_html__( "Booking will be available in $difference_days days." ));
 
 			} elseif ( $difference_days === 1 ) {
 				$outpout = printf(esc_html__( "Booking will be available tomorow" ));
 
-//			} elseif ( $difference_days === 0 ) {
-//				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
-//				$outpout   = __( "Booking will be available in $hoursleft hours." );
+			} elseif ( $difference_days === 0 ) {
+				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
+				$difference_hours = ($difference_hours - $this->get_option( 'hoursbefore' ));
+				$outpout   = __( "Booking will be available in $difference_hours hours." );
 			} elseif ( $difference_days < 0 ) {
 
 				$hoursleft = intval( $this->get_option( 'hoursafter' ) ) - ( $difference_hours );
 				$daysleft  = intval( floor( $hoursleft / 24 ) );
+                $minutesleft = $difference->i;
 
 				if ( $hoursleft > 0 && $hoursleft < 24 ) {
-					$outpout = esc_html__( "Booking is available for $hoursleft days." );
+					$outpout = esc_html__( "Booking is available for $hoursleft days and ." );
 				} elseif ( $hoursleft > 23 ) {
 					$outpout = esc_html__( "Booking is available for $daysleft days." );
 				} else {
 					$outpout = "";
 				}
-//				if ( ( $difference_hours ) < intval( $this->get_option( 'hoursafter' ) ) ) {
-//					$outpout = __( "Booking is available for $daysleft days." );
-//				} elseif ( $daysleft > 0 ) {
-//					$outpout = __( "Booking is available for $daysleft days." );
-//				} else {
-//					$outpout = "";
-//                }
 			} else {
 				$outpout = "";
 			}
