@@ -2640,21 +2640,23 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$difference_hours  = $difference->h;
 			$difference_hours  = $difference_hours + ( $difference->days * 24 );
 			if ( $difference_days > 1 ) {
-				$outpout = __( "Booking will be available in $difference_days days." );
+				$outpout = printf(esc_html__( "Booking will be available in $difference_days days." ));
+
 			} elseif ( $difference_days === 1 ) {
-				$outpout = __( "Booking will be available tomorow" );
-			} elseif ( $difference_days === 0 ) {
-				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
-				$outpout   = __( "Booking will be available in $hoursleft hours." );
+				$outpout = printf(esc_html__( "Booking will be available tomorow" ));
+
+//			} elseif ( $difference_days === 0 ) {
+//				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
+//				$outpout   = __( "Booking will be available in $hoursleft hours." );
 			} elseif ( $difference_days < 0 ) {
 
 				$hoursleft = intval( $this->get_option( 'hoursafter' ) ) - ( $difference_hours );
 				$daysleft  = intval( floor( $hoursleft / 24 ) );
 
 				if ( $hoursleft > 0 && $hoursleft < 24 ) {
-					$outpout = __( "Booking is available for $hoursleft days." );
+					$outpout = esc_html__( "Booking is available for $hoursleft days." );
 				} elseif ( $hoursleft > 23 ) {
-					$outpout = __( "Booking is available for $daysleft days." );
+					$outpout = esc_html__( "Booking is available for $daysleft days." );
 				} else {
 					$outpout = "";
 				}
