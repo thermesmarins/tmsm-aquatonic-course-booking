@@ -2634,6 +2634,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
 			$date_today        = new Datetime();
+			$date_today->setTimezone(new DateTimeZone('Europe/Paris'));
 			$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ));
 			$difference        = $date_today->diff( $date_booking_open );
 			$difference_days   = intval( $difference->format( "%r%a" ) );
@@ -2657,9 +2658,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
                 $minutesleft = $difference->i;
 
 				if ( $hoursleft > 0 && $hoursleft < 24 ) {
-					$outpout = esc_html__( "Booking is available for $hoursleft days and ." );
+					$outpout = printf(esc_html__( "Booking is available for $hoursleft days and ." ));
 				} elseif ( $hoursleft > 23 ) {
-					$outpout = esc_html__( "Booking is available for $daysleft days." );
+					$outpout = printf(esc_html__( "Booking is available for $daysleft days." ));
 				} else {
 					$outpout = "";
 				}
