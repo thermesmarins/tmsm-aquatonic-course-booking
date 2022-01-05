@@ -2641,25 +2641,25 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			$difference_hours = $difference_hours + ($difference->days*24);
 
 			if ( $difference_days > 1 ) {
-				$outpout = __( "Booking will be availlable in $difference_days days." );
+				$outpout = __( "Booking will be available in $difference_days days." );
 
 			} elseif ( $difference_days == 1 ) {
-				$outpout = __( "Booking will be availlable tomorow" );
+				$outpout = __( "Booking will be available tomorow" );
 			} elseif ( $difference_days < 0 ) {
 				if ( ( $difference_hours * - 1 ) < $this->get_option( 'hoursafter' ) ) {
 					$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
 					$daysleft  = floor( $hoursleft / 24 );
 					if ( $daysleft = 0 ) {
-						$outpout = __( "Booking is availlable for $hoursleft hours." );
+						$outpout = __( "Booking is available for $hoursleft hours." );
 					} elseif ( $daysleft > 0 ) {
-						$outpout = __( "Booking is availlable for $daysleft days." );
+						$outpout = __( "Booking is available for $daysleft days." );
 					} else {
 						$outpout = "";
 					}
 				}
             } elseif ($difference_days == 0){
 				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours * - 1 );
-				$outpout = __( "Booking will be availlable in $hoursleft hours." );
+				$outpout = __( "Booking will be available in $hoursleft hours." );
 			}
 		}
 
