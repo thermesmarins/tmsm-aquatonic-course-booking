@@ -2643,22 +2643,32 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$outpout = __( "Booking will be available in $difference_days days." );
 			} elseif ( $difference_days === 1 ) {
 				$outpout = __( "Booking will be available tomorow" );
-			} elseif ( $difference_days < 0 ) {
-				if ( ( $difference_hours ) < intval( $this->get_option( 'hoursafter' ) ) ) {
-					$hoursleft = intval( $this->get_option( 'hoursafter' ) ) - ( $difference_hours );
-					$daysleft  = intval( floor( $hoursleft / 24 ) );
-					if ( $daysleft === 0 ) {
-						$outpout = __( "Booking is available for $difference_hours hours." );
-					} elseif ( $daysleft > 0 ) {
-						$outpout = __( "Booking is available for $daysleft days." );
-					} else {
-						$outpout = "";
-					}
-				}
 			} elseif ( $difference_days === 0 ) {
 				$hoursleft = $this->get_option( 'hoursafter' ) - ( $difference_hours );
 				$outpout   = __( "Booking will be available in $hoursleft hours." );
+			} elseif ( $difference_days < 0 ) {
+
+				$hoursleft = intval( $this->get_option( 'hoursafter' ) ) - ( $difference_hours );
+				$daysleft  = intval( floor( $hoursleft / 24 ) );
+
+				if ( $hoursleft > 0 && $hoursleft < 24 ) {
+					$outpout = __( "Booking is available for $hoursleft days." );
+				} elseif ( $hoursleft > 23 ) {
+					$outpout = __( "Booking is available for $daysleft days." );
+				} else {
+					$outpout = "";
+				}
+//				if ( ( $difference_hours ) < intval( $this->get_option( 'hoursafter' ) ) ) {
+//					$outpout = __( "Booking is available for $daysleft days." );
+//				} elseif ( $daysleft > 0 ) {
+//					$outpout = __( "Booking is available for $daysleft days." );
+//				} else {
+//					$outpout = "";
+//                }
+			} else {
+				$outpout = "";
 			}
+
 		}
 
 		return $outpout;
