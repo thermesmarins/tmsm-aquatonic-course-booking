@@ -2639,36 +2639,26 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$date_today = new Datetime();
 		//date & time of right now (Europe/Paris time zone).
 		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
-		//date one plugin parameter when booking will be open.
 		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ) );
 		$date_booking_open->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
 		$difference               = $date_today->diff( $date_booking_open );
-		$difference_days          = intval( $difference->format( "%r%a" ) );
 		$difference_hours         = $difference->h;
 		$difference_minutes       = $difference->i;
 		$difference_hours_total   = $difference_hours + ( $difference->days * 24 );
 		$difference_minutes_total = $difference_minutes + ( $difference_hours_total * 60 );
 		$minutesafter             = ( floatval( $this->get_option( 'hoursafter' ) ) * 60 );
 		$minutesbefore            = ( floatval( $this->get_option( 'hoursbefore' ) ) * 60 );
-
-		$date_booking_close       = '';
 		$output                   = '';
 		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
-			;
-		}
-		{
 			if ( $date_today > $date_booking_open ) {
 				if ( $difference_minutes_total < $minutesafter ) {
 					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
-//				var_dump( $date_booking_close );
 					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
 					$output             = sprintf( __( "Reservations will be closed on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_close );
 				} else {
 					$output = '';
 				}
 			} elseif ( $date_today < $date_booking_open ) {
-//			var_dump( $difference_minutes_total );
-//			var_dump( $minutesbefore );
 				if ( $difference_minutes_total < $minutesbefore ) {
 					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
 					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
@@ -2676,64 +2666,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				} elseif ( $difference_minutes_total > $minutesbefore ) {
 					$date_booking_open = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
 					$date_booking_open = date_format( $date_booking_open, 'Y-m-d' );
-//					var_dump( $date_booking_open );
-					$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_open );
+					$output            = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_open );
 				} else {
 					$output = '';
 				}
-			}
-
+			};
 		}
-//	public function shortcode_remainingdays_left() {
-//
-//		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
-//			$date_today = new Datetime();
-//			$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
-//			$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ) );
-//			//           var_dump($this->get_option( 'blockedbeforedate' ));
-//			$difference       = $date_today->diff( $date_booking_open );
-//			$difference_days  = intval( $difference->format( "%r%a" ) );
-//			var_dump($difference_days);
-//			$difference_hours = $difference->h;
-//            var_dump($difference_hours);
-//			$difference_hours_total = $difference_hours + ( $difference->days * 24 );
-//			if ( $difference_days >= 1 ) {
-//				$output = sprintf( __( "Reservations will be possible from %s.", 'tmsm-aquatonic-course-booking' ), $this->get_option( 'blockedbeforedate' ) );
-//			} elseif ( $difference_days === 0 ) {
-////				$difference_hours = ( $difference_hours - $this->get_option( 'hoursbefore' ) );
-////				$output           = sprintf( __( "Reservations will be possible in %.1f hours.", 'tmsm-aquatonic-course-booking' ), $difference_hours_total );
-//				$output = sprintf( __( "Reservations are available for %d days.", 'tmsm-aquatonic-course-booking' ), $daysleft );
-//			} elseif ( $difference_days < 0 ) {
-//
-//				$hoursleft = intval( $this->get_option( 'hoursafter' ) ) - ( $difference_hours_total );
-//				var_dump($hoursleft);
-//				$daysleft  = intval( floor( $hoursleft / 24 ) );
-//				var_dump($daysleft);
-////				$hoursleft = ($hoursleft - (24*$daysleft));
-//
-//				if ( $hoursleft >= 1 && $hoursleft < 24 ) {
-//
-//					$output = sprintf( __( "Reservations are available for %.1f hours.", 'tmsm-aquatonic-course-booking' ), floor( $hoursleft ));
-//				} elseif ( $hoursleft > 0 && $hoursleft < 1 ) {
-//					$output = sprintf( __( "Reservations are available for %.1f minutes", 'tmsm-aquatonic-course-booking' ), $hoursleft * 60 );
-//				} elseif ( $hoursleft > 23 ) {
-//					$output = sprintf( __( "Reservations are available for %d days.", 'tmsm-aquatonic-course-booking' ), $daysleft );
-//				} else {
-//					$output = "";
-//				}
-//			} else {
-//				$output = "";
-//			}
-//
-//		} else {
-//			$output = "";
-//		}
-//
-//		return $output;
-//	}
 
 		return $output;
 	}
+
+
 	/**
 	 * Aquos: generate signature
 	 *
