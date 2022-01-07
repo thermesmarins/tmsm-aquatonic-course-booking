@@ -2703,7 +2703,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$minutesbefore            = ( floatval( $this->get_option( 'hoursbefore' ) ) * 60 );
 		$date_booking_close       = '';
 		$output                   = '';
-        if (!empty($this->get_option( 'blockedbeforedate' )));{
+		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
+			;
+		}
+		{
 			if ( $date_today > $date_booking_open ) {
 				if ( $difference_minutes_total < $minutesafter ) {
 					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
@@ -2731,7 +2734,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			}
 
 		}
-        return $output;
+
+		return $output;
 	}
 	/**
 	 * Aquos: generate signature
