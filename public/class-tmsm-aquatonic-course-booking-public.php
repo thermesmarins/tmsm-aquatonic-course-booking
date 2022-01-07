@@ -2626,18 +2626,64 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Booking Page Shortcode
 	 *
-	 * If "blockedbeforedate" is define on the plugin "tmsm-aquatonic-course-booking" parameter:
-	 *     display: case1 - Reservations will be possible from XXXX XX XX.
-	 *              case2 - Reservations will be possible in XX hours.
-	 *              case3 - Reservations are available for XX,X hours.
-	 *              case4 - Reservations are available for XX days.
-	 * If not define, the shortcode doesn't display anything.
+	 * Shortcode work with plugin: tmsm-aquatonic-course-booking.
 	 *
-	 * @return string|void
-	 * @throws Exception
+	 * if plugin parameter are set, display open/close date.
+	 *
+	 * @return string
 	 * @since    1.9.3
 	 *
 	 */
+	public function shortcode_remainingdays_left() {
+		//date & time of right now (default time zone).
+		$date_today = new Datetime();
+		//date & time of right now (Europe/Paris time zone).
+		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
+		//date one plugin parameter when booking will be open.
+		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ) );
+		$date_booking_open->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
+		$difference               = $date_today->diff( $date_booking_open );
+		$difference_days          = intval( $difference->format( "%r%a" ) );
+		$difference_hours         = $difference->h;
+		$difference_minutes       = $difference->i;
+		$difference_hours_total   = $difference_hours + ( $difference->days * 24 );
+		$difference_minutes_total = $difference_minutes + ( $difference_hours_total * 60 );
+		$minutesafter             = ( floatval( $this->get_option( 'hoursafter' ) ) * 60 );
+		$minutesbefore            = ( floatval( $this->get_option( 'hoursbefore' ) ) * 60 );
+
+		$date_booking_close       = '';
+		$output                   = '';
+		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
+			;
+		}
+		{
+			if ( $date_today > $date_booking_open ) {
+				if ( $difference_minutes_total < $minutesafter ) {
+					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
+//				var_dump( $date_booking_close );
+					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
+					$output             = sprintf( __( "Reservations will be closed on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_close );
+				} else {
+					$output = '';
+				}
+			} elseif ( $date_today < $date_booking_open ) {
+//			var_dump( $difference_minutes_total );
+//			var_dump( $minutesbefore );
+				if ( $difference_minutes_total < $minutesbefore ) {
+					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
+					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
+					$output             = sprintf( __( "Reservations will be closed on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_close );
+				} elseif ( $difference_minutes_total > $minutesbefore ) {
+					$date_booking_open = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
+					$date_booking_open = date_format( $date_booking_open, 'Y-m-d' );
+//					var_dump( $date_booking_open );
+					$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_open );
+				} else {
+					$output = '';
+				}
+			}
+
+		}
 //	public function shortcode_remainingdays_left() {
 //
 //		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
@@ -2685,55 +2731,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 //
 //		return $output;
 //	}
-	public function shortcode_remainingdays_left() {
-		//date & time of right now (default time zone).
-		$date_today = new Datetime();
-		//date & time of right now (Europe/Paris time zone).
-		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
-		//date one plugin parameter when booking will be open.
-		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ) );
-		$date_booking_open->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
-		$difference               = $date_today->diff( $date_booking_open );
-		$difference_days          = intval( $difference->format( "%r%a" ) );
-		$difference_hours         = $difference->h;
-		$difference_minutes       = $difference->i;
-		$difference_hours_total   = $difference_hours + ( $difference->days * 24 );
-		$difference_minutes_total = $difference_minutes + ( $difference_hours_total * 60 );
-		$minutesafter             = ( floatval( $this->get_option( 'hoursafter' ) ) * 60 );
-		$minutesbefore            = ( floatval( $this->get_option( 'hoursbefore' ) ) * 60 );
-		$date_booking_close       = '';
-		$output                   = '';
-		if ( ! empty( $this->get_option( 'blockedbeforedate' ) ) ) {
-			;
-		}
-		{
-			if ( $date_today > $date_booking_open ) {
-				if ( $difference_minutes_total < $minutesafter ) {
-					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
-//				var_dump( $date_booking_close );
-					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
-					$output             = sprintf( __( "Reservations will be closed on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_close );
-				} else {
-					$output = '';
-				}
-			} elseif ( $date_today < $date_booking_open ) {
-//			var_dump( $difference_minutes_total );
-//			var_dump( $minutesbefore );
-				if ( $difference_minutes_total < $minutesbefore ) {
-					$date_booking_close = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
-					$date_booking_close = date_format( $date_booking_close, 'Y-m-d' );
-					$output             = sprintf( __( "Reservations will be closed on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_close );
-				} elseif ( $difference_minutes_total > $minutesbefore ) {
-					$date_booking_open = $date_booking_open->add( new DateInterval( "PT{$minutesafter}M" ) );
-					$date_booking_open = date_format( $date_booking_open, 'Y-m-d' );
-//					var_dump( $date_booking_open );
-					$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_open );
-				} else {
-					$output = '';
-				}
-			}
-
-		}
 
 		return $output;
 	}
