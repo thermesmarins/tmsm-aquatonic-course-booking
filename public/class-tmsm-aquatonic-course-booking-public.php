@@ -2613,49 +2613,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
-	 * Register the shortcodes
-	 *
-	 * @since    1.0.0
-	 */
-	public function register_shortcodes() {
-
-		add_shortcode( 'tmsm_aquatonic_course_booking_remainingdays_left', array(
-			$this,
-			'shortcode_remainingdays_left'
-		) );
-
-	}
-
-	/**
-	 * Booking Page Shortcode: "tmsm_aquatonic_course_booking_remainingdays_left"
-	 *
-	 * Display remaining days to book or the date when booking is available.
-	 *
-	 * @return string
-	 *
-	 * @since    1.9.4
-	 *
-	 */
-	public function shortcode_remainingdays_left() {
-		$date_today = new Datetime();
-		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
-		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ), wp_timezone() );
-		// Date open is not defined or past.
-		if ( empty( $date_booking_open ) || ( $date_booking_open < $date_today ) ) {
-			$daysafter = $this->get_option( 'hoursafter' ) / 24;
-			$output    = sprintf( __( "Reservations will be close in %d days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
-			// Date open future.
-		} else {
-			// Format $date_booking_open on french format.
-			$date   = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
-			$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date );
-		}
-
-		return $output;
-	}
-
-
-	/**
 	 * Aquos: generate signature
 	 *
 	 * @param string $payload
@@ -2680,4 +2637,41 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		return $secret;
 	}
+
+	/**
+	 * Register the shortcodes
+	 *
+	 * @since    1.9.4
+	 */
+	public function register_shortcodes() {
+
+		add_shortcode( 'tmsm_aquatonic_course_booking_remainingdays_left', array( $this, 'shortcode_remainingdays_left' ) );
+
+	}
+
+	/**
+	 * Booking Page Shortcode [tmsm_aquatonic_course_booking_remainingdays_left]: display remaining days to book or the date when booking is available.
+	 *
+	 * @since    1.9.4
+	 *
+	 * @return string
+	 */
+	public function shortcode_remainingdays_left(): string {
+		$date_today = new Datetime();
+		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ), wp_timezone() );
+
+		// Date open is not defined or past: display how many days are open
+		if ( empty( $date_booking_open ) || ( $date_booking_open < $date_today ) ) {
+			$daysafter = $this->get_option( 'hoursafter' ) / 24;
+			$output    = sprintf( __( "Reservations will be close in %d days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
+
+			// Date open is future: display the date
+		} else {
+			$date   = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
+			$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date );
+		}
+
+		return $output;
+	}
+
 }
