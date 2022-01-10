@@ -2640,6 +2640,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	public function shortcode_remainingdays_left() {
 		$date_today = new Datetime();
 		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
+		// =>! before Y-m-d is used to auto generate hours minutes second to 0 and wp_timezone() is set on 'Europe,Paris'
 		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ), wp_timezone() );
 		$difference        = $date_today->diff( $date_booking_open );
 		$difference_days   = intval( $difference->format( '%a' ) );
