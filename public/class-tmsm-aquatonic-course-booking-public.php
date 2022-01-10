@@ -2627,22 +2627,24 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
-	 * Booking Page Shortcode:
+	 * Booking Page Shortcode: "tmsm_aquatonic_course_booking_remainingdays_left"
 	 *
+	 * Display remaining days to book or the date when booking is available.
 	 *
-     *
 	 * @return string
-	 * @since    1.9.3
+	 * @return string
+	 * @since    1.9.4
 	 *
 	 */
 	public function shortcode_remainingdays_left() {
 		$date_today = new Datetime();
 		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
 		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ), wp_timezone() );
-		// Display open days left
-		if ( empty( $date_booking_open ) or $date_booking_open < $date_today ) {
+		// Date open is not defined or past.
+		if ( empty( $date_booking_open ) || ( $date_booking_open < $date_today ) ) {
 			$daysafter = $this->get_option( 'hoursafter' ) / 24;
-			$output    = sprintf( __( "Reservations will be open on %s days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
+			$output    = sprintf( __( "Reservations will be close in %d days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
+			// Date open future.
 		} else {
 			// Format $date_booking_open on french format.
 			$date   = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
