@@ -2648,7 +2648,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		} else {
 			// Format $date_booking_open on french format.
 			$date = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
-			$output            = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date_booking_open );
+			$output            = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date );
 		}
         return $output;
 	}
