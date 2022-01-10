@@ -2632,7 +2632,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 * Display remaining days to book or the date when booking is available.
 	 *
 	 * @return string
-	 * @return string
+	 *
 	 * @since    1.9.4
 	 *
 	 */
