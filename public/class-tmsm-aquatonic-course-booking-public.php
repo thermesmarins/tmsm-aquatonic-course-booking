@@ -2629,10 +2629,8 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	/**
 	 * Booking Page Shortcode:
 	 *
-	 * Shortcode work with plugin: tmsm-aquatonic-course-booking.
 	 *
-	 * if plugin parameter are set, display days left before booking open or the date when booking will be closed.
-	 *
+     *
 	 * @return string
 	 * @since    1.9.3
 	 *
@@ -2641,16 +2639,17 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$date_today = new Datetime();
 		$date_today->setTimezone( new DateTimeZone( 'Europe/Paris' ) );
 		$date_booking_open = DateTime::createFromFormat( '!Y-m-d', $this->get_option( 'blockedbeforedate' ), wp_timezone() );
-        // Display open days left
+		// Display open days left
 		if ( empty( $date_booking_open ) or $date_booking_open < $date_today ) {
-            $daysafter = $this->get_option( 'hoursafter' ) / 24;
-			$output = sprintf( __( "Reservations will be open on %s days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
+			$daysafter = $this->get_option( 'hoursafter' ) / 24;
+			$output    = sprintf( __( "Reservations will be open on %s days.", 'tmsm-aquatonic-course-booking' ), $daysafter );
 		} else {
 			// Format $date_booking_open on french format.
-			$date = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
-			$output            = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date );
+			$date   = wp_date( get_option( 'date_format' ), $date_booking_open->getTimestamp() );
+			$output = sprintf( __( "Reservations will be open on %s.", 'tmsm-aquatonic-course-booking' ), $date );
 		}
-        return $output;
+
+		return $output;
 	}
 
 
