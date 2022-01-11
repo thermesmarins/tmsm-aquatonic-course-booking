@@ -1,3 +1,6 @@
+### 1.9.4: January 11th, 2022
+* Shortcode: [tmsm_aquatonic_course_booking_remainingdays_left] displays remaining days to book or the date when booking will be available at a later date.
+
 ### 1.9.3: December 8th, 2021
 * History: quick fix for history table only listing 200 items
 * History: allow to filter by begin/end dates
