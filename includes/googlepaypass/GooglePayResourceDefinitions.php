@@ -123,36 +123,38 @@ class GooglePayResourceDefinitions {
 		// Prepare data for markup
 		$image           = null;
 		$address         = null;
-		$phone_name         = null;
-		$phone_number         = null;
+		$phone_name      = null;
+		$phone_number    = null;
 		$contact_page_id = null;
 		$shop_name       = get_bloginfo( 'name' );
 		$shop_url        = home_url();
 
+		// Get organization data from Rank Math
 		if ( class_exists( 'RankMath\Helper' ) ) {
-			$image           = RankMath\Helper::get_settings( 'titles.knowledgegraph_logo' );
-			$shop_name       = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
-			$phones_array         = RankMath\Helper::get_settings( 'titles.phone_numbers' );
-			if( ! empty( $phones_array)){
-				$phone_first = $phones_array[0];
-				$phone_type = $phone_first['type'];
+			$image        = RankMath\Helper::get_settings( 'titles.knowledgegraph_logo' );
+			$shop_name    = RankMath\Helper::get_settings( 'titles.knowledgegraph_name' );
+			$phones_array = RankMath\Helper::get_settings( 'titles.phone_numbers' );
+			if ( ! empty( $phones_array ) ) {
+				$phone_first  = $phones_array[0];
+				$phone_type   = $phone_first['type'];
 				$phone_number = $phone_first['number'];
 
-				$phones_choices = RankMath\Helper::choices_phone_types( );
-				if(isset($phones_choices[$phone_type])){
-					$phone_name = $phones_choices[$phone_type];
+				$phones_choices = RankMath\Helper::choices_phone_types();
+				if ( isset( $phones_choices[ $phone_type ] ) ) {
+					$phone_name = $phones_choices[ $phone_type ];
 				}
 			}
-			$address_array         = RankMath\Helper::get_settings( 'titles.local_address' );
-			if( ! empty ( $address_array)){
-				$address = $address_array['streetAddress'] . ', ' . $address_array['postalCode'] . ' ' . $address_array['addressLocality'] . ', ' . $address_array['addressCountry'];
+			$address_array = RankMath\Helper::get_settings( 'titles.local_address' );
+			if ( ! empty ( $address_array ) ) {
+				$address = $address_array['streetAddress'] . ', ' . $address_array['postalCode'] . ' ' . $address_array['addressLocality'] . ', '
+				           . $address_array['addressCountry'];
 			}
 			$contact_page_id = RankMath\Helper::get_settings( 'titles.local_seo_contact_page' );
-			$geo = RankMath\Helper::get_settings( 'titles.geo' );
-			$geo_lat = null;
-			$geo_lng = null;
-			if(! empty($geo) && is_array(explode(',', $geo))){
-				list($geo_lat, $geo_lng) = explode(',', $geo);
+			$geo             = RankMath\Helper::get_settings( 'titles.geo' );
+			$geo_lat         = null;
+			$geo_lng         = null;
+			if ( ! empty( $geo ) && is_array( explode( ',', $geo ) ) ) {
+				list( $geo_lat, $geo_lng ) = explode( ',', $geo );
 			}
 		}
 
@@ -231,7 +233,7 @@ class GooglePayResourceDefinitions {
 		$payload->setLogo($logoImage);
 		$payload->setVenue($localEventVenue);
 		$payload->setDateTime($eventDateTime);
-		$payload->setTextModulesData($textModulesDatas);
+		//$payload->setTextModulesData($textModulesDatas);
 		if( ! empty($linksModuleData)){
 			$payload->setLinksModuleData($linksModuleData);
 		}

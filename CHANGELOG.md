@@ -1,4 +1,5 @@
-* Booking Form: Animate to weekday times after filling a number of participants
+* Booking Form: animate to weekday times after filling a number of participants
+* Google Pay Passes: fix error while  creating pass with organizations names with apostrophe 
 
 ### 1.9.4: January 11th, 2022
 * Shortcode: [tmsm_aquatonic_course_booking_remainingdays_left] displays remaining days to book or the date when booking will be available at a later date.

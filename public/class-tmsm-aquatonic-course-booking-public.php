@@ -1349,10 +1349,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			&& ! empty( $this->get_option( 'googlepaypasses_applicationname' ) )
 			&& file_exists( $this->get_option( 'googlepaypasses_accountfilepath' ) )
 		) {
-			$classUid = 'course-' . sanitize_title_with_dashes( get_bloginfo( 'name' ) . '-' . $booking['googlepay_date_start'] );
+			$classUid = 'course-' . sanitize_title_with_dashes( preg_replace( "/[:’]/", "", get_bloginfo( 'name' ) ) . '-' . $booking['googlepay_date_start'] );
+
 			$classId  = sprintf( "%s.%s", ISSUER_ID, $classUid );
 
-			$objectUid = 'course-' . sanitize_title_with_dashes( get_bloginfo( 'name' ) . '-' . $booking['token'] );
+			$objectUid = 'course-' . sanitize_title_with_dashes( preg_replace( "/[:’]/", "", get_bloginfo( 'name' ) ) . '-' . $booking['token'] );
 			$objectId  = sprintf( "%s.%s", ISSUER_ID, $objectUid );
 
 			$services = new GooglePayServices();
