@@ -628,7 +628,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'minutes_field' => '.tmsm-aquatonic-course-hourminutes .gfield_time_minute input',
 				'submit_button' => '.gform_button[type=submit]',
 			],
-			'i18n'        => [
+			'i18n' => [
 				'birthdateformatdatepicker' => _x( 'mm/dd/yyyy', 'birthdate date format for datepicker', 'tmsm-aquatonic-course-booking' ),
 				'birthdateformat'           => _x( 'mm/dd/yyyy', 'birthdate date format for humans', 'tmsm-aquatonic-course-booking' ),
 				'loading'                   => __( 'Loading', 'tmsm-aquatonic-course-booking' ),
@@ -637,6 +637,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'pickatimeslot'             => __( 'Pick a time slot', 'tmsm-aquatonic-course-booking' ),
 				'summary'                   => __( 'Course for %s participant(s) on %s at %s:%s', 'tmsm-aquatonic-course-booking' ),
 				'summarymomentdateformat'   => __( 'MMMM DD, YYYY', 'tmsm-aquatonic-course-booking' ),
+				'downloading'               => __( 'Downloading', 'tmsm-aquatonic-course-booking' ),
 
 			],
 
@@ -1200,7 +1201,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							if ( ! empty( $token ) ) {
 								$download_url = self::download_url( $token, $form['id'], $entry_id, $url_encode, $esc_html, $nl2br, $format );
 							}
-							$download_link = '<a id="tmsm-aquatonic-course-booking-download-pdf" class="' . self::button_class_primary() . '" href="' . $download_url . '">' . __( 'Download your booking', 'tmsm-aquatonic-course-booking' ) . '</a>';
+							$download_link = '<a id="tmsm-aquatonic-course-booking-download-pdf" class="' . self::button_class_primary() . '" data-original-text="'.esc_attr(__( 'Download your booking', 'tmsm-aquatonic-course-booking' )).'" href="' . $download_url . '">' . __( 'Download your booking', 'tmsm-aquatonic-course-booking' ) . '</a>';
 							$text          = str_replace( $custom_merge_tag_download_url, $download_link, $text );
 						}
 
