@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2022-02-09 15:23+0100\n"
-"PO-Revision-Date: 2022-02-09 15:23+0100\n"
+"POT-Creation-Date: 2022-02-09 15:29+0100\n"
+"PO-Revision-Date: 2022-02-09 15:29+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language: fr\n"
@@ -780,7 +780,7 @@ msgstr "dddd DD MMMM YYYY"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:640
 msgid "Downloading"
-msgstr "Télécharger en cours"
+msgstr "Téléchargement en cours"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:721
 msgid "Change time"
@@ -805,6 +805,11 @@ msgstr "Télécharger la réservation en PDF"
 #: public/class-tmsm-aquatonic-course-booking-public.php:1386
 msgid "Barcode missing"
 msgstr "Code barre manquant"
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:1457
+#, php-format
+msgid "aquatonic-course-%d.pdf"
+msgstr "parcours-aquatonic-%d.pdf"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:1537
 msgid "This booking was already cancelled"

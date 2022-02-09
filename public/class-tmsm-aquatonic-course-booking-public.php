@@ -1454,7 +1454,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		';
 		$pdf->WriteHTML( $stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS );
 		$pdf->WriteHTML( $block );
-		$pdf->Output( 'file.pdf', \Mpdf\Output\Destination::DOWNLOAD );
+		$pdf->Output( sprintf(__( 'aquatonic-course-%d.pdf', 'tmsm-aquatonic-course-booking' ), $entry_id), \Mpdf\Output\Destination::DOWNLOAD );
 
 		die();
 	}

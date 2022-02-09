@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2022-02-09 15:22+0100\n"
+"POT-Creation-Date: 2022-02-09 15:29+0100\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -798,6 +798,11 @@ msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:1386
 msgid "Barcode missing"
+msgstr ""
+
+#: public/class-tmsm-aquatonic-course-booking-public.php:1457
+#, php-format
+msgid "aquatonic-course-%d.pdf"
 msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:1537
