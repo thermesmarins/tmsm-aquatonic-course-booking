@@ -804,6 +804,11 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
     });
   }
 
+  $('#tmsm-aquatonic-course-booking-download-pdf').on('click', function (e) {
+    $(this).prop('disabled', true);
+  });
+
+
   //$('.tmsm-aquatonic-course-birthdate input').mask("99/99/9999", {placeholder: TmsmAquatonicCourseApp.i18n.birthdateformat});
   //$('.tmsm-aquatonic-course-phone input').mask('+99-9999999999', {placeholder: ''});
   /*$('.tmsm-aquatonic-course-phone input').mask('YZ0000000000', {placeholder: '__________', translation:  {

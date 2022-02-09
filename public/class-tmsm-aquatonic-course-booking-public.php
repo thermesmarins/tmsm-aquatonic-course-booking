@@ -1200,7 +1200,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 							if ( ! empty( $token ) ) {
 								$download_url = self::download_url( $token, $form['id'], $entry_id, $url_encode, $esc_html, $nl2br, $format );
 							}
-							$download_link = '<a class="' . self::button_class_primary() . '" href="' . $download_url . '">' . __( 'Download your booking', 'tmsm-aquatonic-course-booking' ) . '</a>';
+							$download_link = '<a id="tmsm-aquatonic-course-booking-download-pdf" class="' . self::button_class_primary() . '" href="' . $download_url . '">' . __( 'Download your booking', 'tmsm-aquatonic-course-booking' ) . '</a>';
 							$text          = str_replace( $custom_merge_tag_download_url, $download_link, $text );
 						}
 

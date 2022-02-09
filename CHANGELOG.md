@@ -1,3 +1,5 @@
+* Download PDF: prevent multiple clicks on button
+
 ### 1.9.5: January 24th, 2022
 * Booking Form: animate to weekday times after filling a number of participants
 * Google Pay Passes: fix error while  creating pass with organizations names with apostrophe 
