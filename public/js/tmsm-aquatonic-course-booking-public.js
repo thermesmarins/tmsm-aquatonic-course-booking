@@ -806,7 +806,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   // Disable PDF link after click
   $('#tmsm-aquatonic-course-booking-download-pdf').on('click', function (e) {
-    //$(this).addClass('disabled');
+    $(this).addClass('disabled');
     $(this).text(TmsmAquatonicCourseApp.i18n.downloading);
   });
 
