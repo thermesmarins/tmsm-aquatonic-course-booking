@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.9.6',
-    'version' => '1.9.6.0',
+    'pretty_version' => '1.9.7',
+    'version' => '1.9.7.0',
     'aliases' => 
     array (
     ),

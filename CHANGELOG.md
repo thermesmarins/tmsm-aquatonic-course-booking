@@ -1,3 +1,4 @@
+### 1.9.7: February 9th, 2022
 * Download PDF: renamed filename
 * Download PDf: removed unused code
 
