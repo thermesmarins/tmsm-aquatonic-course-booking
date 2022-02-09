@@ -1,4 +1,5 @@
 * Download PDF: renamed filename
+* Download PDf: removed unused code
 
 ### 1.9.6: February 9th, 2022
 * Download PDF: prevent multiple clicks on button and text button changing when downloading

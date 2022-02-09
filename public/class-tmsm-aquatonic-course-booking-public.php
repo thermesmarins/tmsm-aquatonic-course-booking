@@ -1418,11 +1418,6 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$form  = GFAPI::get_form( $form_id );
 		$entry = GFAPI::get_entry( $entry_id );
 
-		// Find booking
-		if ( ! empty( $token ) ) {
-			$booking = self::find_booking_with_token( $token );
-		}
-
 		// WooCommerce email settings
 		$text_color   = get_option( 'woocommerce_email_text_color' ) ?? '#000000';
 		$image_header = get_option( 'woocommerce_email_header_image' ) ?? '';
