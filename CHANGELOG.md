@@ -1,4 +1,5 @@
-* Download PDF: prevent multiple clicks on button
+### 1.9.6: February 9th, 2022
+* Download PDF: prevent multiple clicks on button and text button changing when downloading
 
 ### 1.9.5: January 24th, 2022
 * Booking Form: animate to weekday times after filling a number of participants
