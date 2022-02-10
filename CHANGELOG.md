@@ -1,3 +1,4 @@
+### 1.9.9: February 10th, 2022
 * Fix: compatibility with new attendance camera names
 
 ### 1.9.8: February 9th, 2022
