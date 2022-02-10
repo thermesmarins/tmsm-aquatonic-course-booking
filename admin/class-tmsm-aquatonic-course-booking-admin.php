@@ -1507,6 +1507,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		return $slotminutes;
 	}
 
+	public function get_attendance_realtime_count(){
+
+		$realtime_count = 0;
+		$realtime_data = get_option( 'tmsm-aquatonic-attendance-data' );
+		foreach($realtime_data as $camera){
+			if($camera->camera_name === 'bassin'){
+				$realtime_count = $camera->number;
+			}
+		}
+		return $realtime_count;
+	}
 
 	/**
 	 * Dashboard calculate data for big and mini dashboard
@@ -1567,7 +1578,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		//print_r( allotment_timeslots_forthedate );
 		//echo '</pre>';
 
-		$realtime = get_option( 'tmsm-aquatonic-attendance-count' );
+		$realtime = self::get_attendance_realtime_count();
 
 		$site_id = (int) $this->get_option('aquos_siteid');
 

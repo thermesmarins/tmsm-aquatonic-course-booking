@@ -1,3 +1,5 @@
+* Fix: compatibility with new attendance camera names
+
 ### 1.9.8: February 9th, 2022
 * Download PDF: disable button after click
 
