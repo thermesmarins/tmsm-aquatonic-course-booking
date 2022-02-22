@@ -2256,6 +2256,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$dashboard[90][] = ' ';
 		$dashboard[90][] = ' ';
 		$dashboard[90][] = ' ';
+		$minidashboard[ 0 ]['date'] = esc_html__( 'Can Start', 'tmsm-aquatonic-course-booking' );;
+		$minidashboard[ 0 ]['free'] = $canstart;
 
 
 		// Real Time
