@@ -14,8 +14,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.9.9',
-    'version' => '1.9.9.0',
+    'pretty_version' => '2.0.0',
+    'version' => '2.0.0.0',
     'aliases' => 
     array (
     ),
@@ -256,8 +256,8 @@ private static $installed = array (
     ),
     'thermesmarins/tmsm-aquatonic-course-booking' => 
     array (
-      'pretty_version' => '1.9.9',
-      'version' => '1.9.9.0',
+      'pretty_version' => '2.0.0',
+      'version' => '2.0.0.0',
       'aliases' => 
       array (
       ),

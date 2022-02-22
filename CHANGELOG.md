@@ -1,3 +1,4 @@
+### 2.0.0: February 22nd, 2022
 * Fix minidashboard "can start" was missing
 
 ### 1.9.9: February 10th, 2022
