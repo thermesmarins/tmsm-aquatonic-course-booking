@@ -1,8 +1,10 @@
+* Customer Alliance: submit arrived customers with "Guest" API 
+
 ### 2.0.0: February 22nd, 2022
-* Fix minidashboard "can start" was missing
+* Fix - Minidashboard "can start" was missing
 
 ### 1.9.9: February 10th, 2022
-* Fix: compatibility with new attendance camera names
+* Fix - Compatibility with new attendance camera names
 
 ### 1.9.8: February 9th, 2022
 * Download PDF: disable button after click

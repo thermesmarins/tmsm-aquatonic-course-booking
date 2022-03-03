@@ -212,6 +212,9 @@ class Tmsm_Aquatonic_Course_Booking {
 		// Send Aquos Contacts every 5 minutes
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'aquos_send_contacts_cron', 10 );
 
+		// Send arrived contacts to Customer Alliance every 5 minutes
+		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'customeralliance_send_contacts_cron', 10 );
+
 		// Calculate dashboard data
 		$this->loader->add_action( 'tmsm_aquatonic_course_refresh_event', $plugin_admin, 'dashboard_calculate_data', 50 );
 

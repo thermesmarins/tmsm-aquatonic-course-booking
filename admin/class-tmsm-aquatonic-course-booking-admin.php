@@ -251,6 +251,17 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Creates a settings section
+	 *
+	 * @since 		1.0.0
+	 * @param 		array 		$params 		Array of parameters for the section
+	 * @return 		mixed 						The settings section
+	 */
+	public function section_customeralliance( $params ) {
+		include_once( plugin_dir_path( __FILE__ ) . 'partials/'. $this->plugin_name.'-admin-section-customeralliance.php' );
+	}
+
+	/**
 	 * Registers settings fields with WordPress
 	 */
 	public function register_fields() {
@@ -629,6 +640,28 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			)
 		);
 
+		add_settings_field(
+			'customeralliance_accesskey',
+			esc_html__( 'Access Key', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-customeralliance',
+			array(
+				'id' => 'customeralliance_accesskey',
+			)
+		);
+
+		add_settings_field(
+			'customeralliance_reviewsubject',
+			esc_html__( 'Access Key', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-customeralliance',
+			array(
+				'id' => 'customeralliance_reviewsubject',
+			)
+		);
+
 	}
 
 	/**
@@ -676,6 +709,13 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			$this->plugin_name . '-googlepaypasses',
 			esc_html__( 'Google Pay Passes', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'section_googlepaypasses' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->plugin_name . '-customeralliance',
+			esc_html__( 'Customer Alliance', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'section_customeralliance' ),
 			$this->plugin_name
 		);
 
@@ -2432,13 +2472,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 
-
 	/**
 	 * Send contact data to Aquos
 	 *
-	 * @param $contact
-	 *
-	 * @return WP_Error
+	 * @param $booking
 	 */
 	public function aquos_send_contact( $booking ){
 
@@ -2550,6 +2587,193 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 					error_log('entry not found for token'  . $token);
 				}
 
+			}
+
+		} // endpoint exists
+	}
+
+	/**
+	 * Send arrived contacts to Customer Alliance every 5 minutes
+	 */
+	public function customeralliance_send_contacts_cron() {
+
+		global $wpdb;
+
+		error_log( 'customeralliance_send_contacts_cron_start ' . home_url() );
+
+		$lastexec_option_name = 'tmsm-aquatonic-course-booking-customeralliance-send-contacts-last-exec';
+		$now = time();
+		$lastexec_timestamp = get_option( $lastexec_option_name );
+
+		if ( empty( $lastexec_timestamp ) ) {
+			$lastexec_timestamp = $now;
+			update_option( $lastexec_option_name, $lastexec_timestamp, true );
+		}
+
+		$lastexec_object = new DateTime();
+		$lastexec_object->setTimezone(wp_timezone());
+		$lastexec_object->setTimestamp($lastexec_timestamp);
+
+		$now_object = new DateTime();
+		$now_object->setTimezone(wp_timezone());
+		$now_object->setTimestamp($now);
+
+		// Get bookings arrived from yesterday (to avoid missing customer arriving late)
+		$lastexec_object->modify('-1 day');
+		$now_object->modify('-1 day');
+
+		// Get only arrived customers based on course date
+		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE status= 'arrived' AND date_course > '%s' AND date_course <= '%s'", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
+
+		error_log('found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
+
+		foreach($bookings as $booking){
+			$this->customeralliance_send_contact($booking);
+        }
+
+		$lastexec_timestamp = $now;
+		update_option( $lastexec_option_name, $lastexec_timestamp, true );
+		error_log('customeralliance_send_contacts_cron_end');
+	}
+
+
+	/**
+	 * Send contact data to Customer Alliance
+	 *
+	 * @param $booking
+	 *
+	 * @return void
+	 */
+	public function customeralliance_send_contact( $booking ){
+
+		error_log('customeralliance_send_contact_start');
+
+		$endpoint = 'https://interfaces.customer-alliance.com/api/';
+		$access_key = $this->get_option('customeralliance_accesskey');
+		$review_subject = $this->get_option('customeralliance_reviewsubject');
+
+		if ( ! empty ( $access_key ) && ! empty ( $review_subject ) && ! empty( $booking['email'] ) ) {
+			$endpoint .= $access_key. '/' . $review_subject;
+			$phone_number = $booking['phone'];
+
+			// Format phone number in E.164 standard (+33XXXXXX) does it contain the prefix
+			if ( strpos( $phone_number, '+33' ) === false && strpos( $phone_number, '033' ) ) {
+				// Phone number is OK, do nothing
+			} // No country prefix
+			else {
+				// First character is zero, then remove it
+				if ( strpos( substr( $phone_number, 0, 1 ), '0' ) !== false ) {
+					$phone_number = '+33' . substr( $phone_number, 1 );
+				}
+			}
+
+			// Prepare data for Customer Alliance API
+			$data = [
+				'gender'           => ( $booking['title'] == 1 ? 'm' : 'f' ),
+				'first_name'       => $booking['firstname'],
+				'name'             => $booking['lastname'],
+				'language'         => 'fr',
+				'id'               => $booking['email'],
+				'email'            => $booking['email'],
+				'guest_profile_id' => $booking['email'],
+				'room_number'      => __( 'Aquatonic Course', 'tmsm-aquatonic-course-booking' ),
+				'room_category'    => __( 'Aquatonic Course', 'tmsm-aquatonic-course-booking' ),
+				'arrival_date'     => substr( $booking['course_start'], 0, 10 ),
+				'departure_date'   => substr( $booking['course_start'], 0, 10 ),
+				'phone_number'     => $phone_number,
+				'reservation_id'   => $booking['barcode'],
+				'cancelled'        => false,
+			];
+
+			// Default status
+			$status = 'sent';
+
+			$body = json_encode($data);
+
+			$headers = [
+				'Content-Type' => 'application/json; charset=utf-8',
+				'Cache-Control' => 'no-cache',
+			];
+
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('headers:');
+				error_log(print_r($headers, true));
+
+				error_log('body:');
+				error_log($body);
+
+			}
+
+			$response = wp_remote_post(
+				$endpoint,
+				array(
+					'headers'     => $headers,
+					'body'        => $body,
+					'timeout'     => 30,
+					'data_format' => 'body',
+					//'sslverify'   => true,
+				)
+			);
+
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+				error_log( 'Customer Alliance response:' );
+				error_log( print_r( $response, true ) );
+				error_log( 'wp_remote_retrieve_body( $response ): ' );
+				error_log( print_r( wp_remote_retrieve_body( $response ), true ) );
+				error_log( print_r( $response_data, true ) );
+				error_log( '$response_data->success: ' . $response_data->success );
+				error_log( '$response_data->errors: ' . print_r( $response_data->errors, true ) );
+			}
+
+			if ( $response_code >= 400 ) {
+
+				error_log( sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+					absint( $response_code ) ) );
+				$status =  sprintf( __( 'Error: Delivery URL returned response code: %s', 'tmsm-aquatonic-course-booking' ),
+					absint( $response_code ) );
+
+			}
+
+			if ( isset($response_data->success) &&  $response_data->success === 'false') {
+
+				error_log(sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), print_r($response_data->errors, true) ));
+				$status = sprintf( __( 'Error message: %s', 'tmsm-aquatonic-course-booking' ), print_r($response_data->errors, true) );
+
+			}
+
+			if ( is_wp_error( $response ) ) {
+
+				error_log('Error message: '. $response->get_error_message());
+				$status = 'is_wp_error ' . $response->get_error_message();
+
+			}
+
+			if ( isset($response_data->success) &&  $response_data->success === 'true') {
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('customeralliance_contact_inserted '. $booking['firstname']. ' ' . $booking['lastname']);
+				}
+			}
+
+			// Storing Aquos status in entry meta
+			$token = $booking['token'];
+			if( ! empty($token)){
+				$entry = self::find_entry_with_token($token);
+				if( ! empty( $entry )){
+					$entry_id = $entry['id'];
+					if( !empty($entry_id)){
+						gform_update_meta( $entry_id, '_customeralliance_status', $status );
+					}
+					else{
+						error_log('entry_id not set'  . $token);
+						error_log(print_r( $entry, true));
+					}
+				}
+				else{
+					error_log('entry not found for token'  . $token);
+				}
 			}
 
 		} // endpoint exists
