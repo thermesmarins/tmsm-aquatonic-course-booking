@@ -1,4 +1,4 @@
-* Customer Alliance: submit arrived customers with "Guest" API 
+* Customer Alliance: submit arrived customers with "Guest" API
 
 ### 2.0.0: February 22nd, 2022
 * Fix - Minidashboard "can start" was missing
@@ -11,7 +11,7 @@
 
 ### 1.9.7: February 9th, 2022
 * Download PDF: renamed filename
-* Download PDf: removed unused code
+* Download PDF: removed unused code
 
 ### 1.9.6: February 9th, 2022
 * Download PDF: prevent multiple clicks on button and text button changing when downloading
