@@ -1594,6 +1594,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		if ( $site_id === 1 && date( 'Y-m-d' ) === '2021-10-20' ) {
 			$realtime += 35;
 		}
+		// Temp fix for Paris camera wrong realtime data on 2022-03-02
+		if ( $site_id === 2 && date( 'Y-m-d' ) === '2022-03-02' ) {
+			$realtime += 37;
+		}
 
 		$realtime = max( $realtime, 0 );
 		if ( ! empty( $this->get_option( 'tests_realtimeattendance' ) ) ) {
