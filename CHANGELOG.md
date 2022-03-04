@@ -1,3 +1,4 @@
+### 2.0.1: March 4th, 2022
 * Customer Alliance: submit arrived customers with "Guest" API
 
 ### 2.0.0: February 22nd, 2022
