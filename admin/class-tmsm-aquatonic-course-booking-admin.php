@@ -2602,7 +2602,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		global $wpdb;
 
-		error_log( 'customeralliance_send_contacts_cron_start ' . home_url() );
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'customeralliance_send_contacts_cron_start ' . home_url() );
+		}
 
 		$lastexec_option_name = 'tmsm-aquatonic-course-booking-customeralliance-send-contacts-last-exec';
 		$now = time();
@@ -2622,13 +2624,15 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$now_object->setTimestamp($now);
 
 		// Get bookings arrived from yesterday (to avoid missing customer arriving late)
-		$lastexec_object->modify('-1 day');
-		$now_object->modify('-1 day');
+		$lastexec_object->modify('-2 hours');
+		$now_object->modify('-2 hours');
 
 		// Get only arrived customers based on course date
 		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE status= 'arrived' AND course_start > '%s' AND course_start <= '%s'", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
 
-		error_log('found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
+		}
 
 		foreach($bookings as $booking){
 			$this->customeralliance_send_contact($booking);
@@ -2636,7 +2640,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		$lastexec_timestamp = $now;
 		update_option( $lastexec_option_name, $lastexec_timestamp, true );
-		error_log('customeralliance_send_contacts_cron_end');
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log('customeralliance_send_contacts_cron_end');
+		}
 	}
 
 
@@ -2649,7 +2655,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 */
 	public function customeralliance_send_contact( $booking ) {
 
-		error_log( 'customeralliance_send_contact_start' );
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'customeralliance_send_contact_start' );
+		}
 
 		$endpoint       = 'https://interfaces.customer-alliance.com/api/';
 		$access_key     = $this->get_option( 'customeralliance_accesskey' );
@@ -2691,7 +2699,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'phone_number'     => $phone_number,
 				'reservation_id'   => $booking['barcode'],
 				'cancelled'        => false,
-			]
+				]
 			];
 
 			// Default status
