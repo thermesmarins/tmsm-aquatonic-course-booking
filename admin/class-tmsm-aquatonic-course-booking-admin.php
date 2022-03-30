@@ -2623,7 +2623,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$now_object->setTimezone(wp_timezone());
 		$now_object->setTimestamp($now);
 
-		// Get bookings arrived from yesterday (to avoid missing customer arriving late)
+		// Get bookings arrived from 2 hours ago (to avoid missing customer arriving late)
 		$lastexec_object->modify('-2 hours');
 		$now_object->modify('-2 hours');
 
