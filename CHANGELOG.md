@@ -1,3 +1,6 @@
+### 2.0.3: March 9th, 2022
+* Fix debug
+
 ### 2.0.2: March 8th, 2022
 * Customer Alliance: check customers 2 hours after their course, instead of  1 day after
 
