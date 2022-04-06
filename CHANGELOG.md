@@ -1,3 +1,5 @@
+* Send to Aquos only bookings "self", exclude for "other"
+
 ### 2.0.3: March 9th, 2022
 * Fix debug
 

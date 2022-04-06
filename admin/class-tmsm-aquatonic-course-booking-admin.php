@@ -2460,7 +2460,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$now_object->setTimezone(wp_timezone());
 		$now_object->setTimestamp($now);
 
-		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE date_created > '%s' AND date_created <= '%s'", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
+		$bookings = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}aquatonic_course_booking WHERE date_created > '%s' AND date_created <= '%s' AND self = 1", $lastexec_object->format('Y-m-d H:i:s'), $now_object->format('Y-m-d H:i:s') ), ARRAY_A );
 
 		//error_log('aquos_found '. count($bookings) . ' bookings between ' . $lastexec_object->format('Y-m-d H:i:s'). ' and '. $now_object->format('Y-m-d H:i:s'));
 
