@@ -1,4 +1,5 @@
 * Send to Aquos only bookings "self", exclude for "other"
+* Display "self" info in bookings list
 
 ### 2.0.3: March 9th, 2022
 * Fix debug

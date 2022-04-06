@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TMSM Aquatonic Course Booking\n"
-"POT-Creation-Date: 2022-03-04 15:25+0100\n"
+"POT-Creation-Date: 2022-04-06 15:52+0200\n"
 "PO-Revision-Date: 2014-10-24 21:08+0100\n"
 "Last-Translator: Nicolas Mollet <nico.mollet@gmail.com>\n"
 "Language-Team: Nicolas Mollet <nico.mollet@gmail.com>\n"
@@ -26,8 +26,8 @@ msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:118
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:122
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2683
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2684
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2695
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2696
 #: includes/googlepaypass/GooglePayResourceDefinitions.php:166
 #: public/class-tmsm-aquatonic-course-booking-public.php:2570
 msgid "Aquatonic Course"
@@ -501,7 +501,7 @@ msgstr ""
 
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:2549
 #: admin/class-tmsm-aquatonic-course-booking-admin.php:2551
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2851
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2861
 #: includes/class-dialog-insight-api.php:150
 #: includes/class-dialog-insight-api.php:151
 #, php-format
@@ -514,13 +514,13 @@ msgstr ""
 msgid "Error message: %s"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2741
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2743
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2751
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2753
 #, php-format
 msgid "Error: Delivery URL returned code %s with error %s"
 msgstr ""
 
-#: admin/class-tmsm-aquatonic-course-booking-admin.php:2860
+#: admin/class-tmsm-aquatonic-course-booking-admin.php:2870
 #, php-format
 msgid "Aquos reached, with error message: %s"
 msgstr ""
@@ -704,6 +704,14 @@ msgstr ""
 
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:81
 msgid "Actions"
+msgstr ""
+
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:430
+msgid "For me"
+msgstr ""
+
+#: includes/class-tmsm-aquatonic-course-booking-list-table.php:430
+msgid "For someone else"
 msgstr ""
 
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:512

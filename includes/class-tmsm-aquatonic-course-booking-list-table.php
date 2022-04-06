@@ -427,7 +427,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	 * @param object $item The current item object.
 	 */
 	public function column_fullname( $item ) {
-		echo '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
+		echo '<a href="' . admin_url( self::admin_page_url() . '?page=' . $this->page . '&tab=bookings&status=all&s=' . $item['email'] ) . '"><abbr title="' . esc_attr( $item['email'] . '&#013;' . $item['phone'] . '&#013;' . $item['barcode'] ) . '&#013;' . ( $item['self'] == 1 ? __( 'For me', 'tmsm-aquatonic-course-booking' ) : __( 'For someone else', 'tmsm-aquatonic-course-booking' ) ) . '">' . ucwords( $item['firstname'] ) . ' ' . strtoupper( $item['lastname'] ) . '</abbr></a>';
 	}
 
 	/**
