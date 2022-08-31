@@ -2918,12 +2918,12 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 						$period   = new DatePeriod( $lesson_datetime_start, $interval, $lesson_datetime_end );
 
 						// Set starting & ending lessons
-						if ( isset( $lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ] ) ) {
+						if ( isset( $lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ] ) && isset($lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ]['starting'] ) ) {
 							$lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ]['starting'] += $response_lesson->inscrit;
 						} else {
 							$lessons[ $lesson_datetime_start->format( 'Y-m-d H:i:s' ) ] = ['starting' => $response_lesson->inscrit];
 						}
-						if ( isset( $lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ] ) ) {
+						if ( isset( $lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ] ) && isset( $lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ]['ending'] ) ) {
 							$lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ]['ending'] += $response_lesson->inscrit;
 						} else {
 							$lessons[ $lesson_datetime_end->format( 'Y-m-d H:i:s' ) ] = ['ending' => $response_lesson->inscrit];
