@@ -1,3 +1,5 @@
+* Minify CSS file
+
 ### 2.0.4: April 6th, 2022
 * Send to Aquos only bookings "self", exclude for "other"
 * Display "self" info in bookings list
