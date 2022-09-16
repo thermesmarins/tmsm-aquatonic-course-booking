@@ -665,7 +665,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
                     data-date="{{ data.date_computed }}">
                 <option>{{ TmsmAquatonicCourseApp.i18n.loading }}</option>
             </select>
-            <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+            <span class="glyphicon glyphicon-refresh glyphicon-spin fas fa-spinner fa-spin "></span>
         </script>
 
 		<?php

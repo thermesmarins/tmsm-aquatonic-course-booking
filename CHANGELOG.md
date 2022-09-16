@@ -1,4 +1,5 @@
 * Minify CSS file
+* Loading icon with Font Awesome instead of Glyphicon
 
 ### 2.0.4: April 6th, 2022
 * Send to Aquos only bookings "self", exclude for "other"
