@@ -359,7 +359,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			$objdate = \Datetime::createFromFormat('d/m/Y', $search_datecourse);
 		}
 		if ( ! empty( $objdate ) ) {
-			$where .= sprintf( " AND (course_start BETWEEN '%s' AND DATE_ADD('%s', INTERVAL 14 DAY))", $objdate->format( 'Y-m-d' ), $objdate->format( 'Y-m-d' ) );
+			$where .= sprintf( " AND (course_start BETWEEN '%s' AND DATE_ADD('%s', INTERVAL 31 DAY))", $objdate->format( 'Y-m-d' ), $objdate->format( 'Y-m-d' ) );
 		}
 
 		$results = "SELECT SUM(participants) as participants, DATE(course_start) as course_start FROM `{$wpdb->prefix}aquatonic_course_booking` WHERE ".$where." GROUP BY DATE(course_start)" ;
