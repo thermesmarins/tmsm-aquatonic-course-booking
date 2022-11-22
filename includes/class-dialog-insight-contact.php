@@ -55,6 +55,11 @@ class Dialog_Insight_Contact {
 	 */
 	public $beneficiary;
 
+	/**
+	 * @var      int    $bookings_nb
+	 */
+	public $bookings_nb;
+
 
 	public function __construct() {
 
@@ -101,6 +106,11 @@ class Dialog_Insight_Contact {
 			$this->firstname  = $contact->f_FirstName ?? null;
 			$this->lastname   = $contact->f_LastName ?? null;
 			$this->contact_id = $contact->idContact ?? null;
+			$bookingsnbfield = self::get_option( 'dialoginsight_bookingsnbfield' );
+			if(! empty ($bookingsnbfield ) ){
+				$this->bookings_nb = $contact->{"f_".$bookingsnbfield} ?? 0;
+			}
+
 		}
 
 	}
@@ -192,7 +202,7 @@ class Dialog_Insight_Contact {
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function update_by_id( ){
+	public function update_by_id( ): bool {
 
 		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 			error_log( 'Dialog Insight Update Contact by ID' );
@@ -208,6 +218,15 @@ class Dialog_Insight_Contact {
 			if( ! empty( $beneficiaryfield ) ){
 				$data['f_'.$beneficiaryfield] = 1;
 			}
+		}
+
+		$beneficiaryfield = self::get_option( 'dialoginsight_beneficiaryfield' );
+		if( ! empty( $beneficiaryfield ) ){
+			$data['f_'.$beneficiaryfield] = 1;
+		}
+		$bookingsnbfield = self::get_option( 'dialoginsight_bookingsnbfield' );
+		if(! empty ($bookingsnbfield ) ){
+			$data["f_".$bookingsnbfield] = $this->bookings_nb+1;
 		}
 
 		$request = [

@@ -174,4 +174,46 @@ class Dialog_Insight_Booking {
 
 	}
 
+	/**
+	 * Update Booking
+	 *
+	 * @throws \Exception
+	 */
+	public function getCountByIdContact(){
+
+			$request = [
+				'Clause' => [
+					[
+						'$type'   => 'FieldClause',
+						'Field' => [
+							'Name'          => 'idContact',
+						],
+						'TypeOperator' => 'Equal',
+						'ComparisonValue' => 'Equal',
+					],
+				],
+			];
+
+			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Get' );
+
+			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log( 'Booking found, assigning values' );
+				}
+
+				if(!empty($bookings->Records[0])){
+					$booking          = $bookings->Records[0];
+					if( ! empty($booking->Record)){
+						$booking_record          = $booking->Record;
+						if( !empty($booking_record->idContact)){
+							$this->contact_id = $booking_record->idContact ?? null;
+						}
+					}
+				}
+
+			}
+
+
+	}
+
 }

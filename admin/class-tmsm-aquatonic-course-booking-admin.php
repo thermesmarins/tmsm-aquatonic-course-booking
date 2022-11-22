@@ -519,6 +519,18 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		);
 
 		add_settings_field(
+			'dialoginsight_bookingsnbfield',
+			esc_html__( 'Dialog Insight Booking Number Field', 'tmsm-aquatonic-course-booking' ),
+			array( $this, 'field_text' ),
+			$this->plugin_name,
+			$this->plugin_name . '-dialoginsight',
+			array(
+				'id' => 'dialoginsight_bookingsnbfield',
+				'description' => esc_html__( 'Bookings Number Field in Dialog Insight', 'tmsm-aquatonic-course-booking' ),
+			)
+		);
+
+		add_settings_field(
 			'aquos_endpoint_contact',
 			esc_html__( 'Aquos Endpoint for Adding Contact', 'tmsm-aquatonic-course-booking' ),
 			array( $this, 'field_text' ),
@@ -1191,6 +1203,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$options[] = array( 'dialoginsight_relationaltableid', 'text', '' );
 		$options[] = array( 'dialoginsight_sourcecode', 'text', '' );
 		$options[] = array( 'dialoginsight_beneficiaryfield', 'text', '' );
+		$options[] = array( 'dialoginsight_bookingsnbfield', 'text', '' );
 
 		$options[] = array( 'aquos_endpoint_lessons', 'text', '' );
 		$options[] = array( 'aquos_endpoint_contact', 'text', '' );
