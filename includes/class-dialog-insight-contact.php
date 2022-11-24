@@ -94,9 +94,6 @@ class Dialog_Insight_Contact {
 
 		$contacts = \Dialog_Insight_API::request( $request, 'contacts', 'Get' );
 
-		//error_log( '$contacts:' );
-		//error_log( print_r( $contacts, true ) );
-
 		if ( ! empty( $contacts->Records ) && ! empty( $contacts->Records[0] ) ) {
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log( 'First contact found, assigning values' );
@@ -106,11 +103,6 @@ class Dialog_Insight_Contact {
 			$this->firstname  = $contact->f_FirstName ?? null;
 			$this->lastname   = $contact->f_LastName ?? null;
 			$this->contact_id = $contact->idContact ?? null;
-			$bookingsnbfield = self::get_option( 'dialoginsight_bookingsnbfield' );
-			if(! empty ($bookingsnbfield ) ){
-				$this->bookings_nb = $contact->{"f_".$bookingsnbfield} ?? 0;
-			}
-
 		}
 
 	}
@@ -213,6 +205,7 @@ class Dialog_Insight_Contact {
 		$data         = [
 		];
 
+		// Make this user a beneficiary
 		if ($this->beneficiary == 1){
 			$beneficiaryfield = self::get_option( 'dialoginsight_beneficiaryfield' );
 			if( ! empty( $beneficiaryfield ) ){
@@ -220,13 +213,19 @@ class Dialog_Insight_Contact {
 			}
 		}
 
-		$beneficiaryfield = self::get_option( 'dialoginsight_beneficiaryfield' );
-		if( ! empty( $beneficiaryfield ) ){
-			$data['f_'.$beneficiaryfield] = 1;
-		}
+		// Increment the number of bookings of the user
 		$bookingsnbfield = self::get_option( 'dialoginsight_bookingsnbfield' );
-		if(! empty ($bookingsnbfield ) ){
-			$data["f_".$bookingsnbfield] = $this->bookings_nb+1;
+
+		if(! empty( $this->bookings_nb ) ){
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'bookings_nb is set' );
+			}
+			$data['f_'.$bookingsnbfield] = (int) $this->bookings_nb;
+		}
+		else{
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log( 'bookings_nb is not set' );
+			}
 		}
 
 		$request = [
@@ -243,7 +242,7 @@ class Dialog_Insight_Contact {
 				'AllowUpdate'            => true,
 				'SkipDuplicateRecords'   => false,
 				'SkipUnmatchedRecords'   => false,
-				'ReturnRecordsOnSuccess' => false,
+				'ReturnRecordsOnSuccess' => true,
 				'ReturnRecordsOnError'   => false,
 				'FieldOptions'           => null,
 			],
@@ -262,8 +261,12 @@ class Dialog_Insight_Contact {
 
 		if ( ! empty($result) && ! empty( $result->Success ) &&  $result->Success== true ) {
 
+
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log( 'Dialog Insight updated added successfully' );
+				error_log(print_r($result->Records[0]->Record, true));
+				error_log('$bookingsnbfieldvalue: ' . $result->Records[0]->Record->{"f_".$bookingsnbfield});
+				$this->bookings_nb = $result->Records[0]->Record->{"f_".$bookingsnbfield};
 			}
 			return true;
 		}

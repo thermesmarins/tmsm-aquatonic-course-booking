@@ -124,8 +124,10 @@ class Dialog_Insight_API {
 			'Key'   => self::get_option( 'dialoginsight_apikey' ),
 		];
 
-		//error_log( 'request after:' );
-		//error_log( print_r( $request, true ) );
+		if ( defined( 'TMSM_AQUOS_SPA_BOOKING_DEBUG' ) && TMSM_AQUOS_SPA_BOOKING_DEBUG ) {
+			error_log( 'request after:' );
+			error_log( print_r( $request, true ) );
+		}
 
 		$response = wp_safe_remote_post(
 			self::ENDPOINT . $api . '.ashx?method=' . $method,

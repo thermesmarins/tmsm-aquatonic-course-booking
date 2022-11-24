@@ -127,7 +127,9 @@ class Dialog_Insight_Booking {
 	 * @throws \Exception
 	 */
 	public function update(){
-
+		if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+			error_log( 'Booking update()' );
+		}
 		if( !empty($this->token) && !empty($this->status)){
 			$request = [
 				'Records' => [
@@ -153,21 +155,37 @@ class Dialog_Insight_Booking {
 
 			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Merge' );
 
-			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
+			if ( ! empty( $bookings->Records ) ) {
 				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log( 'Booking found, assigning values' );
+					error_log( 'Records found' );
 				}
 
 				if(!empty($bookings->Records[0])){
+					if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+						error_log( 'Booking found' );
+					}
 					$booking          = $bookings->Records[0];
 					if( ! empty($booking->Record)){
 						$booking_record          = $booking->Record;
 						if( !empty($booking_record->idContact)){
+							if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+								error_log( '$booking_record->idContact:' . $booking_record->idContact );
+							}
 							$this->contact_id = $booking_record->idContact ?? null;
+						}
+					}
+					else{
+						if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+							error_log( 'No booking found' );
 						}
 					}
 				}
 
+			}
+			else{
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log( 'No records found' );
+				}
 			}
 
 		}
@@ -179,40 +197,26 @@ class Dialog_Insight_Booking {
 	 *
 	 * @throws \Exception
 	 */
-	public function getCountByIdContact(){
+	public function getCountByIdContact() {
 
-			$request = [
-				'Clause' => [
-					[
-						'$type'   => 'FieldClause',
-						'Field' => [
-							'Name'          => 'idContact',
-						],
-						'TypeOperator' => 'Equal',
-						'ComparisonValue' => 'Equal',
+		$request = [
+			'Clause' => [
+				[
+					'$type'           => 'FieldClause',
+					'Field'           => [
+						'Name' => 'idContact',
 					],
+					'TypeOperator'    => 'Equal',
+					'ComparisonValue' => $this->contact_id,
 				],
-			];
+			],
+		];
 
-			$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Get' );
-
-			if ( ! empty( $bookings->Records ) && ! empty( $bookings->Records[0] ) ) {
-				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
-					error_log( 'Booking found, assigning values' );
-				}
-
-				if(!empty($bookings->Records[0])){
-					$booking          = $bookings->Records[0];
-					if( ! empty($booking->Record)){
-						$booking_record          = $booking->Record;
-						if( !empty($booking_record->idContact)){
-							$this->contact_id = $booking_record->idContact ?? null;
-						}
-					}
-				}
-
-			}
-
+		$bookings = \Dialog_Insight_API::request( $request, 'relationaltables', 'Get' );
+		if ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_DEBUG' ) && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true ) {
+			error_log( 'Counted ' . count($bookings->Records) . ' records/bookings for contact id' . $this->contact_id );
+		}
+		return count($bookings->Records);
 
 	}
 

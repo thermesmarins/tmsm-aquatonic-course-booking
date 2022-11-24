@@ -1279,14 +1279,28 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$booking_dialoginsight->status = 'arrived';
 
 		try {
+			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+				error_log('Try booking update()');
+			}
 			$booking_dialoginsight->update();
 
 			// Booking updated and contact_id found
 			if( ! empty($booking_dialoginsight->contact_id)){
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Found contact_id');
+				}
 				$contact = new \Tmsm_Aquatonic_Course_Booking\Dialog_Insight_Contact();
 				$contact->contact_id = $booking_dialoginsight->contact_id;
 				$contact->beneficiary = 1;
 				$contact->update_by_id();
+
+				$contact->bookings_nb += 1;
+				$contact->update_by_id();
+			}
+			else{
+				if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
+					error_log('Not found contact_id');
+				}
 			}
 
 		} catch (Exception $exception) {
