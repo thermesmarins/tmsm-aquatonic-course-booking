@@ -1,3 +1,4 @@
+### 2.0.5: November 24th, 2022
 * Minify CSS file
 * Loading icon with Font Awesome instead of Glyphicon
 * New setting: Dialog Insight "Bookings Number" Field
