@@ -257,6 +257,7 @@ class Tmsm_Aquatonic_Course_Booking {
 				$this->loader->add_filter( 'gform_pre_render_' . $form_add_id, $plugin_public, 'gform_pre_render_add', 20, 1 );
 				$this->loader->add_filter( 'gform_pre_render_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
 				$this->loader->add_filter( 'gform_pre_validation_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
+				$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email_to', 20, 4 );
 
 
 				$this->loader->add_action( 'gform_entry_created', $plugin_public, 'gform_entry_created', 20, 2 );
@@ -290,7 +291,7 @@ class Tmsm_Aquatonic_Course_Booking {
 
 		// Emails
 		$this->loader->add_filter( 'gform_html_message_template_pre_send_email', $plugin_public, 'gform_html_message_template_pre_send_email', 20, 1 );
-		$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email', 20, 4 );
+		$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email_message', 20, 4 );
 		$this->loader->add_filter( 'woocommerce_email_styles', $plugin_public, 'woocommerce_email_styles', 20, 2 );
 
 		// Misc

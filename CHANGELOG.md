@@ -1,3 +1,5 @@
+* Customize email with "To" header set to firstname lastname <email>
+
 ### 2.0.5: November 24th, 2022
 * Minify CSS file
 * Loading icon with Font Awesome instead of Glyphicon

@@ -1603,6 +1603,41 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Gravity Forms: Custom "To" header: firstname lastname <email>
+	 *
+	 * @param array $email
+	 * @param       $message_format
+	 * @param array $notification
+	 * @param array $entry
+	 *
+	 * @return array
+	 */
+	function gform_pre_send_email_to( array $email, $message_format, array $notification, array $entry ): array {
+		$form_id = $entry['form_id'] ?? '';
+
+		// Gravity Forms Hooks only for the selected form
+		$options = get_option( $this->plugin_name . '-options' );
+		if ( ! empty( $options ) ) {
+			$form_add_id = $options['gform_add_id'];
+			if ( ! empty( $form_add_id ) && $form_id == $form_add_id ) {
+
+				$form = GFAPI::get_form( $form_id );
+
+				$lastname       = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
+				$firstname      = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
+				$customer_email = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
+				if( ! empty($firstname) && ! empty($lastname)){
+					$email['to'] = sanitize_text_field( $firstname ) . ' ' . sanitize_text_field( $lastname ) . ' <' . sanitize_email( $customer_email )
+					               . '>';
+					GFCommon::log_debug( __METHOD__ . '(): To set to => ' . $email['to'] );
+				}
+			}
+		}
+
+		return $email;
+	}
+
+	/**
 	 * Gravity Forms: Add date validation, compare year of birth to current year
 	 *
 	 * @param $result
@@ -2445,7 +2480,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	 *
 	 * @return array
 	 */
-	public function gform_pre_send_email( array $email, string $message_format, array $notification, array $entry ) {
+	public function gform_pre_send_email_message( array $email, string $message_format, array $notification, array $entry ) {
 
 		if ( class_exists( 'WC_Email' ) ) {
 
