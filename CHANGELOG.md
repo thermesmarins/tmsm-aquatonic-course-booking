@@ -1,3 +1,4 @@
+### 2.0.6: November 30th, 2022
 * Customize email with "To" header set to firstname lastname <email>
 
 ### 2.0.5: November 24th, 2022
