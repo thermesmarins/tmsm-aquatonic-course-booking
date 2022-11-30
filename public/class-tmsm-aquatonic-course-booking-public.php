@@ -1626,8 +1626,9 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$lastname       = self::field_value_from_class( 'tmsm-aquatonic-course-lastname', $form['fields'], $entry );
 				$firstname      = self::field_value_from_class( 'tmsm-aquatonic-course-firstname', $form['fields'], $entry );
 				$customer_email = self::field_value_from_class( 'tmsm-aquatonic-course-email', $form['fields'], $entry );
-				if( ! empty($firstname) && ! empty($lastname)){
-					$email['to'] = sanitize_text_field( $firstname ) . ' ' . sanitize_text_field( $lastname ) . ' <' . sanitize_email( $customer_email )
+				if ( ! empty( $firstname ) && ! empty( $lastname ) ) {
+					$email['to'] = sanitize_text_field( $firstname ) . ' ' . sanitize_text_field( $lastname ) . ' <'
+					               . sanitize_email( $customer_email )
 					               . '>';
 					GFCommon::log_debug( __METHOD__ . '(): To set to => ' . $email['to'] );
 				}
