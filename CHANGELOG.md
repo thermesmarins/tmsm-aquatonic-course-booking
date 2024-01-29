@@ -1,3 +1,6 @@
+### 2.0.7: January 29th, 2024
+* Customize pdf file with name and firstname fields
+  
 ### 2.0.6: November 30th, 2022
 * Customize email with "To" header set to firstname lastname <email>
 
