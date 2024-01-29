@@ -1096,6 +1096,12 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$booking = self::find_booking_with_token( $token );
 
 					if ( ! empty( $booking ) ) {
+
+						$custom_merge_tag_name = '{booking_tag_name}';
+						if ( strpos( $text, $custom_merge_tag_name ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
+							$text = str_replace( $custom_merge_tag_name, $booking['firstname'] . ' ' . $booking['lastname'], $text );
+						}
+						
 						$custom_merge_tag_date = '{booking_date}';
 						if ( strpos( $text, $custom_merge_tag_date ) !== false && ! empty( $entry_id ) && ! empty( $form ) ) {
 							$booking_start_object = DateTime::createFromFormat( 'Y-m-d H:i:s', $booking['course_start'], wp_timezone() );
