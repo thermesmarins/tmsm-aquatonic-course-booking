@@ -1749,7 +1749,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$cell .= '<span class="tooltip-trigger lessons-registered lessons-registered-' . $counter . '">'
 				         . $lessons_registered_forthedate_counter[ $counter ] . '</span>';
 
-				if ( $period_for_testing_lessons != $period ) {
+				//todo if ( $period_for_testing_lessons != $period ) {
+				if (! empty($this->get_option('tests_lessonsdate'))) {
 					$cell .= ' ';
 					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
 				}
@@ -1778,7 +1779,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$cell .= '<span class="tooltip-trigger lessons-ending lessons-ending-' . $counter . '">'
 				         . $lessons_ending_forthedate_counter[ $counter ] . '</span>';
 
-				if ( $period_for_testing_lessons != $period ) {
+				//todo if ( $period_for_testing_lessons != $period ) {
+				if (! empty($this->get_option('tests_lessonsdate'))){
 					$cell .= ' ';
 					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
 				}
@@ -1807,7 +1809,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				$cell .= '<span class="tooltip-trigger lessons-starting lessons-starting-' . $counter . '">'
 				         . $lessons_starting_forthedate_counter[ $counter ] . '</span>';
 
-				if ( $period_for_testing_lessons != $period ) {
+				//todo if ( $period_for_testing_lessons != $period ) {
+				if (! empty($this->get_option('tests_lessonsdate'))) {
 					$cell .= ' ';
 					$cell .= __( '(Test Mode)', 'tmsm-aquatonic-course-booking' );
 				}
