@@ -1,3 +1,6 @@
+### 2.0.8: November 14th, 2024
+* change the if condition to check if it is a test or production mode, for the Dashboard
+
 ### 2.0.7: January 29th, 2024
 * Customize pdf file with name and firstname fields
   
