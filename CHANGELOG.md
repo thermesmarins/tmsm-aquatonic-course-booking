@@ -1,3 +1,6 @@
+### 2.0.9: November 27th, 2024
+* Add stats dashboard for course bookings over the years.
+
 ### 2.0.8: November 14th, 2024
 * change the if condition to check if it is a test or production mode, for the Dashboard
 
