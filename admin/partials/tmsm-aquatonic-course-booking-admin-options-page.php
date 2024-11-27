@@ -197,7 +197,7 @@
 									<input type="hidden" name="page" value="<?php echo esc_attr($bookings->page); ?>" />
 									<input type="hidden" name="tab" value="stats" />
 									<p class="search-box">
-										<input type="search" placeholder="<?php echo esc_attr__('Année choisie', 'tmsm-aquatonic-course-booking'); ?>" name="search_year" value="<?php
+										<input type="search" placeholder="<?php echo esc_attr__('Year', 'tmsm-aquatonic-course-booking'); ?>" name="search_year" value="<?php
 																																													$search_year = isset($_REQUEST['search_year']) ? esc_attr(wp_unslash($_REQUEST['search_year'])) : '';
 																																													echo $search_year; ?>" />
 										<?php submit_button(__('Filter', 'tmsm-aquatonic-course-booking'), '', '', false, array('id' => 'search-submit')); ?>

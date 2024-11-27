@@ -660,6 +660,10 @@ msgstr "État de réservation"
 msgid "Number of bookings"
 msgstr "Nombre de réservations"
 
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:266
+msgid "Year"
+msgstr "Année"
+
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:294
 msgid "Total Participants by Status"
 msgstr "Total des participants par statut"
