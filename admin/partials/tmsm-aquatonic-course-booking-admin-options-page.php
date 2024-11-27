@@ -179,6 +179,154 @@
 			</div>
 		</div>
 	</div>
+			<!-- Début Tableau de stats no-show participant et reservation -->
+			<?php
+		$months = $bookings->get_months();
+		?>
+		<div id="dashboard-widgets" class="metabox-holder columns-1">
+			<div id="postbox-container-5" class="postbox-container">
+				<div class="meta-box-sortables ui-sortable">
+					<div class="postbox" id="postbox-stats-listfuturedates">
+						<div class="postbox-header">
+							<h2 class="hndle ui-sortable-handle"><?php esc_html_e('Statistiques totales par mois', 'tmsm-aquatonic-course-booking'); ?></h2>
+						</div>
+						<div class="insidee">
+							<div class="main">
+
+								<form method="get" action="">
+									<input type="hidden" name="page" value="<?php echo esc_attr($bookings->page); ?>" />
+									<input type="hidden" name="tab" value="stats" />
+									<p class="search-box">
+										<input type="search" placeholder="<?php echo esc_attr__('Année choisie', 'tmsm-aquatonic-course-booking'); ?>" name="search_year" value="<?php
+																																													$search_year = isset($_REQUEST['search_year']) ? esc_attr(wp_unslash($_REQUEST['search_year'])) : '';
+																																													echo $search_year; ?>" />
+										<?php submit_button(__('Filter', 'tmsm-aquatonic-course-booking'), '', '', false, array('id' => 'search-submit')); ?>
+									</p>
+								</form>
+								<div class="table-responsive">
+									<table class="wp-list-table widefat table-view-list settings_page_tmsm-aquatonic-course-booking-settings">
+										<thead>
+											<tr>
+												<th scope="col" class="manage-column column-primary"><?php esc_html_e('Mois', 'tmsm-aquatonic-course-booking'); ?></th>
+												<?php
+												foreach ($months as $month => $number) {
+													echo '<td>' .
+														$month . '
+												</td>';
+												}
+												?>
+											</tr>
+										</thead>
+
+										<tbody>
+											<th scope="col" class="manage-column column-primary"><strong><?php esc_html_e('Reservations', 'tmsm-aquatonic-course-booking'); ?></strong></th>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Arrivées', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_total_reservations_per_month($number, 'arrived') . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('No-show', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_total_reservations_per_month($number, 'noshow') . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Annulés', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_total_reservations_per_month($number, 'cancelled')  . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Total Réservations', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_total_reservations_per_month($number) . '</td>';
+												}
+												?>
+											</tr>
+											<thead>
+												<tr>
+													<th scope="col" class="manage-column">
+													</th>
+													<?php
+													foreach ($months as $month) {
+														echo '<td>
+												</td>';
+													}
+													?>
+												</tr>
+											</thead>
+											<th scope="col" class="manage-column column-primary"><strong><?php esc_html_e('Participants', 'tmsm-aquatonic-course-booking'); ?></strong></th>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Arrivées', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_paricipant_per_month($number, 'arrived') . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('No-show', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_paricipant_per_month($number, 'noshow') . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Annulés', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_paricipant_per_month($number, 'cancelled') . '</td>';
+												}
+												?>
+											</tr>
+											<tr>
+												<th scope="col" class="manage-column">
+													<?php esc_html_e('Total Participants', 'tmsm-aquatonic-course-booking'); ?>
+												</th>
+												<?php
+												foreach ($months as $number) {
+													echo '<td>' . $bookings->get_all_paricipant_per_month($number) . '</td>';
+												}
+												?>
+											</tr>
+										</tbody>
+
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--Fin Tableau de stats no-show participant et reservation -->
 	<div id="dashboard-widgets" class="metabox-holder columns-1">
 		<div id="postbox-container-3" class="postbox-container">
 			<div class="meta-box-sortables ui-sortable">

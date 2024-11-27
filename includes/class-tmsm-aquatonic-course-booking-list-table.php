@@ -217,7 +217,109 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$sql_count = "SELECT COUNT(*) FROM `{$wpdb->prefix}aquatonic_course_booking`" . $this->get_where_query();
 		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
+/**
+	 * Get all Months
+	 *
+	 * @return array
+	 */
+	public function get_months()
+	{
+		
+		$months = [
+			
+				'JAN'=> '01',
+				'FEV'=> '02',
+				'MAR'=> '03',
+				'AVR'=> '04',
+				'MAI'=> '05',
+				'JUIN'=> '06',
+				'JUIL'=> '07',
+				'AOU'=> '08',
+				'SEP'=> '09',
+				'OCT'=> '10',
+				'NOV'=> '11',
+				'DEC'=> '12',
+			
+		];
+		// for ($m = 1; $m <= 12; $m++) {
+	
+			// $month['letter'] = date('F', mktime(0, 0, 0, $m, 1, date('Y')));
+		// 	$month['number'] = $m;
+			// $months['number'] = $m;
+		// 	array_push($months,$month);
+			
+		// }
 
+		return $months;
+
+	}
+
+	/**
+	 * Get specific year for Monthly search
+	 * @return void
+	 */
+	protected function get_year() {
+		$search_year   = isset($_GET['search_year']) ? sanitize_text_field(wp_unslash($_GET['search_year'])) : '';
+		if (! empty($search_year)) {
+			$year = \Datetime::createFromFormat('Y', $search_year);
+		}
+		else {
+			$year = new Datetime();			
+		}
+		return $year->format('Y');	
+	}
+	/**
+	 * Get last day of the month
+	 *
+	 * @param [string] $annee
+	 * @param [string] $month
+	 * @return void
+	 */
+	public function get_last_day_of_months($annee,$month)
+	{
+
+
+		$resultats = '';
+			$date = new DateTime($annee . '-' . $month . '-01'); // Premier jour du mois
+			$date->modify('last day of this month');
+			$resultats = $date->format('d'); // Format : Année-Mois-Jour
+			
+		return $resultats;
+	}
+	/**
+	 * Get all participant per month
+	 * @return int
+	 * 
+	 */
+	public function get_all_total_reservations_per_month($month, $status = null)
+	{
+		global $wpdb;
+		$annee = $this->get_year();
+		$last_day = $this->get_last_day_of_months($annee, $month);
+		if ($status !== null) {
+			$sql_count = "SELECT COUNT(*) FROM {$wpdb->prefix}aquatonic_course_booking WHERE course_start BETWEEN '{$annee}-{$month}-01' AND '{$annee}-{$month}-{$last_day}' AND status = '{$status}' ; ";
+
+		} else {
+			$sql_count = "SELECT COUNT(*) FROM {$wpdb->prefix}aquatonic_course_booking WHERE course_start BETWEEN '{$annee}-{$month}-01' AND '{$annee}-{$month}-{$last_day}'; ";
+		}
+		$results = $wpdb->get_var($sql_count) ?? 0;
+		return  $results;
+	}
+	public function get_all_paricipant_per_month($month, $status = null)
+	{
+		global $wpdb;
+		$annee = $this->get_year();			
+		$last_day = $this->get_last_day_of_months($annee, $month);
+		if($status !== null) {
+
+			$sql_count = "SELECT SUM(participants) AS total_participants FROM {$wpdb->prefix}aquatonic_course_booking WHERE course_start BETWEEN '{$annee}-{$month}-01' AND '{$annee}-{$month}-{$last_day}'AND status = '{$status}'; ";
+		} else {
+
+			$sql_count = "SELECT SUM(participants) AS total_participants FROM {$wpdb->prefix}aquatonic_course_booking WHERE course_start BETWEEN '{$annee}-{$month}-01' AND '{$annee}-{$month}-{$last_day}'; ";
+		}
+		$results = $wpdb->get_var($sql_count) ?? 0;
+		return  $results;
+	}
 	/**
 	 * Get total number of bookings cancelled
 	 *
