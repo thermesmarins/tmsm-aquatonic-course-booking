@@ -645,6 +645,9 @@ msgstr "Total des réservations par statut"
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:254
 msgid "Total Bookings"
 msgstr "Total des réservations"
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:254
+msgid "Stats per month"
+msgstr "Statistiques totales par mois"
 
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:266
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:308

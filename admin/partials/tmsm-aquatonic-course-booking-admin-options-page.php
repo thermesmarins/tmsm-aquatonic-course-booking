@@ -188,7 +188,7 @@
 				<div class="meta-box-sortables ui-sortable">
 					<div class="postbox" id="postbox-stats-listfuturedates">
 						<div class="postbox-header">
-							<h2 class="hndle ui-sortable-handle"><?php esc_html_e('Statistiques totales par mois', 'tmsm-aquatonic-course-booking'); ?></h2>
+							<h2 class="hndle ui-sortable-handle"><?php esc_html_e('Stats per month', 'tmsm-aquatonic-course-booking'); ?></h2>
 						</div>
 						<div class="insidee">
 							<div class="main">
