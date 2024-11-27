@@ -218,7 +218,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		return $wpdb->get_var( $sql_count ) ?? 0;
 	}
 /**
-	 * Get all Months
+	 * Get all Months and months numbers
 	 *
 	 * @return array
 	 */
@@ -255,7 +255,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get specific year for Monthly search
+	 * Get specific year for Yearly search
 	 * @return void
 	 */
 	protected function get_year() {
@@ -269,7 +269,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		return $year->format('Y');	
 	}
 	/**
-	 * Get last day of the month
+	 * Get last day of the month from year and month
 	 *
 	 * @param [string] $annee
 	 * @param [string] $month
@@ -287,7 +287,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		return $resultats;
 	}
 	/**
-	 * Get all participant per month
+	 * Get all Reservations based on month and status if given for a given year
 	 * @return int
 	 * 
 	 */
@@ -305,6 +305,12 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 		$results = $wpdb->get_var($sql_count) ?? 0;
 		return  $results;
 	}
+
+		/**
+	 * Get total number Participants based on month and status if given for a given year
+	 * @return int
+	 * 
+	 */
 	public function get_all_paricipant_per_month($month, $status = null)
 	{
 		global $wpdb;
