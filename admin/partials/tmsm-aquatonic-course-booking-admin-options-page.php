@@ -207,7 +207,7 @@
 									<table class="wp-list-table widefat table-view-list settings_page_tmsm-aquatonic-course-booking-settings">
 										<thead>
 											<tr>
-												<th scope="col" class="manage-column column-primary"><?php esc_html_e('Mois', 'tmsm-aquatonic-course-booking'); ?></th>
+												<th scope="col" class="manage-column column-primary"><?php esc_html_e('Date', 'tmsm-aquatonic-course-booking'); ?></th>
 												<?php
 												foreach ($months as $month => $number) {
 													echo '<td>' .
