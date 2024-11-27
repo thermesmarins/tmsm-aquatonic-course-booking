@@ -642,6 +642,10 @@ msgstr "No-Show"
 msgid "Total Bookings by Status"
 msgstr "Total des réservations par statut"
 
+#: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:254
+msgid "Total Bookings"
+msgstr "Total des réservations"
+
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:266
 #: admin/partials/tmsm-aquatonic-course-booking-admin-options-page.php:308
 #: includes/class-tmsm-aquatonic-course-booking-list-table.php:80

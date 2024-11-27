@@ -219,10 +219,10 @@
 										</thead>
 
 										<tbody>
-											<th scope="col" class="manage-column column-primary"><strong><?php esc_html_e('Reservations', 'tmsm-aquatonic-course-booking'); ?></strong></th>
+											<th scope="col" class="manage-column column-primary"><strong><?php esc_html_e('Bookings', 'tmsm-aquatonic-course-booking'); ?></strong></th>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Arrivées', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Arrived', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
@@ -243,7 +243,7 @@
 											</tr>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Annulés', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Cancelled', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
@@ -253,7 +253,7 @@
 											</tr>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Total Réservations', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Total Bookings', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
@@ -276,7 +276,7 @@
 											<th scope="col" class="manage-column column-primary"><strong><?php esc_html_e('Participants', 'tmsm-aquatonic-course-booking'); ?></strong></th>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Arrivées', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Arrived', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
@@ -297,7 +297,7 @@
 											</tr>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Annulés', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Cancelled', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
@@ -307,7 +307,7 @@
 											</tr>
 											<tr>
 												<th scope="col" class="manage-column">
-													<?php esc_html_e('Total Participants', 'tmsm-aquatonic-course-booking'); ?>
+													<?php esc_html_e('Number of participants', 'tmsm-aquatonic-course-booking'); ?>
 												</th>
 												<?php
 												foreach ($months as $number) {
