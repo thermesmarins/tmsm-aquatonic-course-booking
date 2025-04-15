@@ -1,3 +1,6 @@
+### 2.0.10: April 15th, 2025
+* Fix DI incrementation for aquatonic parcours
+
 ### 2.0.9: November 27th, 2024
 * Add stats dashboard for course bookings over the years.
 

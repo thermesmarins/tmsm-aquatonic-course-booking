@@ -266,8 +266,8 @@ class Dialog_Insight_Contact {
 				error_log( 'Dialog Insight updated added successfully' );
 				error_log(print_r($result->Records[0]->Record, true));
 				error_log('$bookingsnbfieldvalue: ' . $result->Records[0]->Record->{"f_".$bookingsnbfield});
-				$this->bookings_nb = $result->Records[0]->Record->{"f_".$bookingsnbfield};
 			}
+			$this->bookings_nb = $result->Records[0]->Record->{"f_".$bookingsnbfield};
 			return true;
 		}
 		else{
