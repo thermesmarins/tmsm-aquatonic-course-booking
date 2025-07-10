@@ -1,3 +1,6 @@
+### 2.0.11: April 15th, 2025
+* Add email field in the reservation board
+
 ### 2.0.10: April 15th, 2025
 * Fix DI incrementation for aquatonic parcours
 

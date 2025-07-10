@@ -74,7 +74,7 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 			'fullname'   => esc_html__( 'Full Name', 'tmsm-aquatonic-course-booking' ),
 			//'firstname'   => esc_html__( 'Firstname', 'tmsm-aquatonic-course-booking' ),
 			//'lastname'   => esc_html__( 'Lastname', 'tmsm-aquatonic-course-booking' ),
-			//'email'   => esc_html__( 'Email', 'tmsm-aquatonic-course-booking' ),
+			'email'   => esc_html__( 'Email', 'tmsm-aquatonic-course-booking' ),
 			'participants' => esc_html__( 'Participants', 'tmsm-aquatonic-course-booking' ),
 			'course_start' => esc_html__( 'Course Start', 'tmsm-aquatonic-course-booking' ),
 			'status'  => esc_html__( 'Status', 'tmsm-aquatonic-course-booking' ),
