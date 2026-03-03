@@ -1,3 +1,7 @@
+### 2.0.12: March 3rd, 2026
+
+* Add reservations export button for aquatonic course booking
+
 ### 2.0.11: April 15th, 2025
 * Add email field in the reservation board
 
