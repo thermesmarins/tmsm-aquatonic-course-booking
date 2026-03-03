@@ -599,6 +599,30 @@
 			<?php $bookings->search_box( __( 'Filter', 'tmsm-aquatonic-course-booking' ), 'bookings' ); ?>
 		</form>
 
+		<?php
+		$current_url = remove_query_arg(
+			array(
+				'tmsm_aquatonic_export',
+				'tmsm_aquatonic_export_nonce',
+			)
+		);
+
+		$export_url = add_query_arg(
+			array(
+				'tmsm_aquatonic_export'       => 1,
+				'tmsm_aquatonic_export_nonce' => wp_create_nonce( 'tmsm_aquatonic_export' ),
+			),
+			$current_url
+		);
+		?>
+
+		<p class="alignleft actions">
+			<a href="<?php echo esc_url( $export_url ); ?>" class="button button-secondary">
+				<?php esc_html_e( 'Export CSV', 'tmsm-aquatonic-course-booking' ); ?>
+			</a>
+		</p>
+		<div style="clear: both"></div>
+
 		<form id="tmsm-aquatonic-course-booking-settings-table" method="post" action="">
 			<div class="table-responsive">
 				<?php $bookings->display(); ?>

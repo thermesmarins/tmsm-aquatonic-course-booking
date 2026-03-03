@@ -72,15 +72,14 @@ class Tmsm_Aquatonic_Course_Booking {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'tmsm-aquatonic-course-booking';
+	$this->plugin_name = 'tmsm-aquatonic-course-booking';
 
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->create_cron_schedule();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
+	$this->load_dependencies();
+	$this->set_locale();
+	$this->define_admin_hooks();
+	$this->define_public_hooks();
 
-	}
+}
 
 	/**
 	 * Load the required dependencies for this plugin.
@@ -171,13 +170,14 @@ class Tmsm_Aquatonic_Course_Booking {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
+private function set_locale() {
 
-		$plugin_i18n = new Tmsm_Aquatonic_Course_Booking_i18n();
+	$plugin_i18n = new Tmsm_Aquatonic_Course_Booking_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+	$this->loader->add_action( 'init', $plugin_i18n, 'load_plugin_textdomain' );
+	$this->loader->add_action( 'init', $this, 'create_cron_schedule' );
 
-	}
+}
 
 	/**
 	 * Register all of the hooks related to the admin area functionality
@@ -198,6 +198,7 @@ class Tmsm_Aquatonic_Course_Booking {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_sections' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_fields' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_fields' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'export_bookings_csv' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'options_page_menu' );
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_'.$plugin_basename, $plugin_admin, 'settings_link' );
@@ -302,13 +303,13 @@ class Tmsm_Aquatonic_Course_Booking {
 
 
 
-	/**
-	 * Creates cron schedule
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function create_cron_schedule() {
+/**
+ * Creates cron schedule
+ *
+ * @since    1.0.0
+ * @access   public
+ */
+public function create_cron_schedule() {
 		add_filter('cron_schedules', function($schedules) {
 			$schedules['tmsm_aquatonic_course_refresh_schedule'] = array(
 				'interval' => MINUTE_IN_SECONDS * 5,

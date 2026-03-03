@@ -172,6 +172,44 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	}
 
 	/**
+	 * Maybe export the bookings list as CSV from the admin Bookings tab.
+	 *
+	 * This is wired on admin_init so that the export URL can be a simple GET
+	 * reusing the current filters from the list table.
+	 *
+	 * @return void
+	 */
+	public function export_bookings_csv() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+		if ( $page !== $this->plugin_name . '-settings' || $tab !== 'bookings' ) {
+			return;
+		}
+
+		if ( empty( $_GET['tmsm_aquatonic_export'] ) || (int) $_GET['tmsm_aquatonic_export'] !== 1 ) {
+			return;
+		}
+
+		$nonce = isset( $_GET['tmsm_aquatonic_export_nonce'] ) ? $_GET['tmsm_aquatonic_export_nonce'] : '';
+
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'tmsm_aquatonic_export' ) ) {
+			wp_die( esc_html__( 'Security check failed.', 'tmsm-aquatonic-course-booking' ) );
+		}
+
+		if ( ! current_user_can( 'aquatonic_course' ) && ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to export bookings.', 'tmsm-aquatonic-course-booking' ) );
+		}
+
+		$bookings_list = new Tmsm_Aquatonic_Course_Booking_List_Table();
+		$bookings_list->export_to_csv();
+	}
+
+	/**
 	 * @return array|object|null
 	 */
 	public function bookings_of_the_day(){

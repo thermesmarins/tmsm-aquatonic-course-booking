@@ -476,6 +476,64 @@ class Tmsm_Aquatonic_Course_Booking_List_Table extends WP_List_Table {
 
 
 	/**
+	 * Export bookings to CSV using current filters from the list table.
+	 *
+	 * This reuses the same WHERE clause as the admin list so that the export
+	 * matches exactly what the user is filtering on (dates, status, search).
+	 *
+	 * @return void
+	 */
+	public function export_to_csv() {
+		global $wpdb;
+
+		$sql  = "SELECT * FROM `{$wpdb->prefix}aquatonic_course_booking`";
+		$sql .= $this->get_where_query();
+		$sql .= ' ORDER BY course_start ASC';
+
+		$rows = $wpdb->get_results( $sql, ARRAY_A );
+
+		if ( headers_sent() ) {
+			return;
+		}
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=bookings-' . date( 'Y-m-d-H-i-s' ) . '.csv' );
+
+		$output = fopen( 'php://output', 'w' );
+
+		$columns = array(
+			'booking_id',
+			'date_created',
+			'firstname',
+			'lastname',
+			'email',
+			'phone',
+			'participants',
+			'course_start',
+			'status',
+			'self',
+			'barcode',
+		);
+
+		fputcsv( $output, $columns, ';' );
+
+		foreach ( $rows as $row ) {
+			$line = array();
+
+			foreach ( $columns as $col ) {
+				$line[] = isset( $row[ $col ] ) ? $row[ $col ] : '';
+			}
+
+			fputcsv( $output, $line, ';' );
+		}
+
+		fclose( $output );
+		exit;
+	}
+
+
+	/**
 	 * Checkbox column
 	 *
 	 * @param  array $item Item.
