@@ -549,6 +549,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tmsm-aquatonic-course-booking-public.min.css', array(), $this->version, 'all' );
+		// Ajout du style pour le Datepicker (ex: thème Smoothness via CDN)
+		wp_enqueue_style( 
+			'jquery-ui-style', 
+			'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css' 
+		);
 
 	}
 
@@ -574,6 +579,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				'status' => $post->post_status,
 			);
 		}
+		wp_enqueue_script('jquery-ui-datepicker');
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public' . ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ? '' : '.min' ) . '.js', array(
 			'wp-backbone',
@@ -642,6 +648,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			],
 
 		);
+		
 		wp_localize_script( $this->plugin_name, 'TmsmAquatonicCourseApp', $translation_array );
 
 	}
@@ -724,6 +731,27 @@ class Tmsm_Aquatonic_Course_Booking_Public {
             <# } #>
 
         </script>
+		<?php
+	}
+
+	/**
+	 * Calendar Header Template (Datepicker)
+	 */
+	public function template_calendar_header() {
+		?>
+		<script type="text/html" id="tmpl-tmsm-aquatonic-calendar-header">
+			<div id="tmsm-datepicker-wrapper" style="margin-bottom:25px; text-align:center;">
+				<label style="display:block; font-weight:bold; margin-bottom:10px;">
+					<?php _e('Choisir la date de début :', 'tmsm-aquatonic-course-booking'); ?>
+				</label>
+				<input type="text" 
+					id="tmsm-week-starter-datepicker" 
+					class="tmsm-custom-datepicker-input" 
+					style="width:250px; text-align:center; padding:8px; border:1px solid #ccc; border-radius:4px;" 
+					placeholder="<?php _e('Cliquez pour choisir', 'tmsm-aquatonic-course-booking'); ?>" />
+			</div>
+			<div id="tmsm-aquatonic-course-booking-weekdays-list"></div>
+		</script>
 		<?php
 	}
 

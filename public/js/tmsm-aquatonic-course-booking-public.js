@@ -291,281 +291,324 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
   } );
 
-  TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend( {
-    el: '#tmsm-aquatonic-course-slots-container',
-    listElement: '#tmsm-aquatonic-course-booking-weekdays-list',
-    selectButtons: '.tmsm-aquatonic-course-booking-time-button',
-    addAppointmentButton: '#tmsm-aquatonic-course-booking-confirm',
-    daysPage: 1,
-    timesPage: 1,
-    timesPerPage: 10,
+// Test ultime pour savoir si le script est lu
+console.log('--- DEBUG START ---');
+console.log('Fichier datepicker_integration.js chargé (V16 - Focus Jour & Semaine)');
 
-    templateHelpers: {
-      moment: moment // <-- this is the reference to the moment in your view
-    },
+TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
+  el: '#tmsm-aquatonic-course-slots-container',
+  
+  listElement: '#tmsm-aquatonic-course-booking-weekdays-list',
+  datepickerId: '#tmsm-inline-calendar', 
+  
+  headerTemplate: null,
+  startDateOffset: 0,
 
-    initialize: function() {
+  initialize: function() {
+    console.log('WeekDayListView initialize (Arnaud V16)');
+    
+    if (typeof moment === 'undefined') {
+        console.error('Moment.js manquant');
+        return;
+    }
 
-      console.log('WeekDayListView initialize');
+    moment.locale(TmsmAquatonicCourseApp.data.locale);
+    
+    // Initialisation : on se cale sur le lundi de la semaine actuelle
+    var startDay = moment().add(parseInt(TmsmAquatonicCourseApp.data.daysrangefrom) || 0, 'days').startOf('isoWeek');
+    var today = moment().startOf('day');
+    this.startDateOffset = startDay.diff(today, 'days');
 
-      console.log('Change moment locale to TmsmAquatonicCourseApp.data.locale:' + TmsmAquatonicCourseApp.data.locale);
-      moment.locale(TmsmAquatonicCourseApp.data.locale);
-      console.log("moment locale: "+ moment.locale());
+    // Cache des anciens boutons
+    $('#tmsm-aquatonic-course-booking-weekdays-previous, #tmsm-aquatonic-course-booking-weekdays-next').hide();
 
-      console.log("moment fromnow: "+ moment().fromNow());
-      this.listenTo( this.collection, 'sync', this.render );
-    },
+    this.listenTo(this.collection, 'sync', this.render);
+    _.bindAll(this, 'render', 'initDatepicker', 'onDateChange', 'getHeaderHtml', 'injectStyles');
+    
+    this.injectStyles();
+  },
 
-    events : {
-      'click .tmsm-aquatonic-course-booking-time-button' : 'selectTime',
-      'change .tmsm-aquatonic-course-booking-weekday-times' : 'selectTimeWithSelect',
-      'click #tmsm-aquatonic-course-booking-weekdays-previous': 'previous_week',
-      'click #tmsm-aquatonic-course-booking-weekdays-next': 'next_week',
-      'click #tmsm-aquatonic-course-booking-next-times': 'next_times',
-    },
+  injectStyles: function() {
+    if ($('#tmsm-datepicker-styles').length > 0) return;
 
-    element: function (){
-      return this.$el;
-    },
-
-    refreshNextTimesButton: function(event){
-
-      return; // Disable the function
-
-
-      var object = this;
-      console.log('refreshNextTimesButton');
-      console.log('TmsmAquatonicCourseApp.times_indexmax: ' + TmsmAquatonicCourseApp.times_indexmax);
-      console.log('this.timesPerPage: ' + this.timesPerPage);
-      console.log('this.timesPage: ' +  this.timesPage);
-
-      // Hide or show next times button
-      if( TmsmAquatonicCourseApp.times_indexmax >= (object.timesPerPage * object.timesPage)){
-        console.log('show next_times button');
-        $('#tmsm-aquatonic-course-booking-next-times').show();
-      }
-      else{
-        console.log('hide next_times button');
-        $('#tmsm-aquatonic-course-booking-next-times').hide();
+    var css = `
+      .tmsm-inline-calendar-wrapper {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin: 0 auto 20px auto;
+        overflow: hidden;
+        max-width: 1200px; /* Largeur max pour éviter l'étirement excessif */
+        max-height: 800px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
 
-      console.log('hide all times where index is above: ' + (object.timesPerPage * object.timesPage));
-      $('.tmsm-aquatonic-course-booking-weekday-times .tmsm-aquatonic-course-booking-time-item').filter(function() {
-        console.log('index (' + $(this).attr("data-index") + ')');
-        console.log('(this.timesPerPage * this.timesPage): '+ (object.timesPerPage * object.timesPage));
-        return $(this).attr("data-index") <=  (object.timesPerPage * object.timesPage);
-      }).show();
+      .tmsm-calendar-title-area {
+        padding: 10px 0 10px 0;
+        text-align: center;
+      }
 
-      console.log('show all times where index is below: ' + (object.timesPerPage * object.timesPage));
-      $('.tmsm-aquatonic-course-booking-weekday-times .tmsm-aquatonic-course-booking-time-item').filter(function() {
-        console.log('index (' + $(this).attr("data-index") + ')');
-        console.log('(this.timesPerPage * this.timesPage): '+ (object.timesPerPage * object.timesPage));
-        return $(this).attr("data-index") >  (object.timesPerPage * object.timesPage);
-      }).hide();
+      .tmsm-calendar-title-area h2 {
+        font-size: 2rem;
+        font-weight: 300;
+        color: #666;
+        margin: 0;
+      }
 
+      .datepicker-inline {
+        width: 100% !important;
+        border: none !important;
+        padding: 0 40px 10px 40px !important;
+      }
 
-    },
+      .datepicker table {
+        width: 100% !important;
+        border-collapse: separate !important;
+        border-spacing: 0 10px !important;
+      }
 
-    previous_week: function(event){
-      console.log('WeekDayListView previous_week');
+      /* Navigation & Switch */
+      .datepicker .datepicker-switch {
+        font-weight: 800 !important;
+        color: #111 !important;
+        font-size: 1.6rem !important;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+       
+      }
+      
+      .datepicker .prev, .datepicker .next {
+        color: #1a56db !important;
+        font-size: 2.5rem !important;
+        font-weight: bold !important;
+      }
 
-      event.preventDefault();
-      this.daysPage = this.daysPage - 1;
-      this.timesPage = 1;
-      $('#tmsm-aquatonic-course-booking-next-times').hide();
+      /* Jours de la semaine */
+      .datepicker .dow {
+        color: #111 !important;
+        font-weight: 800 !important;
+        font-size: 1.2rem !important;
+        text-transform: uppercase;
+        padding: 10px 0 !important;
+        border-bottom: 2px solid #f1f5f9 !important;
+      }
 
+      /* Style des Jours */
+      .datepicker table tr td.day {
+        height: 30px !important;
+        font-size: 1.6rem !important;
+        font-weight: 500 !important;
+        color: #111 !important;
+        border-radius: 0 !important; /* On gère le radius via les états */
+        transition: all 0.2s ease;
+      }
+
+      .datepicker table tr td.old, 
+      .datepicker table tr td.day.disabled,
+      .datepicker table tr td.past {
+        color: #eee !important;
+        opacity: 0.5;
+      }
+
+      /* --- SURBRILLANCE DU JOUR CLIQUE (Focus principal) --- */
+      .datepicker table tr td.active, 
+      .datepicker table tr td.active:hover,
+      .datepicker table tr td.active.active {
+        background-color: #1a56db !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        font-weight: 800 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 15px -3px rgba(26, 86, 219, 0.4) !important;
+        z-index: 10;
+        position: relative;
+      }
+
+      /* --- SURBRILLANCE DE LA SEMAINE (Contexte) --- */
+      /* On met en bleu très clair toute la ligne de la semaine sélectionnée */
+      .datepicker table tr:has(.active) td:not(.old):not(.new) {
+        background-color: #eff6ff;
+      }
+
+      /* Arrondis pour le début et la fin de la ligne de semaine */
+      .datepicker table tr:has(.active) td:not(.old):not(.new):first-child {
+        border-top-left-radius: 12px !important;
+        border-bottom-left-radius: 12px !important;
+      }
+      .datepicker table tr:has(.active) td:not(.old):not(.new):last-child {
+        border-top-right-radius: 12px !important;
+        border-bottom-right-radius: 12px !important;
+      }
+
+      /* Aujourd'hui */
+      .datepicker table tr td.today {
+        background: transparent !important;
+        color: #1a56db !important;
+        font-weight: 900 !important;
+      }
+
+      /* Footer / Bouton Aujourd'hui */
+      .datepicker .datepicker-footer {
+        display: block !important;
+        text-align: center !important;
+        padding: 25px 0 !important;
+        border-top: 1px solid #f1f5f9 !important;
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        color: #1a56db !important;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .datepicker-inline { padding: 10px !important; }
+        .datepicker table tr td.day { height: 55px !important; font-size: 1.3rem !important; }
+        .tmsm-calendar-title-area h2 { font-size: 1.5rem; }
+      }
+    `;
+
+    $('<style>')
+      .attr('id', 'tmsm-datepicker-styles')
+      .prop('type', 'text/css')
+      .html(css)
+      .appendTo('head');
+  },
+
+  getHeaderHtml: function() {
+      var templateId = 'tmsm-aquatonic-calendar-header';
+      if ($('#tmpl-' + templateId).length > 0) {
+          try {
+              return wp.template(templateId)();
+          } catch (e) {}
+      }
+
+      return '<div class="tmsm-inline-calendar-wrapper">' +
+             '  <div class="tmsm-calendar-title-area"><h2>Choisir l’heure des soins :</h2></div>' +
+             '  <div id="tmsm-inline-calendar"></div>' +
+             '</div>' +
+             '<div id="tmsm-aquatonic-course-booking-weekdays-list"></div>';
+  },
+
+  onDateChange: function(date) {
+    if (!date) return;
+    
+    // On calcule le lundi de la semaine cliquée pour la liste du bas
+    var selectedMonday = moment(date).startOf('isoWeek'); 
+    var today = moment().startOf('day');
+
+    if (selectedMonday.isValid()) {
+      this.startDateOffset = selectedMonday.diff(today, 'days');
+      console.log('Focus Jour & Semaine - Nouveau lundi offset :', this.startDateOffset);
       this.render();
-    },
+    }
+  },
 
-    next_week: function(event){
-      console.log('WeekDayListView next_week');
+  initDatepicker: function() {
+    var self = this;
+    var $calendar = $(this.datepickerId);
 
-      event.preventDefault();
-      this.daysPage = this.daysPage + 1;
-      this.timesPage = 1;
-      $('#tmsm-aquatonic-course-booking-next-times').hide();
-
-      this.render();
-    },
-
-    next_times: function(event){
-      console.log('WeekDayListView next_times');
-
-      event.preventDefault();
-      this.timesPage = this.timesPage + 1;
-
-      this.refreshNextTimesButton();
-
-
-    },
-
-    render: function() {
-
-      var tmpDaysPage = this.daysPage;
-
-      //console.warn(' TmsmAquatonicCourseApp.form_fields.step:'+ TmsmAquatonicCourseApp.form_fields.step);
-      //if(TmsmAquatonicCourseApp.form_fields.step != 2){
-        //return;
-      //}
-      var object = this;
-
-      console.log('WeekDayListView render');
-      var $list = this.$( this.listElement ).empty().val('');
-
-      this.collection.reset();
-
-      $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
-      $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
-
-      /*if(tmpDaysPage === 1){
-        $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
-        console.log('premiere page je cache previous');
-      }
-      else{
-        $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', false);
-        console.log('autre page jaffiche previous');
-      }
-
-      if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < tmpDaysPage){
-        $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
-      }
-      else{
-        $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', false);
-      }*/
-
-      var i = 0;
-
-
-      TmsmAquatonicCourseApp.times_indexmax = 1;
-      $('#tmsm-aquatonic-course-booking-next-times').hide();
-
-      var loaded_days = 1;
-      for (i = (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+(tmpDaysPage-1) * 7); i < (parseInt(TmsmAquatonicCourseApp.data.daysrangefrom)+7+(tmpDaysPage-1) * 7); i++) {
-
-        this.collection.push( {
-          date_label: moment().add(i, 'days').format('dddd Do MMMM'),
-          date_label_secondline: moment().add(i, 'days').format('MMMM'),
-          date_label_firstline: moment().add(i, 'days').format('dddd Do'),
-          date_computed: moment().add(i, 'days').format('YYYY-MM-DD')
-        });
-      }
-
-      console.log('WeekDayListView collection:');
-      console.log(this.collection);
-
-      console.log('WeekDayListView collection length: ' + this.collection.length);
-
-      this.collection.each( function( model ) {
-
-
-        //console.log('WeekDayListView each');
-        //console.log(model);
-        var item = new TmsmAquatonicCourseApp.WeekDayListItemView( { model: model } );
-        $list.append( item.render().$el );
-
-        //$('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh');
-        $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').hide().parent().next().show();
-
-        console.log('WeekDayListView fetch:');
-        TmsmAquatonicCourseApp.times.fetch({
-          data: {
-            date: model.attributes.date_computed,
-            participants: TmsmAquatonicCourseApp.participants,
-          },
-          complete: function(xhr){
-            console.log('complete fetch for date '+model.attributes.date_computed);
-            //console.log('count options:' + $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option').length);
-
-            // No results: remove the first option "Pick a timeslot" to let appear first "No timeslot available"
-            if($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').length > 0){
-              if($.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.notimeslot || $.trim($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(1)').text()) == TmsmAquatonicCourseApp.i18n.closed){
-                $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+'] option:eq(0)').remove();
-              }
-
-
-            }
-
-            //console.log('TmsmAquatonicCourseApp.times_indexmax after fetching '+ model.attributes.date_computed + ': ' + TmsmAquatonicCourseApp.times_indexmax);
-
-            $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next().hide();
-            //console.log('parent:');
-            //console.log($('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']').selectpicker('refresh').show().parent().next());
-
-            object.refreshNextTimesButton();
-
-            loaded_days++;
-            if(loaded_days === 7){
-              //console.warn('ALl days loaded ****************');
-              //console.warn('tmpDaysPage: ' + tmpDaysPage);
-
-              // Animate to see this field
-              TmsmAquatonicCourseApp.animateTransition(object.element());
-
-              if(tmpDaysPage === 1){
-                $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', true);
-                //console.log('premiere page je cache previous');
-              }
-              else{
-                $('#tmsm-aquatonic-course-booking-weekdays-previous').attr('disabled', false);
-                //console.log('autre page jaffiche previous');
-              }
-
-              if((TmsmAquatonicCourseApp.data.daysrangeto / 7) < tmpDaysPage){
-                $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', true);
-              }
-              else{
-                $('#tmsm-aquatonic-course-booking-weekdays-next').attr('disabled', false);
-              }
-            }
-
-          }
+    if (typeof $.fn.datepicker !== 'undefined') {
+      if ($calendar.length > 0) {
+        $calendar.datepicker({
+          format: 'dd/mm/yyyy',
+          language: 'fr',
+          weekStart: 1, 
+          todayHighlight: true,
+          startDate: new Date(),
+          todayBtn: "linked",
+          clearBtn: false
+        }).on('changeDate', function(e) {
+            // e.date est le jour précis cliqué
+            self.onDateChange(e.date);
         });
 
-      }, this );
+        // Positionnement initial sur la date stockée
+        var currentActiveDate = moment().add(this.startDateOffset, 'days').toDate();
+        $calendar.datepicker('setDate', currentActiveDate);
+      }
+    } else {
+      setTimeout(this.initDatepicker, 1000);
+    }
+  },
 
+  render: function() {
+    var self = this;
+    
+    if (this.$('#tmsm-inline-calendar').length === 0) {
+        this.$el.html(this.getHeaderHtml());
+        setTimeout(this.initDatepicker, 100);
+    } else {
+        var $calendar = $(this.datepickerId);
+        // On s'assure que le calendrier visuel est synchro sans forcer un redessin total
+        var currentActiveDate = moment().add(this.startDateOffset, 'days').toDate();
+        // Note: on utilise 'update' ou 'setDate' prudemment pour ne pas perdre le focus
+    }
 
+    var $list = this.$(this.listElement);
+    if ($list.length === 0) {
+        this.$el.append('<div id="tmsm-aquatonic-course-booking-weekdays-list"></div>');
+        $list = this.$(this.listElement);
+    }
+    $list.empty();
+    
+    this.collection.reset();
+    TmsmAquatonicCourseApp.times_indexmax = 1;
 
+    for (var i = this.startDateOffset; i < (this.startDateOffset + 7); i++) {
+      this.collection.push({
+        date_label: moment().add(i, 'days').format('dddd Do MMMM'),
+        date_label_secondline: moment().add(i, 'days').format('MMMM'),
+        date_label_firstline: moment().add(i, 'days').format('dddd Do'),
+        date_computed: moment().add(i, 'days').format('YYYY-MM-DD')
+      });
+    }
 
-      return this;
-    },
+    var loaded_days = 0;
+    this.collection.each(function(model) {
+      var item = new TmsmAquatonicCourseApp.WeekDayListItemView({ model: model });
+      $list.append(item.render().$el);
 
-    selectTimeWithSelect: function(event){
-      console.log('selectTimeWithSelect');
-      console.log('event.target.selectedIndex:'+event.target.selectedIndex);
-      event.preventDefault();
-      var date = $(event.target.options[event.target.selectedIndex]).data('date');
-      var hour = $(event.target.options[event.target.selectedIndex]).data('hour');
-      var minutes = $(event.target.options[event.target.selectedIndex]).data('minutes');
-      this.selectedValue =  $(event.target.options[event.target.selectedIndex]).data('hourminutes');
-      console.log('WeekDayListView selectedValue: '+ this.selectedValue);
-      TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
-      TmsmAquatonicCourseApp.selectedData.set('hour', hour);
-      TmsmAquatonicCourseApp.selectedData.set('minutes', minutes);
-      TmsmAquatonicCourseApp.selectedData.set('date', date);
-    },
+      var $select = $('select.tmsm-aquatonic-course-booking-weekday-times[data-date='+model.attributes.date_computed+']');
+      $select.hide().parent().next().show();
 
-    selectTime: function(event){
-      event.preventDefault();
-      console.log('WeekDayListView selectTime');
-      this.selectedValue = $(event.target).data('hourminutes');
-      var date = $(event.target).data('date');
-      var hour = $(event.target).data('hour');
-      var minutes = $(event.target).data('minutes');
-      console.log('WeekDayListView selectedValue: '+ this.selectedValue);
-      $( this.selectButtons ).removeClass('btn-primary').removeClass('disabled').removeClass('selected').addClass('not-selected');
-      $(event.target).addClass('btn-primary').addClass('disabled').removeClass('not-selected');
+      TmsmAquatonicCourseApp.times.fetch({
+        data: {
+          date: model.attributes.date_computed,
+          participants: TmsmAquatonicCourseApp.participants,
+        },
+        complete: function() {
+          $select.selectpicker('refresh').show().parent().next().hide();
+          loaded_days++;
+        }
+      });
+    }, this);
 
-      console.warn($(this.addAppointmentButton));
-      //TmsmAquatonicCourseApp.animateTransition($(this.addAppointmentButton));
+    return this;
+  },
 
-      TmsmAquatonicCourseApp.selectedData.set('hourminutes', this.selectedValue);
-      TmsmAquatonicCourseApp.selectedData.set('hour', hour);
-      TmsmAquatonicCourseApp.selectedData.set('minutes', minutes);
-      TmsmAquatonicCourseApp.selectedData.set('date', date);
-    },
+  selectTimeWithSelect: function(event) {
+    var $opt = $(event.target.options[event.target.selectedIndex]);
+    TmsmAquatonicCourseApp.selectedData.set({
+      'hourminutes': $opt.data('hourminutes'),
+      'hour': $opt.data('hour'),
+      'minutes': $opt.data('minutes'),
+      'date': $opt.data('date')
+    });
+  },
 
-  } );
+  selectTime: function(event) {
+    var $el = $(event.target);
+    $('.tmsm-aquatonic-course-booking-time-button').removeClass('btn-primary disabled selected').addClass('not-selected');
+    $el.addClass('btn-primary disabled').removeClass('not-selected');
 
+    TmsmAquatonicCourseApp.selectedData.set({
+      'hourminutes': $el.data('hourminutes'),
+      'hour': $el.data('hour'),
+      'minutes': $el.data('minutes'),
+      'date': $el.data('date')
+    });
+  }
+});
   TmsmAquatonicCourseApp.WeekDayListItemView = Backbone.View.extend( {
     tagName: 'div',
     className: 'tmsm-aquatonic-course-booking-weekday-item',
