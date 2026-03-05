@@ -1,3 +1,7 @@
+### 2.1.0: March 5th, 2026
+
+* Add new datepicker for reservations.
+
 ### 2.0.12: March 3rd, 2026
 
 * Add reservations export button for aquatonic course booking
