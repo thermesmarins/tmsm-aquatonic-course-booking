@@ -293,7 +293,7 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
 // Test ultime pour savoir si le script est lu
 console.log('--- DEBUG START ---');
-console.log('Fichier datepicker_integration.js chargé (V16 - Focus Jour & Semaine)');
+console.log('Fichier datepicker_integration.js chargé (V20 - Fix Final Validation & Events)');
 
 TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   el: '#tmsm-aquatonic-course-slots-container',
@@ -305,7 +305,7 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   startDateOffset: 0,
 
   initialize: function() {
-    console.log('WeekDayListView initialize (Arnaud V16)');
+    console.log('WeekDayListView initialize (Arnaud V20)');
     
     if (typeof moment === 'undefined') {
         console.error('Moment.js manquant');
@@ -323,7 +323,7 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
     $('#tmsm-aquatonic-course-booking-weekdays-previous, #tmsm-aquatonic-course-booking-weekdays-next').hide();
 
     this.listenTo(this.collection, 'sync', this.render);
-    _.bindAll(this, 'render', 'initDatepicker', 'onDateChange', 'getHeaderHtml', 'injectStyles');
+    _.bindAll(this, 'render', 'initDatepicker', 'onDateChange', 'getHeaderHtml', 'injectStyles', 'selectTime', 'selectTimeWithSelect');
     
     this.injectStyles();
   },
@@ -338,7 +338,7 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         border-radius: 12px;
         margin: 0 auto 20px auto;
         overflow: hidden;
-        max-width: 1200px; /* Largeur max pour éviter l'étirement excessif */
+        max-width: 1200px;
         max-height: 800px;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
@@ -367,14 +367,12 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         border-spacing: 0 10px !important;
       }
 
-      /* Navigation & Switch */
       .datepicker .datepicker-switch {
         font-weight: 800 !important;
         color: #111 !important;
         font-size: 1.6rem !important;
         text-transform: uppercase;
         letter-spacing: 2px;
-       
       }
       
       .datepicker .prev, .datepicker .next {
@@ -383,7 +381,6 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         font-weight: bold !important;
       }
 
-      /* Jours de la semaine */
       .datepicker .dow {
         color: #111 !important;
         font-weight: 800 !important;
@@ -393,13 +390,12 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         border-bottom: 2px solid #f1f5f9 !important;
       }
 
-      /* Style des Jours */
       .datepicker table tr td.day {
         height: 30px !important;
         font-size: 1.6rem !important;
         font-weight: 500 !important;
         color: #111 !important;
-        border-radius: 0 !important; /* On gère le radius via les états */
+        border-radius: 0 !important;
         transition: all 0.2s ease;
       }
 
@@ -410,7 +406,6 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         opacity: 0.5;
       }
 
-      /* --- SURBRILLANCE DU JOUR CLIQUE (Focus principal) --- */
       .datepicker table tr td.active, 
       .datepicker table tr td.active:hover,
       .datepicker table tr td.active.active {
@@ -424,13 +419,10 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         position: relative;
       }
 
-      /* --- SURBRILLANCE DE LA SEMAINE (Contexte) --- */
-      /* On met en bleu très clair toute la ligne de la semaine sélectionnée */
       .datepicker table tr:has(.active) td:not(.old):not(.new) {
         background-color: #eff6ff;
       }
 
-      /* Arrondis pour le début et la fin de la ligne de semaine */
       .datepicker table tr:has(.active) td:not(.old):not(.new):first-child {
         border-top-left-radius: 12px !important;
         border-bottom-left-radius: 12px !important;
@@ -440,14 +432,12 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
         border-bottom-right-radius: 12px !important;
       }
 
-      /* Aujourd'hui */
       .datepicker table tr td.today {
         background: transparent !important;
         color: #1a56db !important;
         font-weight: 900 !important;
       }
 
-      /* Footer / Bouton Aujourd'hui */
       .datepicker .datepicker-footer {
         display: block !important;
         text-align: center !important;
@@ -474,6 +464,13 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
       .appendTo('head');
   },
 
+  events: {
+    'click .tmsm-aquatonic-course-booking-time-button': 'selectTime',
+    'change .tmsm-aquatonic-course-booking-weekday-times': 'selectTimeWithSelect', // ESSENTIEL : Écoute le changement du select
+    'click #tmsm-aquatonic-course-booking-weekdays-previous': 'previous',
+    'click #tmsm-aquatonic-course-booking-weekdays-next': 'next',
+  },
+
   getHeaderHtml: function() {
       var templateId = 'tmsm-aquatonic-calendar-header';
       if ($('#tmpl-' + templateId).length > 0) {
@@ -492,13 +489,18 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   onDateChange: function(date) {
     if (!date) return;
     
-    // On calcule le lundi de la semaine cliquée pour la liste du bas
-    var selectedMonday = moment(date).startOf('isoWeek'); 
+    var selectedDate = moment(date);
+    var selectedMonday = selectedDate.clone().startOf('isoWeek'); 
     var today = moment().startOf('day');
 
     if (selectedMonday.isValid()) {
       this.startDateOffset = selectedMonday.diff(today, 'days');
-      console.log('Focus Jour & Semaine - Nouveau lundi offset :', this.startDateOffset);
+      
+      // On met à jour la date dans le modèle pour la validation immédiate si besoin
+      if (TmsmAquatonicCourseApp.selectedData) {
+          TmsmAquatonicCourseApp.selectedData.set("date", selectedDate.format("YYYY-MM-DD"));
+      }
+
       this.render();
     }
   },
@@ -518,11 +520,9 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
           todayBtn: "linked",
           clearBtn: false
         }).on('changeDate', function(e) {
-            // e.date est le jour précis cliqué
             self.onDateChange(e.date);
         });
 
-        // Positionnement initial sur la date stockée
         var currentActiveDate = moment().add(this.startDateOffset, 'days').toDate();
         $calendar.datepicker('setDate', currentActiveDate);
       }
@@ -537,11 +537,6 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
     if (this.$('#tmsm-inline-calendar').length === 0) {
         this.$el.html(this.getHeaderHtml());
         setTimeout(this.initDatepicker, 100);
-    } else {
-        var $calendar = $(this.datepickerId);
-        // On s'assure que le calendrier visuel est synchro sans forcer un redessin total
-        var currentActiveDate = moment().add(this.startDateOffset, 'days').toDate();
-        // Note: on utilise 'update' ou 'setDate' prudemment pour ne pas perdre le focus
     }
 
     var $list = this.$(this.listElement);
@@ -588,6 +583,9 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
 
   selectTimeWithSelect: function(event) {
     var $opt = $(event.target.options[event.target.selectedIndex]);
+    console.log('Selection via Select detectée:', $opt.data('hourminutes'));
+    
+    // MISE A JOUR DU MODELE (Critique pour validation)
     TmsmAquatonicCourseApp.selectedData.set({
       'hourminutes': $opt.data('hourminutes'),
       'hour': $opt.data('hour'),
@@ -597,16 +595,25 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   },
 
   selectTime: function(event) {
-    var $el = $(event.target);
+    // Utilisation de currentTarget pour être sûr de choper le bouton
+    var $el = $(event.currentTarget);
     $('.tmsm-aquatonic-course-booking-time-button').removeClass('btn-primary disabled selected').addClass('not-selected');
     $el.addClass('btn-primary disabled').removeClass('not-selected');
 
+    console.log('Selection via Button detectée:', $el.data('hourminutes'));
+
+    // MISE A JOUR DU MODELE (Critique pour validation)
     TmsmAquatonicCourseApp.selectedData.set({
       'hourminutes': $el.data('hourminutes'),
       'hour': $el.data('hour'),
       'minutes': $el.data('minutes'),
       'date': $el.data('date')
     });
+    
+    // Animation automatique vers le bouton Continuer
+    if (TmsmAquatonicCourseApp.selectedDataList && TmsmAquatonicCourseApp.selectedDataList.confirmButton) {
+         TmsmAquatonicCourseApp.animateTransition($(TmsmAquatonicCourseApp.selectedDataList.confirmButton));
+    }
   }
 });
   TmsmAquatonicCourseApp.WeekDayListItemView = Backbone.View.extend( {
@@ -759,6 +766,7 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
     },
 
     canConfirm: function(attributes) {
+      console.log('canConfirm: ' + attributes.date + ' ' + attributes.hour + ' ' + attributes.minutes);
       return ( attributes.date != null && attributes.hour != null && attributes.minutes != null );
     },
 

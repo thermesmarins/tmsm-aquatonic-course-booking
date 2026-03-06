@@ -1,3 +1,7 @@
+### 2.1.1: March 6th, 2026
+
+* Fix form validations.
+  
 ### 2.1.0: March 5th, 2026
 
 * Add new datepicker for reservations.
