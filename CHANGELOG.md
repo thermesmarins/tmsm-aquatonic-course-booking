@@ -1,3 +1,8 @@
+### 2.1.2: March 6th, 2026
+
+* Update calendar with message instead of choice if no hour slot or closed
+* Delete text in calendar header  
+
 ### 2.1.1: March 6th, 2026
 
 * Fix form validations.
