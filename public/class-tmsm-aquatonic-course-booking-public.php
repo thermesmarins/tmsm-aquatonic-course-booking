@@ -588,6 +588,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 			'gform_gravityforms',
 			'wp-i18n'
 		), $this->version, true );
+		wp_add_inline_script(
+			$this->plugin_name,
+			'window.sprintf = window.sprintf || function (format) { var args = Array.prototype.slice.call(arguments, 1); var autoIndex = 0; return String(format || "").replace(/%(\\d+\\$)?s/g, function (match, numbered) { if (numbered) { var numberedIndex = parseInt(numbered, 10) - 1; return typeof args[numberedIndex] !== "undefined" ? args[numberedIndex] : ""; } var current = autoIndex++; return typeof args[current] !== "undefined" ? args[current] : ""; }); };',
+			'before'
+		);
 
 		wp_dequeue_script( 'gform_masked_input' );
 		wp_deregister_script( 'gform_masked_input' );

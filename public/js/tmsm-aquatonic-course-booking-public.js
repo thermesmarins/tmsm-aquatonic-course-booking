@@ -161,19 +161,32 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
       $list.hide();
 
-      console.log('TimesListView collection:');
-      console.log(this.collection);
-      console.log('TimesListView collection length: ' + this.collection.length);
+      // console.log('TimesListView collection:');
+      // console.log(this.collection);
+      // console.log('TimesListView collection length: ' + this.collection.length);
 
       var i = 0;
       this.collection.each( function( model ) {
         i++;
         if(i===1){
-          $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]').empty().append('<option>'+TmsmAquatonicCourseApp.i18n.pickatimeslot+'</option>');
+          var $selectForDate = $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="'+model.attributes.date+'"]' );
+          $selectForDate.empty();
+          // console.log('model.attributes.hourminutes: '+model.attributes.hourminutes);
+          if ( model.attributes.hourminutes == null ) {
+            // If API returns only an informational row, show it as the select placeholder.
+            $selectForDate.append('<option selected>' + ( model.attributes.message || TmsmAquatonicCourseApp.i18n.notimeslot ) + '</option>');
+          } else {
+            $selectForDate.append('<option>' + TmsmAquatonicCourseApp.i18n.pickatimeslot + '</option>');
+          }
         }
+
+        if ( model.attributes.hourminutes == null ) {
+          return;
+        }
+
         var item = new TmsmAquatonicCourseApp.TimesListItemView( { model: model } );
-        console.log('item render:');
-        console.log(item.render());
+        // console.log('item render:');
+        // console.log(item.render());
         if ($('.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').length > 0) {
           //$( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().$el.context.outerHTML);
           $( '.tmsm-aquatonic-course-booking-weekday-times[data-date="' + model.attributes.date + '"]').append(item.render().el.outerHTML);
@@ -202,9 +215,9 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
 
     selectTime: function(event){
       event.preventDefault();
-      console.log('TimeListView selectTime');
+      // console.log('TimeListView selectTime');
       this.selectedValue = $(event.target).data('hourminutes');
-      console.log('TimeListView selectedValue: '+ this.selectedValue);
+      // console.log('TimeListView selectedValue: '+ this.selectedValue);
       $( this.selectButtons ).hide().removeClass('disabled').removeClass('selected').addClass('not-selected');
       $(event.target).show().addClass('selected').removeClass('not-selected').find('.tmsm-aquatonic-course-booking-time').addClass('disabled');
 
@@ -292,8 +305,8 @@ var TmsmAquatonicCourseApp = TmsmAquatonicCourseApp || {};
   } );
 
 // Test ultime pour savoir si le script est lu
-console.log('--- DEBUG START ---');
-console.log('Fichier datepicker_integration.js chargé (V20 - Fix Final Validation & Events)');
+// console.log('--- DEBUG START ---');
+// console.log('Fichier datepicker_integration.js chargé (V20 - Fix Final Validation & Events)');
 
 TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   el: '#tmsm-aquatonic-course-slots-container',
@@ -305,7 +318,7 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   startDateOffset: 0,
 
   initialize: function() {
-    console.log('WeekDayListView initialize (Arnaud V20)');
+    // console.log('WeekDayListView initialize (Arnaud V20)');
     
     if (typeof moment === 'undefined') {
         console.error('Moment.js manquant');
@@ -480,7 +493,6 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
       }
 
       return '<div class="tmsm-inline-calendar-wrapper">' +
-             '  <div class="tmsm-calendar-title-area"><h2>Choisir l’heure des soins :</h2></div>' +
              '  <div id="tmsm-inline-calendar"></div>' +
              '</div>' +
              '<div id="tmsm-aquatonic-course-booking-weekdays-list"></div>';
@@ -584,6 +596,16 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
   selectTimeWithSelect: function(event) {
     var $opt = $(event.target.options[event.target.selectedIndex]);
     console.log('Selection via Select detectée:', $opt.data('hourminutes'));
+
+    if (!$opt.data('hourminutes')) {
+      TmsmAquatonicCourseApp.selectedData.set({
+        'hourminutes': null,
+        'hour': null,
+        'minutes': null,
+        'date': null
+      });
+      return;
+    }
     
     // MISE A JOUR DU MODELE (Critique pour validation)
     TmsmAquatonicCourseApp.selectedData.set({
@@ -720,7 +742,27 @@ TmsmAquatonicCourseApp.WeekDayListView = Backbone.View.extend({
           $(TmsmAquatonicCourseApp.form_fields.minutes_field).val(this.model.attributes.minutes);
         }
         if($(TmsmAquatonicCourseApp.form_fields.summary_field).length > 0){
-          $(TmsmAquatonicCourseApp.form_fields.summary_field).html(sprintf(TmsmAquatonicCourseApp.i18n.summary, TmsmAquatonicCourseApp.participants, day.format('dddd DD MMMM YYYY'), this.model.attributes.hour, this.model.attributes.minutes ));
+          var formatSummary = window.sprintf || function(format) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            var autoIndex = 0;
+            return String(format || '').replace(/%(\d+\$)?s/g, function(match, numbered) {
+              if (numbered) {
+                var numberedIndex = parseInt(numbered, 10) - 1;
+                return typeof args[numberedIndex] !== 'undefined' ? args[numberedIndex] : '';
+              }
+              var current = autoIndex++;
+              return typeof args[current] !== 'undefined' ? args[current] : '';
+            });
+          };
+          $(TmsmAquatonicCourseApp.form_fields.summary_field).html(
+            formatSummary(
+              TmsmAquatonicCourseApp.i18n.summary,
+              TmsmAquatonicCourseApp.participants,
+              day.format('dddd DD MMMM YYYY'),
+              this.model.attributes.hour,
+              this.model.attributes.minutes
+            )
+          );
         }
 
 
