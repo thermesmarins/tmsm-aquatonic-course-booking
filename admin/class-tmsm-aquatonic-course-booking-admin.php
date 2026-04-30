@@ -2557,15 +2557,60 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		$site_id = (int) $this->get_option('aquos_siteid');
 
 
+		// TODO: dans les data ajouter date_creation (format : YYYYMMDDHHmm), date_arrivee (format : YYYYMMDDHHmm), date_fin(format: YYYYMMDDHHmm), etat_reservation (txt 10), nombre_participants (int), code_barre (txt 20), beneficiaire (bool))
+		// {
+		//    "civilite":"Mme",
+		//    "prenom":"Thomas",
+		//    "nom":"DAVID",
+		//    "email":"tdavid@test.com",
+		//    "datenaissance":"19850914",
+		//    "telephone":"+33606060606",
+		//    "id_site":"2",
+		//    "date_creation":"202603231020",
+		//    "date_arrivee":"202603241000",
+		//    "date_fin":"202603241130",
+		//    "etat_reservation":"Réservé",
+		//    "nombre_participant":2,
+		//    "code_barre":"01010101010101",
+		//    "beneficiaire":true
+		// }
 		if ( ! empty ( $endpoint ) && is_int( $site_id ) && ! empty( $booking['email'] ) ) {
+
+			$date_creation = ! empty( $booking['date_created'] ) ? new DateTime( $booking['date_created'] ) : null;
+			$date_arrivee  = ! empty( $booking['course_start'] ) ? new DateTime( $booking['course_start'] ) : null;
+			$date_fin      = ! empty( $booking['course_end'] )   ? new DateTime( $booking['course_end'] )   : null;
+
+			$etat_reservation = $booking['status'];
+			switch ( $etat_reservation ) {
+				case 'active':
+					$etat_reservation = 'Réservé';
+					break;
+				case 'arrived':
+					$etat_reservation = 'Arrivé';
+					break;
+				case 'cancelled':
+					$etat_reservation = 'Annulé';
+					break;
+				case 'noshow':
+					$etat_reservation = 'No Show';
+					break;
+			}
+
 			$data = [
-				'civilite'      => ( $booking['title'] == 1 ? 'M.' : 'Mme' ),
-				'prenom'        => $booking['firstname'],
-				'nom'           => $booking['lastname'],
-				'email'         => $booking['email'],
-				'datenaissance' => str_replace( '-', '', $booking['birthdate'] ),
-				'telephone'     => $booking['phone'],
-				'id_site'       => (string) $site_id,
+				'civilite'           => ( $booking['title'] == 1 ? 'M.' : 'Mme' ),
+				'prenom'             => $booking['firstname'],
+				'nom'                => $booking['lastname'],
+				'email'              => $booking['email'],
+				'datenaissance'      => str_replace( '-', '', $booking['birthdate'] ),
+				'telephone'          => $booking['phone'],
+				'id_site'            => (string) $site_id,
+				'date_creation'      => $date_creation ? $date_creation->format( 'YmdHi' ) : '',
+				'date_arrivee'       => $date_arrivee ? $date_arrivee->format( 'YmdHi' ) : '',
+				'date_fin'           => $date_fin ? $date_fin->format( 'YmdHi' ) : '',
+				'etat_reservation'   => $etat_reservation,
+				'nombre_participant' => (int) $booking['participants'],
+				'code_barre'         => $booking['barcode'],
+				'beneficiaire'       => (bool) $booking['self'],
 			];
 
 			// Default status
