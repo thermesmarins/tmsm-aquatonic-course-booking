@@ -2547,6 +2547,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 	 * Send contact data to Aquos
 	 *
 	 * @param $booking
+	 * @return array|WP_Error|null
 	 */
 	public function aquos_send_contact( $booking ){
 
@@ -2554,9 +2555,10 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 		// Aquos, send contact information
 		$endpoint = $this->get_option('aquos_endpoint_contact');
-		$site_id = (int) $this->get_option('aquos_siteid');
+		$site_id = $this->get_option('aquos_siteid');
 
-
+		$response = null;
+error_log('aquos_send_contact - booking id: ' . $booking['id'] . ' - email: ' . $booking['email']);
 		// TODO: dans les data ajouter date_creation (format : YYYYMMDDHHmm), date_arrivee (format : YYYYMMDDHHmm), date_fin(format: YYYYMMDDHHmm), etat_reservation (txt 10), nombre_participants (int), code_barre (txt 20), beneficiaire (bool))
 		// {
 		//    "civilite":"Mme",
@@ -2574,7 +2576,7 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 		//    "code_barre":"01010101010101",
 		//    "beneficiaire":true
 		// }
-		if ( ! empty ( $endpoint ) && is_int( $site_id ) && ! empty( $booking['email'] ) ) {
+		if ( ! empty ( $endpoint ) && is_numeric( $site_id ) && ! empty( $booking['email'] ) ) {
 
 			$date_creation = ! empty( $booking['date_created'] ) ? new DateTime( $booking['date_created'] ) : null;
 			$date_arrivee  = ! empty( $booking['course_start'] ) ? new DateTime( $booking['course_start'] ) : null;
@@ -2612,6 +2614,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 				'code_barre'         => $booking['barcode'],
 				'beneficiaire'       => (bool) $booking['self'],
 			];
+			error_log(
+				'aquos_send_contact - data to send for booking id: ' . $booking['id'] . ' - email: ' . $booking['email'] . ' - data: ' . print_r($data, true)
+			);
 
 			// Default status
 			$status = 'sent';
@@ -2646,6 +2651,9 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_data = json_decode( wp_remote_retrieve_body( $response ) );
+			error_log(
+				'aquos_send_contact - response code: ' . $response_code . ' for booking id: ' . ( $booking['booking_id'] ?? '' ) . ' - email: ' . $booking['email']
+			);
 
 			if(defined('TMSM_AQUATONIC_COURSE_BOOKING_DEBUG') && TMSM_AQUATONIC_COURSE_BOOKING_DEBUG === true){
 				error_log('Aquos response:');
@@ -2706,6 +2714,8 @@ class Tmsm_Aquatonic_Course_Booking_Admin {
 			}
 
 		} // endpoint exists
+
+		return $response;
 	}
 
 	/**
