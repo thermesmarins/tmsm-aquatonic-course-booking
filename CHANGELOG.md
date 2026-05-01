@@ -1,3 +1,7 @@
+### 2.1.3: May 1st, 2026
+* Add aquos_send_contact, aquos_update_status, and new helpers
+* Clean logs to avoid personnal datas to be seen (PII)
+
 ### 2.1.2: March 6th, 2026
 
 * Update calendar with message instead of choice if no hour slot or closed
