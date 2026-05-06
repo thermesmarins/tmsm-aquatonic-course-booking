@@ -1,3 +1,7 @@
+### 2.1.4; May 06th, 2026
+* Fix calendar for the old navigator add compatibility
+* Refactor javascript file for performances and readability
+
 ### 2.1.3: May 1st, 2026
 * Add aquos_send_contact, aquos_update_status, and new helpers
 * Clean logs to avoid personnal datas to be seen (PII)
