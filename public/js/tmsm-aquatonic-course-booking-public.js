@@ -64,13 +64,12 @@
         errorElement: '#tmsm-aquatonic-course-booking-times-error',
 
         initialize: function() {
-            _.bindAll(this, 'render', 'selectTime', 'cancelTime');
+            _.bindAll(this, 'render', 'cancelTime');
             this.hide();
             this.listenTo(this.collection, 'sync', this.render);
         },
 
         events: {
-            'click .tmsm-aquatonic-course-booking-time-button': 'selectTime',
             'click .tmsm-aquatonic-course-booking-time-change-label': 'cancelTime',
             'click #tmsm-aquatonic-course-booking-times-anotherdate': 'changeDate'
         },
@@ -92,6 +91,8 @@
 
             // Track initialized dates to empty selects and add headers only once per date
             var initializedDates = {};
+            var currentSelection = App.selectedData ? App.selectedData.get('hourminutes') : null;
+            var currentDateSelection = App.selectedData ? App.selectedData.get('date') : null;
 
             this.collection.each(function(model) {
                 var date = model.get('date');
@@ -100,9 +101,9 @@
                 if (date && !initializedDates[date]) {
                     $selectForDate.empty();
                     if (model.get('hourminutes') == null) {
-                        $selectForDate.append('<option selected>' + (model.get('message') || App.i18n.notimeslot) + '</option>');
+                        $selectForDate.append('<option selected value="">' + (model.get('message') || App.i18n.notimeslot) + '</option>');
                     } else {
-                        $selectForDate.append('<option>' + App.i18n.pickatimeslot + '</option>');
+                        $selectForDate.append('<option value="">' + App.i18n.pickatimeslot + '</option>');
                     }
                     initializedDates[date] = true;
                 }
@@ -110,32 +111,40 @@
                 if (model.get('hourminutes') == null) return;
 
                 var item = new App.TimesListItemView({ model: model });
-                var renderedItem = item.render().el;
+                var $renderedOption = item.render().$el;
+
+                // Préserver la sélection si elle correspond
+                if (currentSelection === model.get('hourminutes') && currentDateSelection === date) {
+                    $renderedOption.prop('selected', true);
+                }
 
                 if ($selectForDate.length > 0) {
-                    $selectForDate.append(renderedItem.outerHTML);
+                    $selectForDate.append($renderedOption);
                 }
-                $list.append(item.render().$el);
+                
+                // Pour la liste de boutons
+                var $renderedButton = item.render().$el.clone();
+                if (currentSelection === model.get('hourminutes') && currentDateSelection === date) {
+                    // Si c'est le bouton sélectionné, on cache les autres via CSS/JS plus tard
+                }
+                $list.append($renderedButton);
             }, this);
 
             this.loaded();
+            
+            // Si on utilise bootstrap-select, on rafraîchit
+            if ($.fn.selectpicker) {
+                $('.tmsm-aquatonic-course-booking-weekday-times').selectpicker('refresh');
+            }
+            
             this.collection.length === 0 ? $(this.errorElement).show() : $(this.errorElement).hide();
             return this;
-        },
-
-        selectTime: function(event) {
-            event.preventDefault();
-            var $target = $(event.target);
-            var selectedValue = $target.data('hourminutes');
-            $('.tmsm-aquatonic-course-booking-time-button').hide().removeClass('selected').addClass('not-selected');
-            $target.show().addClass('selected').removeClass('not-selected');
-            App.selectedData.set('hourminutes', selectedValue);
         },
 
         cancelTime: function(event) {
             event.preventDefault();
             $('.tmsm-aquatonic-course-booking-time-button').show().removeClass('selected').addClass('not-selected');
-            App.selectedData.set('hourminutes', null);
+            App.selectedData.set({ 'hourminutes': null, 'hour': null, 'minutes': null, 'date': null });
         },
 
         changeDate: function(event) {
@@ -211,8 +220,6 @@
             var styleId = 'tmsm-datepicker-styles-v21';
             if ($('#' + styleId).length > 0) return;
 
-            // FIX: Suppression du sélecteur :has() pour compatibilité navigateur.
-            // On utilise une classe .active-week gérée en JS.
             var css = '.tmsm-inline-calendar-wrapper { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; margin: 0 auto 20px; overflow: hidden; max-width: 1200px; font-family: sans-serif; }' +
                 '.datepicker-inline { width: 100% !important; border: none !important; padding: 10px 40px !important; }' +
                 '.datepicker table { width: 100% !important; border-collapse: separate !important; border-spacing: 0 5px !important; }' +
@@ -224,6 +231,15 @@
                 '.datepicker table tr td.active { background-color: #1a56db !important; color: #ffffff !important; border-radius: 8px !important; font-weight: 800; }' +
                 '.datepicker table tr.active-week td:not(.old):not(.new) { background-color: #eff6ff; }' +
                 '.datepicker table tr td.today { color: #1a56db !important; font-weight: 900; }' +
+                '.tmsm-aquatonic-course-booking-weekday-times, .tmsm-aquatonic-course-booking-weekday-times option { color: #000 !important; font-weight: normal; }' +
+                '.tmsm-aquatonic-course-booking-time-button { color: #000 !important; font-weight: normal; }' +
+                '.tmsm-aquatonic-course-booking-time-button.selected { color: #fff !important; }' +
+                '.bootstrap-select > .dropdown-toggle { background-color: #fff !important; color: #000 !important; border: 1px solid #ced4da !important; box-shadow: none !important; }' +
+                '.bootstrap-select > .dropdown-toggle:hover, .bootstrap-select > .dropdown-toggle:focus, .bootstrap-select > .dropdown-toggle:active { background-color: #fff !important; color: #000 !important; border-color: #ced4da !important; outline: none !important; }' +
+                '.bootstrap-select .filter-option { color: #000 !important; font-weight: normal; }' +
+                '.bootstrap-select .dropdown-menu { background-color: #fff !important; border: 1px solid #ced4da !important; }' +
+                '.bootstrap-select .dropdown-menu li a:hover { background-color: #f1f5f9 !important; color: #000 !important; }' +
+                '.bootstrap-select .dropdown-menu li.active a { background-color: #eff6ff !important; color: #000 !important; }' +
                 '@media (max-width: 768px) { .datepicker-inline { padding: 10px !important; } .datepicker table tr td.day { height: 35px; } }';
 
             $('<style>').attr('id', styleId).prop('type', 'text/css').html(css).appendTo('head');
@@ -345,32 +361,49 @@
         },
 
         selectTimeWithSelect: function(event) {
-            var $opt = $(event.target.options[event.target.selectedIndex]);
-            if (!$opt.data('hourminutes')) {
+            var $target = $(event.target);
+            var $opt = $target.find('option:selected');
+            
+            // Désélectionner les autres menus déroulants
+            $('.tmsm-aquatonic-course-booking-weekday-times').not($target).val('');
+            if ($.fn.selectpicker) {
+                $('.tmsm-aquatonic-course-booking-weekday-times').not($target).selectpicker('refresh');
+            }
+            // Réinitialiser les boutons
+            $('.tmsm-aquatonic-course-booking-time-button').show().removeClass('btn-primary selected').addClass('not-selected');
+
+            if (!$opt.attr('data-hourminutes')) {
                 App.selectedData.set({ 'hourminutes': null, 'hour': null, 'minutes': null, 'date': null });
                 return;
             }
-            // On récupère explicitement la date liée à l'option pour synchroniser avec l'horaire
-            var selectedDate = $opt.data('date');
+            
+            var selectedDate = $opt.attr('data-date');
             
             App.selectedData.set({
-                'hourminutes': $opt.data('hourminutes'),
-                'hour': $opt.data('hour'),
-                'minutes': $opt.data('minutes'),
+                'hourminutes': $opt.attr('data-hourminutes'),
+                'hour': $opt.attr('data-hour'),
+                'minutes': $opt.attr('data-minutes'),
                 'date': selectedDate
             });
         },
 
         selectTime: function(event) {
             var $el = $(event.currentTarget);
-            $('.tmsm-aquatonic-course-booking-time-button').removeClass('btn-primary disabled selected').addClass('not-selected');
-            $el.addClass('btn-primary disabled selected').removeClass('not-selected');
+            
+            // Désélectionner TOUS les autres boutons et menus
+            $('.tmsm-aquatonic-course-booking-time-button').not($el).hide().removeClass('btn-primary selected').addClass('not-selected');
+            $('.tmsm-aquatonic-course-booking-weekday-times').val('');
+            if ($.fn.selectpicker) {
+                $('.tmsm-aquatonic-course-booking-weekday-times').selectpicker('refresh');
+            }
+
+            $el.show().addClass('btn-primary selected').removeClass('not-selected');
 
             App.selectedData.set({
-                'hourminutes': $el.data('hourminutes'),
-                'hour': $el.data('hour'),
-                'minutes': $el.data('minutes'),
-                'date': $el.data('date')
+                'hourminutes': $el.attr('data-hourminutes'),
+                'hour': $el.attr('data-hour'),
+                'minutes': $el.attr('data-minutes'),
+                'date': $el.attr('data-date')
             });
             
             if (App.selectedDataList && App.selectedDataList.confirmButton) {
@@ -409,7 +442,7 @@
 
         change: function() {
             var attrs = this.model.attributes;
-            if (attrs.hourminutes) {
+            if (attrs.hourminutes && attrs.date) {
                 this.updateFormFields(attrs);
                 this.showConfirm();
             } else {
@@ -464,15 +497,16 @@
             return;
         }
 
-        App.times = new App.TimesCollection();
-        App.timesList = new App.TimesListView({ collection: App.times });
-
-        App.weekdays = new App.WeekDayCollection();
-        App.weekdaysList = new App.WeekDayListView({ collection: App.weekdays });
+        if (!App.times) {
+            App.times = new App.TimesCollection();
+            App.timesList = new App.TimesListView({ collection: App.times });
+            App.weekdays = new App.WeekDayCollection();
+            App.weekdaysList = new App.WeekDayListView({ collection: App.weekdays });
+            App.selectedData = new App.SelectedDataModel();
+            App.selectedDataList = new App.SelectedDataView({ model: App.selectedData });
+        }
+        
         App.weekdaysList.render();
-
-        App.selectedData = new App.SelectedDataModel();
-        App.selectedDataList = new App.SelectedDataView({ model: App.selectedData });
     };
 
     // DOM Ready logic

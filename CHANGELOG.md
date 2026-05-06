@@ -1,4 +1,7 @@
-### 2.1.4; May 06th, 2026
+### 2.1.5: May 06th, 2026
+* Fix calendar for reservations parcours
+
+### 2.1.4: May 06th, 2026
 * Fix calendar for the old navigator add compatibility
 * Refactor javascript file for performances and readability
 
