@@ -306,7 +306,7 @@
         },
 
         render: function() {
-            if (this.$('#tmsm-inline-calendar').length === 0) {
+            if (this.$('#tmsm-datepicker-wrapper, .tmsm-inline-calendar-wrapper').length === 0) {
                 this.$el.html(this.getHeaderHtml());
                 this.initDatepicker();
             }
@@ -317,7 +317,7 @@
                 $list = this.$(this.listElement);
             }
             $list.empty();
-            
+
             this.collection.reset();
             if (App.times) {
                 App.times.reset();
@@ -339,7 +339,9 @@
 
                 var dateStr = model.get('date_computed');
                 var $select = $('select.tmsm-aquatonic-course-booking-weekday-times[data-date="' + dateStr + '"]');
-                $select.hide().parent().next().show(); // Loader
+                var $spinner = $select.siblings('.glyphicon-spin, .fa-spinner, .fa-spin');
+                $select.hide();
+                $spinner.show();
 
                 App.times.fetch({
                     data: {
@@ -351,7 +353,8 @@
                         if ($.fn.selectpicker) {
                             $select.selectpicker('refresh');
                         }
-                        $select.show().parent().next().hide();
+                        $select.show();
+                        $spinner.hide();
                     }
                 });
             }, this);
@@ -385,6 +388,10 @@
                 'minutes': $opt.attr('data-minutes'),
                 'date': selectedDate
             });
+
+            if (App.selectedDataList && App.selectedDataList.confirmButton) {
+                App.animateTransition($(App.selectedDataList.confirmButton));
+            }
         },
 
         selectTime: function(event) {
