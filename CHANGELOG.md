@@ -1,3 +1,8 @@
+### 2.1.7: May 07th, 2026
+* Fix calendar scroll positioning on all devices (iOS, Android, laptop) — use `requestAnimationFrame` to wait for layout reflow before computing scroll target, preventing the calendar from drifting out of position
+* Replace `$('html, body').animate()` with native `window.scrollTo({ behavior: 'smooth' })` to avoid the known iOS Safari / cross-browser scroll conflict
+* Replace `overflow: hidden` with `overflow: clip` on the calendar wrapper to prevent stacking-context side effects during scroll
+
 ### 2.1.6: May 06th, 2026
 * Fix calendar overload on reservations parcours 
 

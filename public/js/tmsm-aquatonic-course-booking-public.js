@@ -220,7 +220,7 @@
             var styleId = 'tmsm-datepicker-styles-v21';
             if ($('#' + styleId).length > 0) return;
 
-            var css = '.tmsm-inline-calendar-wrapper { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; margin: 0 auto 20px; overflow: hidden; max-width: 1200px; font-family: sans-serif; }' +
+            var css = '.tmsm-inline-calendar-wrapper { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; margin: 0 auto 20px; overflow: clip; max-width: 1200px; font-family: sans-serif; }' +
                 '.datepicker-inline { width: 100% !important; border: none !important; padding: 10px 40px !important; }' +
                 '.datepicker table { width: 100% !important; border-collapse: separate !important; border-spacing: 0 5px !important; }' +
                 '.datepicker .datepicker-switch { font-weight: 800; color: #111; font-size: 1.2rem; text-transform: uppercase; }' +
@@ -490,7 +490,24 @@
     App.animateTransition = function($el) {
         if (!$el.length) return;
         $el.show();
-        $('html, body').animate({ scrollTop: $el.offset().top - 100 }, 400);
+        // On attend le prochain frame de rendu avant de calculer l'offset :
+        // $el.show() rend l'élément visible mais le navigateur n'a pas encore
+        // recalculé le layout (reflow). Sans ce délai, offset().top peut être
+        // faux (0 ou valeur périmée), ce qui fait décrocher le calendrier sur
+        // tous types d'appareils (iOS, Android, laptop).
+        requestAnimationFrame(function() {
+            var scrollTarget = Math.max(0, $el.offset().top - 100);
+            // $('html, body').animate() cause un bug connu sur iOS Safari (les deux
+            // éléments se battent car le scroll y est géré par window, pas body/html).
+            // window.scrollTo avec behavior: smooth est la méthode native correcte.
+            if ('scrollBehavior' in document.documentElement.style) {
+                window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+            } else {
+                // Fallback pour les très vieux navigateurs sans scrollBehavior
+                document.documentElement.scrollTop = scrollTarget;
+                document.body.scrollTop = scrollTarget;
+            }
+        });
     };
 
     App.init = function() {
