@@ -1,3 +1,6 @@
+### 2.1.6: May 06th, 2026
+* Fix calendar overload on reservations parcours 
+
 ### 2.1.5: May 06th, 2026
 * Fix calendar for reservations parcours
 
