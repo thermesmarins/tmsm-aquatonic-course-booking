@@ -581,13 +581,19 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		}
 		wp_enqueue_script('jquery-ui-datepicker');
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public' . ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ? '' : '.min' ) . '.js', array(
-			'wp-backbone',
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-calendar' . ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ? '' : '.min' ) . '.js', array(
 			'moment',
 			'jquery',
 			'gform_gravityforms',
 			'wp-i18n'
 		), $this->version, true );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tmsm-aquatonic-course-booking-public' . ( defined( 'TMSM_AQUATONIC_COURSE_BOOKING_LOCAL' ) && TMSM_AQUATONIC_COURSE_BOOKING_LOCAL === true ? '' : '.min' ) . '.js', array(
+		// 	'moment',
+		// 'wp-backbone',
+		// 	'jquery',
+		// 	'gform_gravityforms',
+		// 	'wp-i18n'
+		// ), $this->version, true );
 		wp_add_inline_script(
 			$this->plugin_name,
 			'window.sprintf = window.sprintf || function (format) { var args = Array.prototype.slice.call(arguments, 1); var autoIndex = 0; return String(format || "").replace(/%(\\d+\\$)?s/g, function (match, numbered) { if (numbered) { var numberedIndex = parseInt(numbered, 10) - 1; return typeof args[numberedIndex] !== "undefined" ? args[numberedIndex] : ""; } var current = autoIndex++; return typeof args[current] !== "undefined" ? args[current] : ""; }); };',
@@ -896,10 +902,10 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					$objdate = DateTime::createFromFormat( 'Y-m-d H:i:s', $course_start );
 					if ( $objdate === false ) {
 						error_log( 'DateTime::createFromFormat false for $course_start: ' . $course_start . ' and $date:' . $date );
+					} else {
+						$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
+						$course_end = $objdate->format( 'Y-m-d H:i:s' );
 					}
-
-					$objdate->modify( '+' . $this->get_option( 'courseaverage' ) . ' minutes' );
-					$course_end = $objdate->format( 'Y-m-d H:i:s' );
 				}
 
 				$now = new DateTime( 'now', wp_timezone() );

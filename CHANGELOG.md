@@ -1,3 +1,9 @@
+### 2.1.8: May 08th, 2026
+* Fix booking form submission on multi-page GravityForms: calendar JS now exits early on page 2+ (container not visible), preventing `clearSelection()` from wiping the date/time values persisted by GF between pages
+* Fix time slot AJAX loading: switched from `$.post()` to `$.ajax({ dataType: 'json' })` so the JSON response is parsed correctly
+* Fix date and time GF fields not submitted: disabled inputs are enabled with `.prop('disabled', false)` before being filled, so the browser includes them in the POST
+* Fix PHP fatal error when `DateTime::createFromFormat` returns false for `$course_start`: `modify()` is now called only if the object is valid
+
 ### 2.1.7: May 07th, 2026
 * Fix calendar scroll positioning on all devices (iOS, Android, laptop) — use `requestAnimationFrame` to wait for layout reflow before computing scroll target, preventing the calendar from drifting out of position
 * Replace `$('html, body').animate()` with native `window.scrollTo({ behavior: 'smooth' })` to avoid the known iOS Safari / cross-browser scroll conflict
