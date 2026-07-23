@@ -64,7 +64,7 @@
         if (document.getElementById(id)) return;
 
         var rules = [
-            '.tmsm-inline-calendar-wrapper{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin:0 auto 20px;overflow:clip;max-width:1200px;font-family:sans-serif}',
+            '.tmsm-inline-calendar-wrapper{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin:0 auto 20px;overflow:hidden;overflow:clip;max-width:1200px;font-family:sans-serif}',
             '.datepicker-inline{width:100%!important;border:none!important;padding:10px 40px!important}',
             '.datepicker table{width:100%!important;border-collapse:separate!important;border-spacing:0 5px!important}',
             '.datepicker .datepicker-switch{font-weight:800;color:#111;font-size:1.2rem;text-transform:uppercase}',
@@ -364,11 +364,12 @@
     $(function () {
         if (!$(SEL.participants).length) return;
 
-        // En GF multipage, le container du calendrier est dans le DOM sur toutes les pages
-        // mais caché (display:none) sur les pages suivantes. Si le container n'est pas
-        // visible, on est sur la page 2+ → ne pas s'initialiser, sinon clearSelection()
+        // En GF multipage, les pages non-courantes sont dans des divs gform_page_X_Y
+        // avec display:none. Si le container du calendrier est dans un tel div caché,
+        // on est sur la page 2+ → ne pas s'initialiser, sinon clearSelection()
         // viderait les champs date/heure que GF a persistés depuis la page 1.
-        if (!$(SEL.container).is(':visible')) return;
+        var $gfPage = $(SEL.container).closest('[id^="gform_page_"]');
+        if ($gfPage.length && $gfPage.css('display') === 'none') return;
 
         if ($(SEL.participants).val() !== '') {
             init();

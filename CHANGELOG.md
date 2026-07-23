@@ -1,3 +1,7 @@
+### 2.1.9: May 09th, 2026
+* Fix multi-page GravityForms detection: hidden-page check now walks up to the closest `gform_page_X_Y` container and reads its `display` style, instead of relying on `:visible` on the calendar container (which could give false positives depending on parent visibility)
+* Add `overflow: hidden` fallback before `overflow: clip` on the calendar wrapper for browsers that don't support `clip`
+
 ### 2.1.8: May 08th, 2026
 * Fix booking form submission on multi-page GravityForms: calendar JS now exits early on page 2+ (container not visible), preventing `clearSelection()` from wiping the date/time values persisted by GF between pages
 * Fix time slot AJAX loading: switched from `$.post()` to `$.ajax({ dataType: 'json' })` so the JSON response is parsed correctly
