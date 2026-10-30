@@ -1,3 +1,11 @@
+### 2.2.0: October 30th, 2026
+* Performance: the booking calendar now loads the 7 days of a week with a single AJAX request (`tmsm-aquatonic-course-booking-times-week`) instead of 7
+* Performance: participants already booked are counted with one SQL query per day instead of one query per time slot (291 queries down to 7 for a week)
+* Performance: slots of a week are kept 60 seconds in the browser, so picking another day of the same week no longer sends any request; an outdated request is cancelled when the week or the number of participants changes
+* Fix: the public class constructor no longer computes all the time slots (and discards them) on every WordPress request
+* The `tmsm-aquatonic-course-booking-times` action is kept unchanged for pages still serving the previous script
+* Add PHPUnit tests (`tests/php`) and Playwright tests (`tests/e2e`) proving the slots are identical to the previous implementation
+
 ### 2.1.9: May 09th, 2026
 * Fix multi-page GravityForms detection: hidden-page check now walks up to the closest `gform_page_X_Y` container and reads its `display` style, instead of relying on `:visible` on the calendar container (which could give false positives depending on parent visibility)
 * Add `overflow: hidden` fallback before `overflow: clip` on the calendar wrapper for browsers that don't support `clip`
