@@ -156,6 +156,47 @@ class TimeslotValidationTest extends Abstract_Times_Test_Case {
 		$this->assertFalse( $this->validate()['is_valid'] );
 	}
 
+	private const BANNER = '<div class="gform_validation_errors"><h2>Une erreur s’est produite</h2></div>';
+
+	public function test_banner_shows_the_message_of_the_hidden_time_field(): void {
+		$this->hourminutes_field->failed_validation  = true;
+		$this->hourminutes_field->validation_message = 'This time slot is no longer available, please choose another one.';
+
+		$banner = $this->current->gform_validation_message_timeslot( self::BANNER, $this->form );
+
+		$this->assertStringContainsString( 'This time slot is no longer available, please choose another one.', $banner );
+		$this->assertStringContainsString( 'Une erreur s’est produite', $banner, 'le bandeau d\'origine est conservé' );
+		// Le message est dans le bandeau, avant sa balise fermante.
+		$this->assertLessThan( strrpos( $banner, '</div>' ), strpos( $banner, 'no longer available' ) );
+	}
+
+	public function test_banner_is_unchanged_when_the_time_field_is_valid(): void {
+		$this->form['fields'][0]->failed_validation  = true; // un autre champ en erreur
+		$this->form['fields'][0]->validation_message = 'Participants invalid';
+
+		$this->assertSame( self::BANNER, $this->current->gform_validation_message_timeslot( self::BANNER, $this->form ) );
+	}
+
+	public function test_banner_message_is_escaped(): void {
+		$this->hourminutes_field->failed_validation  = true;
+		$this->hourminutes_field->validation_message = '<script>alert(1)</script>';
+
+		$banner = $this->current->gform_validation_message_timeslot( self::BANNER, $this->form );
+
+		$this->assertStringNotContainsString( '<script>', $banner );
+		$this->assertStringContainsString( '&lt;script&gt;', $banner );
+	}
+
+	public function test_banner_without_closing_tag_gets_the_message_appended(): void {
+		$this->hourminutes_field->failed_validation  = true;
+		$this->hourminutes_field->validation_message = 'Heure invalide';
+
+		$banner = $this->current->gform_validation_message_timeslot( 'Erreur', $this->form );
+
+		$this->assertStringStartsWith( 'Erreur', $banner );
+		$this->assertStringContainsString( 'Heure invalide', $banner );
+	}
+
 	public function test_non_customer_gets_the_same_check(): void {
 		$GLOBALS['tmsm_test_user'] = new Tmsm_Test_User( 1, [ 'administrator' ] );
 		$this->book_everything_at_ten();

@@ -36,6 +36,8 @@ class Tmsm_Test_Gf_Field implements ArrayAccess {
 	public $id;
 	public $cssClass;
 	public $inputs = null;
+	public $failed_validation = false;
+	public $validation_message = '';
 
 	public function __construct( int $id, string $css_class ) {
 		$this->id       = $id;
@@ -67,6 +69,10 @@ function rgpost( $name ) {
 
 function __( $text, $domain = 'default' ) {
 	return $text;
+}
+
+function esc_html( $text ) {
+	return htmlspecialchars( (string) $text, ENT_QUOTES );
 }
 
 function esc_attr( $text ) {

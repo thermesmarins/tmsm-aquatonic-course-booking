@@ -1855,6 +1855,30 @@ WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s"
 	}
 
 	/**
+	 * Adds the error of the time field to the validation message at the top of the form:
+	 * the time field is hidden on the booking page, so its own error message is never displayed.
+	 *
+	 * @param string $message Validation message (HTML) built by Gravity Forms
+	 * @param array  $form    Form with the validation state of its fields
+	 *
+	 * @return string
+	 */
+	function gform_validation_message_timeslot( $message, $form ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( false === strpos( (string) $field->cssClass, 'tmsm-aquatonic-course-hourminutes' ) || empty( $field->failed_validation ) ) {
+				continue;
+			}
+
+			$notice = '<p class="tmsm-aquatonic-course-timeslot-error">' . esc_html( $field->validation_message ) . '</p>';
+			$end    = strripos( $message, '</div>' );
+
+			return false === $end ? $message . $notice : substr_replace( $message, $notice, $end, 0 );
+		}
+
+		return $message;
+	}
+
+	/**
 	 * Value submitted for the field having a CSS class, found in the form (field ids differ between sites)
 	 *
 	 * @param string $css_class

@@ -82,7 +82,9 @@ test.describe('Validation du créneau à la soumission', () => {
     // Le formulaire reste sur la page du calendrier, avec le champ heure en erreur.
     const timeField = page.locator('.tmsm-aquatonic-course-hourminutes');
     await expect(timeField).toHaveClass(/gfield_error/, { timeout: 20000 });
-    await expect(timeField.locator('.gfield_description')).toContainText(UNAVAILABLE_MESSAGE);
     await expect(page.locator(SLOTS_CONTAINER)).toBeVisible();
+    // Le champ heure est masqué : le message doit être visible dans le bandeau d'erreur du formulaire.
+    await expect(timeField).toBeHidden();
+    await expect(page.locator('.gform_validation_errors').getByText(UNAVAILABLE_MESSAGE)).toBeVisible();
   });
 });
