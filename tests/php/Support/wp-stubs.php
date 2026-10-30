@@ -28,6 +28,43 @@ class Tmsm_Test_User {
 	}
 }
 
+/**
+ * Champ de formulaire GravityForms factice : lisible en tableau ($field['cssClass'])
+ * comme en objet ($field->cssClass), comme un vrai GF_Field.
+ */
+class Tmsm_Test_Gf_Field implements ArrayAccess {
+	public $id;
+	public $cssClass;
+	public $inputs = null;
+
+	public function __construct( int $id, string $css_class ) {
+		$this->id       = $id;
+		$this->cssClass = $css_class;
+	}
+
+	public function offsetExists( $offset ): bool {
+		return isset( $this->$offset );
+	}
+
+	#[\ReturnTypeWillChange]
+	public function offsetGet( $offset ) {
+		return $this->$offset ?? null;
+	}
+
+	public function offsetSet( $offset, $value ): void {
+		$this->$offset = $value;
+	}
+
+	public function offsetUnset( $offset ): void {
+		$this->$offset = null;
+	}
+}
+
+/** Lit une valeur soumise, comme la fonction rgpost() de GravityForms. */
+function rgpost( $name ) {
+	return $_POST[ $name ] ?? null;
+}
+
 function __( $text, $domain = 'default' ) {
 	return $text;
 }

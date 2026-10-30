@@ -243,6 +243,30 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 	}
 
 	/**
+	 * Tells if a time slot is still offered by the calendar, for the current user.
+	 * Same rules as get_times_for_date(): capacity, opening times, hoursbefore/hoursafter for customers.
+	 *
+	 * @param string $date         Day (Y-m-d)
+	 * @param string $hourminutes  Time slot start (HH:MM)
+	 * @param int    $participants Number of participants
+	 *
+	 * @return bool
+	 */
+	public function is_timeslot_available( string $date, string $hourminutes, int $participants ): bool {
+		if ( '' === $hourminutes || $participants < 1 || ! DateTime::createFromFormat( '!Y-m-d', $date ) ) {
+			return false;
+		}
+
+		try {
+			$times = $this->get_times_for_date( $date, $participants );
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		return in_array( $hourminutes, array_column( $times, 'hourminutes' ), true );
+	}
+
+	/**
 	 * Get option
 	 *
 	 * @param string $option_name
@@ -1793,6 +1817,84 @@ WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s"
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Refuses the time field when the chosen time slot is no longer available
+	 * (for example, filled by another booking since the calendar was displayed).
+	 * Uses the same rules as the calendar, for the current user.
+	 *
+	 * @param array $result
+	 * @param mixed $value Time field value: array( hour, minutes ) or "HH:MM"
+	 * @param array $form
+	 * @param mixed $field
+	 *
+	 * @return array
+	 */
+	function gform_field_validation_timeslot( $result, $value, $form, $field ) {
+
+		if ( empty( $result['is_valid'] ) || false === strpos( (string) $field->cssClass, 'tmsm-aquatonic-course-hourminutes' ) ) {
+			return $result;
+		}
+
+		$date         = $this->submitted_value_from_class( 'tmsm-aquatonic-course-date', $form );
+		$participants = $this->submitted_value_from_class( 'tmsm-aquatonic-course-participants', $form );
+		$hourminutes  = self::normalize_hourminutes( $value );
+
+		// Missing values are reported by the required fields validation of Gravity Forms
+		if ( '' === $date || '' === $participants || '' === $hourminutes ) {
+			return $result;
+		}
+
+		if ( ! $this->is_timeslot_available( $date, $hourminutes, absint( $participants ) ) ) {
+			$result['is_valid'] = false;
+			$result['message']  = __( 'This time slot is no longer available, please choose another one.', 'tmsm-aquatonic-course-booking' );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Value submitted for the field having a CSS class, found in the form (field ids differ between sites)
+	 *
+	 * @param string $css_class
+	 * @param array  $form
+	 *
+	 * @return string
+	 */
+	private function submitted_value_from_class( string $css_class, $form ): string {
+		$field_id = self::field_id_from_class( $css_class, $form['fields'] );
+		if ( empty( $field_id ) ) {
+			return '';
+		}
+
+		$value = rgpost( 'input_' . $field_id );
+
+		return is_scalar( $value ) ? trim( sanitize_text_field( (string) $value ) ) : '';
+	}
+
+	/**
+	 * Time field value (array( hour, minutes ) or "H:MM") as "HH:MM", empty string if not a valid time
+	 *
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
+	private static function normalize_hourminutes( $value ): string {
+		if ( is_array( $value ) ) {
+			$hour    = $value[0] ?? '';
+			$minutes = $value[1] ?? '';
+		} elseif ( is_string( $value ) && preg_match( '/^(\d{1,2}):(\d{1,2})/', $value, $matches ) ) {
+			list( , $hour, $minutes ) = $matches;
+		} else {
+			return '';
+		}
+
+		if ( ! ctype_digit( (string) $hour ) || ! ctype_digit( (string) $minutes ) ) {
+			return '';
+		}
+
+		return sprintf( '%02d:%02d', (int) $hour, (int) $minutes );
 	}
 
 	/**

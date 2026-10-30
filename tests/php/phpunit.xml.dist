@@ -10,6 +10,8 @@
         <testsuite name="timeslots">
             <file>TimesEquivalenceTest.php</file>
             <file>ParticipantsOngoingTest.php</file>
+            <file>TimeslotAvailabilityTest.php</file>
+            <file>TimeslotValidationTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

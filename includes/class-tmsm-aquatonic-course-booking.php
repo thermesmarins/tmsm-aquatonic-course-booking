@@ -259,6 +259,7 @@ private function set_locale() {
 				$this->loader->add_filter( 'gform_pre_render_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
 				$this->loader->add_filter( 'gform_pre_validation_' . $form_add_id, $plugin_public, 'gform_email_notrequired', 20, 1 );
 				$this->loader->add_filter( 'gform_pre_send_email', $plugin_public, 'gform_pre_send_email_to', 20, 4 );
+				$this->loader->add_filter( 'gform_field_validation_' . $form_add_id, $plugin_public, 'gform_field_validation_timeslot', 40, 4 );
 
 
 				$this->loader->add_action( 'gform_entry_created', $plugin_public, 'gform_entry_created', 20, 2 );

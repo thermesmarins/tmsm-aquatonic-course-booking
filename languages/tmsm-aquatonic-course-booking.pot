@@ -771,6 +771,10 @@ msgstr ""
 msgid "No time slot found"
 msgstr ""
 
+#: public/class-tmsm-aquatonic-course-booking-public.php
+msgid "This time slot is no longer available, please choose another one."
+msgstr ""
+
 #: public/class-tmsm-aquatonic-course-booking-public.php:248
 #: public/class-tmsm-aquatonic-course-booking-public.php:636
 msgid "Closed"
