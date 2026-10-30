@@ -277,6 +277,8 @@ private function set_locale() {
 		// Ajax frontend
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
 		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times', $plugin_public, 'ajax_times' );
+		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-times-week', $plugin_public, 'ajax_times_week' );
+		$this->loader->add_action( 'wp_ajax_nopriv_tmsm-aquatonic-course-booking-times-week', $plugin_public, 'ajax_times_week' );
 
 		// Barcode
 		$this->loader->add_action( 'wp_ajax_tmsm-aquatonic-course-booking-generate-barcode', $plugin_public, 'generate_barcode_image', 10 );

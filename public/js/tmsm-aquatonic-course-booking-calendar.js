@@ -19,8 +19,16 @@
         selectedHourminutes: null,
         selectedHour:        null,
         selectedMinutes:     null,
-        calendarReady:       false
+        calendarReady:       false,
+        weekRequest:         null, // requête AJAX "semaine" en cours (pour l'annuler si on change de semaine)
+        weekRequestId:       0     // identifie la dernière demande : une réponse plus ancienne est ignorée
     };
+
+    // Les créneaux d'une semaine sont gardés quelques secondes : cliquer sur un autre jour de
+    // la même semaine, ou revenir sur une semaine déjà vue, ne relance aucune requête.
+    // Court volontairement : les places restantes évoluent (une page ouverte longtemps reste de toute façon périmée).
+    var WEEK_CACHE_TTL_MS = 60 * 1000;
+    var weekCache = {};
 
     // ─── Sélecteurs DOM ───────────────────────────────────────────────────────
     var SEL = {
@@ -154,19 +162,18 @@
         var grid = document.createElement('div');
         grid.className = 'tmsm-week-grid';
 
+        var dates = [];
         for (var i = 0; i < 7; i++) {
-            var day    = moment().add(state.weekOffset + i, 'days');
+            var day     = moment().add(state.weekOffset + i, 'days');
             var dateStr = day.format('YYYY-MM-DD');
+            dates.push(dateStr);
             grid.appendChild(buildDayColumn(day, dateStr));
         }
 
         $list.append(grid);
         highlightActiveWeek();
 
-        // 7 appels AJAX en parallèle (contrainte API : pas de paramètre "semaine")
-        for (var j = 0; j < 7; j++) {
-            fetchSlots(moment().add(state.weekOffset + j, 'days').format('YYYY-MM-DD'));
-        }
+        fetchWeekSlots(dates);
     }
 
     function buildDayColumn(day, dateStr) {
@@ -213,20 +220,55 @@
     }
 
     // ─── Appel AJAX ───────────────────────────────────────────────────────────
-    function fetchSlots(dateStr) {
-        $.ajax({
+    // Une seule requête pour toute la semaine : la réponse est { "YYYY-MM-DD": [créneaux], ... },
+    // chaque jour ayant le même contenu que l'ancienne action "tmsm-aquatonic-course-booking-times".
+    function fetchWeekSlots(dates) {
+        // Toute nouvelle demande rend la précédente obsolète (changement de semaine ou de participants).
+        if (state.weekRequest) {
+            state.weekRequest.abort();
+            state.weekRequest = null;
+        }
+        var requestId = ++state.weekRequestId;
+
+        var cacheKey = state.participants + '|' + dates[0];
+        var cached   = weekCache[cacheKey];
+        if (cached && Date.now() - cached.at < WEEK_CACHE_TTL_MS) {
+            fillWeek(dates, cached.days);
+            return;
+        }
+
+        state.weekRequest = $.ajax({
             url:      App.data.ajaxurl,
             method:   'POST',
             dataType: 'json',
             data: {
-                action:       'tmsm-aquatonic-course-booking-times',
+                action:       'tmsm-aquatonic-course-booking-times-week',
                 nonce:        App.data.nonce,
-                date:         dateStr,
+                date_from:    dates[0],
+                days:         dates.length,
                 participants: state.participants
             }
         })
-        .done(function (slots) { fillDaySelect(dateStr, slots); })
-        .fail(function ()       { fillDaySelect(dateStr, null);  });
+        .done(function (days) {
+            if (requestId !== state.weekRequestId) return;
+            // Réponse sans le premier jour (ex. nonce refusé) : on n'affiche rien et on ne la garde pas.
+            if (!days || !days[dates[0]]) {
+                fillWeek(dates, null);
+                return;
+            }
+            weekCache[cacheKey] = { at: Date.now(), days: days };
+            fillWeek(dates, days);
+        })
+        .fail(function () {
+            if (requestId !== state.weekRequestId) return;
+            fillWeek(dates, null);
+        });
+    }
+
+    function fillWeek(dates, days) {
+        dates.forEach(function (dateStr) {
+            fillDaySelect(dateStr, days ? (days[dateStr] || null) : null);
+        });
     }
 
     function fillDaySelect(dateStr, slots) {

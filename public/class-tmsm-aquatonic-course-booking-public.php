@@ -55,39 +55,80 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
-		self::_get_times();
-
 	}
 
 	/**
-	 * Get Times from Web Service
+	 * Nombre maximum de jours renvoyés par un appel "semaine".
+	 */
+	private const TIMES_WEEK_MAX_DAYS = 7;
+
+	/**
+	 * Get Times from Web Service for the date given in the request (single day)
 	 *
 	 * @return array
 	 * @throws Exception
 	 * @since    1.0.0
 	 */
 	private function _get_times() {
-		global $wpdb;
-
-		$user = wp_get_current_user();
-
-		$times        = [];
-		$closed_dates = [];
 		$date         = date( 'Y-m-d' );
 		$participants = 0;
 
 		if ( ! empty( $_REQUEST['date'] ) ) {
 			$date = sanitize_text_field( $_REQUEST['date'] );
 		}
-		$date_with_dash = $date;
 
 		if ( ! empty( $_REQUEST['participants'] ) ) {
-			$participants = sanitize_text_field( $_REQUEST['participants'] );
+			$participants = (int) sanitize_text_field( $_REQUEST['participants'] );
 		}
 
+		return $this->get_times_for_date( $date, $participants );
+	}
+
+	/**
+	 * Available time slots for several consecutive days, keyed by date (Y-m-d).
+	 * Each day has exactly the same content as get_times_for_date().
+	 *
+	 * @param string $date_from    First day (Y-m-d)
+	 * @param int    $days         Number of days, limited to 1..TIMES_WEEK_MAX_DAYS
+	 * @param int    $participants Number of participants
+	 *
+	 * @return array<string, array>
+	 * @throws InvalidArgumentException When $date_from is not a valid Y-m-d date
+	 * @throws Exception
+	 */
+	public function get_times_for_week( string $date_from, int $days, int $participants ): array {
+		$first_day = DateTime::createFromFormat( '!Y-m-d', $date_from );
+		if ( false === $first_day || $first_day->format( 'Y-m-d' ) !== $date_from ) {
+			throw new InvalidArgumentException( 'Invalid date, expected format Y-m-d' );
+		}
+
+		$days  = max( 1, min( self::TIMES_WEEK_MAX_DAYS, $days ) );
+		$times = [];
+		for ( $i = 0; $i < $days; $i ++ ) {
+			$date           = ( clone $first_day )->modify( "+$i days" )->format( 'Y-m-d' );
+			$times[ $date ] = $this->get_times_for_date( $date, $participants );
+		}
+
+		return $times;
+	}
+
+	/**
+	 * Available time slots for one day
+	 *
+	 * @param string $date         Day (Y-m-d)
+	 * @param int    $participants Number of participants
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function get_times_for_date( string $date, int $participants ): array {
+		$user = wp_get_current_user();
+
+		$times          = [];
+		$closed_dates   = [];
+		$date_with_dash = $date;
+
 		if ( ! empty( $date ) && $participants > 0 ) {
-			//error_log('$date:'.$date);
-			//error_log('$participants:'.$participants);
 
 			$averagecourse = $this->get_option( 'courseaverage' );
 
@@ -103,9 +144,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$slotminutes = 30;
 			}
 
-
 			$interval = DateInterval::createFromDateString( $slotminutes . ' minutes' );
-
 
 			$capacity_forthedate_timeslots = self::allotment_timeslots_forthedate( $date_with_dash );
 
@@ -114,50 +153,31 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				array_push( $closed_dates, $date_with_dash );
 			}
 
-			//usort($slots_in_opening_hours, function($a, $b) {
-			//	return strcmp($a['start'], $b['start']);
-			//});
 			ksort( $capacity_forthedate_timeslots );
-			//error_log('$capacity_forthedate_timeslots');
-			//error_log(print_r($capacity_forthedate_timeslots , true));
-
 
 			// Get first and last slot of all the slots
 			$first_slot = null;
 			$last_slot  = null;
 			if ( ! empty( array_key_first( $capacity_forthedate_timeslots ) ) ) {
-				$errors[]   = __( 'No first slot available to calculate all the slots', 'tmsm-aquatonic-course-booking' );
 				$first_slot = DateTime::createFromFormat( 'Y-m-d H:i:s', array_key_first( $capacity_forthedate_timeslots ) );
-
 			}
 			if ( ! empty( array_key_last( $capacity_forthedate_timeslots ) ) ) {
-				$errors[]  = __( 'No end slot available to calculate all the slots', 'tmsm-aquatonic-course-booking' );
 				$last_slot = DateTime::createFromFormat( 'Y-m-d H:i:s', array_key_last( $capacity_forthedate_timeslots ) );
 			}
 
-
-			//error_log('$first_slot');
-			//error_log(print_r($first_slot , true));
-			//error_log('$last_slot');
-			//error_log(print_r($last_slot , true));
-
-
-			// Get all slots between first and last, then get participants for each one
+			// Participants already booked for every slot between first and last: one single query
 			$uses = [];
 			if ( ! empty( $first_slot ) && ! empty( $last_slot ) ) {
-				$period = new DatePeriod( $first_slot, $interval, $last_slot );
-				foreach ( $period as $slot_begin ) {
-					//error_log( 'slot: '.$slot_begin->format( "Y-m-d H:i:s" ) );
-
-					$uses[ $slot_begin->format( "Y-m-d H:i:s" ) ] = self::get_participants_ongoing_forthetime( $slot_begin );
-
-				}
-
+				$uses = self::get_participants_ongoing_forperiod( $first_slot, $last_slot, $interval );
 			}
 
-
-			//error_log('$uses');
-			//error_log(print_r($uses, true));
+			// Customers have a minimum and maximum delay, other users only a minimum (now)
+			$allow_begin          = new DateTime( 'now', wp_timezone() );
+			$allow_begin_customer = new DateTime( 'now', wp_timezone() );
+			$allow_begin_customer->modify( '+' . ( 60 * $this->get_option( 'hoursbefore' ) ) . ' minutes' );
+			$allow_end_customer = new DateTime( 'now', wp_timezone() );
+			$allow_end_customer->modify( '+' . ( 60 * $this->get_option( 'hoursafter' ) ) . ' minutes' );
+			$is_customer = $this->user_has_role( $user, 'customer' ) || ! $user || is_wp_error( $user ) || ! $user->ID;
 
 			$all_slots       = $capacity_forthedate_timeslots;
 			$slots_available = [];
@@ -168,14 +188,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				$slot_end_object   = clone $slot_begin_object;
 				$slot_end_object->modify( '+' . $averagecourse . ' minutes' );
 
-				$allow_begin          = new DateTime( 'now', wp_timezone() );
-				$allow_begin_customer = new DateTime( 'now', wp_timezone() );
-				$allow_begin_customer->modify( '+' . ( 60 * $this->get_option( 'hoursbefore' ) ) . ' minutes' );
-				$allow_end_customer = new DateTime( 'now', wp_timezone() );
-				$allow_end_customer->modify( '+' . ( 60 * $this->get_option( 'hoursafter' ) ) . ' minutes' );
-
-				// Is a customer
-				if ( $this->user_has_role( wp_get_current_user(), 'customer' ) || ! $user || is_wp_error( $user ) || ! $user->ID ) {
+				if ( $is_customer ) {
 					if ( $slot_begin_object < $allow_begin_customer || $slot_begin_object > $allow_end_customer ) {
 						continue;
 					}
@@ -186,10 +199,7 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 					}
 				}
 
-
 				$period = new DatePeriod( $slot_begin_object, $interval, $slot_end_object );
-
-				//error_log('calculate capacity for '.$slot_begin_object->format( "Y-m-d H:i:s" ));
 
 				$min_capacity = 1000;
 				foreach ( $period as $period_begin ) {
@@ -215,31 +225,11 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 				}
 			}
 
-			//error_log('$slots_available');
-			//error_log(print_r($slots_available , true));
-
-
-			/*$times[] = [
-				'date' => '2020-12-20',
-				'hour' => '10',
-				'minutes' => '10',
-				'hourminutes' => '10:10',
-				'priority' => 1,
-			];
-			$times[] = [
-				'date' => '2020-12-19',
-				'hour' => '17',
-				'minutes' => '20',
-				'hourminutes' => '17:20',
-				'priority' => 1,
-			];*/
-
 			$times = array_values( $slots_available );
 		}
 
 		if ( count( $times ) == 0 ) {
-			$errors[] = __( 'No time slot found', 'tmsm-aquatonic-course-booking' );
-			$times[]  = [
+			$times[] = [
 				'date'        => $date_with_dash,
 				'hour'        => null,
 				'minutes'     => null,
@@ -489,6 +479,50 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		return $uses_count;
 
+	}
+
+	/**
+	 * Participants with an ongoing course for every slot of a period, with one single query.
+	 *
+	 * Same result as calling get_participants_ongoing_forthetime() for each slot of
+	 * DatePeriod($first, $interval, $last): the $last slot is excluded, like DatePeriod does.
+	 * A booking counts from its start (included) to its end (excluded).
+	 *
+	 * @param DateTimeInterface $first    First slot
+	 * @param DateTimeInterface $last     End of the period (excluded)
+	 * @param DateInterval      $interval Slot size
+	 *
+	 * @return array<string, int> Participants by slot, keyed by "Y-m-d H:i:s"
+	 */
+	public function get_participants_ongoing_forperiod( DateTimeInterface $first, DateTimeInterface $last, DateInterval $interval ): array {
+		global $wpdb;
+
+		$uses = [];
+		foreach ( new DatePeriod( $first, $interval, $last ) as $slot ) {
+			$uses[ $slot->format( 'Y-m-d H:i:s' ) ] = 0;
+		}
+		if ( empty( $uses ) ) {
+			return $uses;
+		}
+
+		$bookings = $wpdb->get_results( $wpdb->prepare(
+			"SELECT course_start, course_end, participants FROM {$wpdb->prefix}aquatonic_course_booking
+WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s",
+			'active',
+			'arrived',
+			array_key_last( $uses ),
+			array_key_first( $uses )
+		) );
+
+		foreach ( $bookings as $booking ) {
+			foreach ( $uses as $slot => $count ) {
+				if ( $booking->course_start <= $slot && $booking->course_end > $slot ) {
+					$uses[ $slot ] += (int) $booking->participants;
+				}
+			}
+		}
+
+		return $uses;
 	}
 
 	/**
@@ -1980,6 +2014,29 @@ class Tmsm_Aquatonic_Course_Booking_Public {
 
 		$this->ajax_checksecurity();
 		$this->ajax_return( $this->_get_times() );
+	}
+
+	/**
+	 * Ajax For Times of several days in one request.
+	 *
+	 * Request: date_from (Y-m-d), days (1..7), participants.
+	 * Response: { "Y-m-d": [ slot, ... ], ... } where each day has the same content as the "times" action.
+	 *
+	 * @since    2.2.0
+	 */
+	public function ajax_times_week() {
+
+		$this->ajax_checksecurity();
+
+		$date_from    = sanitize_text_field( $_REQUEST['date_from'] ?? '' );
+		$days         = absint( $_REQUEST['days'] ?? self::TIMES_WEEK_MAX_DAYS );
+		$participants = absint( $_REQUEST['participants'] ?? 0 );
+
+		try {
+			$this->ajax_return( $this->get_times_for_week( $date_from, $days, $participants ) );
+		} catch ( InvalidArgumentException $e ) {
+			wp_send_json_error( [ 'message' => $e->getMessage() ], 400 );
+		}
 	}
 
 	/**

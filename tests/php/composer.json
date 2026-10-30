@@ -1,0 +1,11 @@
+{
+  "name": "thermesmarins/tmsm-aquatonic-course-booking-tests",
+  "description": "Tests PHPUnit du calcul des créneaux (isolés du vendor/ du plugin)",
+  "type": "project",
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
