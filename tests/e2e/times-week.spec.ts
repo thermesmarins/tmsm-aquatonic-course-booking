@@ -146,16 +146,24 @@ test.describe('Calendrier : résultats identiques à l\'ancien endpoint', () => 
       await openCalendar(page, participants);
       const dates = await displayedDates(page);
 
-      const week = await callEndpoint<Record<string, Slot[]>>(page, {
+      const fetchWeek = () => callEndpoint<Record<string, Slot[]>>(page, {
         action: WEEK_ACTION, date_from: dates[0], days: '7', participants,
       });
+      // Les créneaux du jour disparaissent au fil de l'heure (délai minimum avant réservation) :
+      // on encadre les appels de l'ancien endpoint par deux appels "semaine". Le temps ne fait
+      // qu'avancer, donc l'ancien résultat doit être égal à l'un des deux.
+      const weekBefore = await fetchWeek();
       const perDay: Record<string, Slot[]> = {};
       for (const date of dates) {
         perDay[date] = await callEndpoint<Slot[]>(page, { action: DAY_ACTION, date, participants });
       }
+      const weekAfter = await fetchWeek();
 
-      expect(Object.keys(week)).toEqual(dates);
-      expect(week).toEqual(perDay);
+      expect(Object.keys(weekBefore)).toEqual(dates);
+      const matchesOne = JSON.stringify(perDay) === JSON.stringify(weekBefore) || JSON.stringify(perDay) === JSON.stringify(weekAfter);
+      if (!matchesOne) {
+        expect(weekAfter).toEqual(perDay); // fait échouer le test avec un diff lisible
+      }
     });
 
     test(`les créneaux affichés dans les 7 listes sont ceux de l'ancien endpoint (${participants} pers.)`, async ({ page }) => {
@@ -163,9 +171,14 @@ test.describe('Calendrier : résultats identiques à l\'ancien endpoint', () => 
       const dates = await displayedDates(page);
       const displayed = await displayedTimes(page);
 
+      const today = await page.evaluate(() => (window as any).moment().format('YYYY-MM-DD'));
+
       for (const date of dates) {
-        const slots = await callEndpoint<Slot[]>(page, { action: DAY_ACTION, date, participants });
-        expect(displayed[date], `créneaux affichés le ${date}`).toEqual(onlyTimes(slots));
+        const expected = onlyTimes(await callEndpoint<Slot[]>(page, { action: DAY_ACTION, date, participants }));
+        // Aujourd'hui, les créneaux les plus proches ont pu devenir trop tardifs depuis le chargement
+        // de la page : on tolère des créneaux affichés en plus au DÉBUT de la liste, jamais ailleurs.
+        const actual = date === today ? displayed[date].slice(Math.max(0, displayed[date].length - expected.length)) : displayed[date];
+        expect(actual, `créneaux affichés le ${date}`).toEqual(expected);
       }
     });
   }
