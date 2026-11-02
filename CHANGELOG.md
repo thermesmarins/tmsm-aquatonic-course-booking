@@ -1,3 +1,11 @@
+### 2.3.0: November 2nd, 2026
+* Feature: when the booking form is validated, a time slot that is no longer available (filled in the meantime, or not offered by the calendar) is refused by the server with the same rules as the calendar, for every user role
+* The error is shown in a visible box with a clear message, replacing the generic Gravity Forms title when the time slot is the only invalid field
+* Fix: the calendar sent the same week request twice on its first display, it is now sent once
+* Fix: the French translation of the time slot message was missing from the compiled `.mo` file, which is rebuilt
+* Remove a debug `console.log` from `renderCalendar`
+* Add PHPUnit tests (time slot availability and validation) and Playwright tests (validation of the time slot on submit)
+
 ### 2.2.0: October 30th, 2026
 * Performance: the booking calendar now loads the 7 days of a week with a single AJAX request (`tmsm-aquatonic-course-booking-times-week`) instead of 7
 * Performance: participants already booked are counted with one SQL query per day instead of one query per time slot (291 queries down to 7 for a week)
