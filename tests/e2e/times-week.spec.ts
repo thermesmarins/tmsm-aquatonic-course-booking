@@ -39,6 +39,8 @@ async function waitForWeekLoaded(page: Page) {
   await expect(page.locator('#tmsm-inline-calendar')).toBeVisible({ timeout: 15000 });
   await expect(page.locator('.tmsm-day-col')).toHaveCount(7);
   await expect(page.locator('.tmsm-day-spinner:visible')).toHaveCount(0, { timeout: 20000 });
+  // Le spinner n'est pas encore affiché avant le départ de la requête : on attend les créneaux eux-mêmes.
+  await expect(page.locator('.tmsm-day-col select option[data-hourminutes]').first()).toBeAttached({ timeout: 20000 });
 }
 
 /** Appelle un endpoint AJAX du plugin depuis la page (même session, même nonce que le calendrier). */
