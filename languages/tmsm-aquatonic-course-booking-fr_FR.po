@@ -787,8 +787,8 @@ msgid "No time slot found"
 msgstr "Aucune disponibilité"
 
 #: public/class-tmsm-aquatonic-course-booking-public.php
-msgid "This time slot is no longer available, please choose another one."
-msgstr "Ce créneau n'est plus disponible, merci d'en choisir un autre."
+msgid "This time slot is no longer available. Please choose another one in the calendar below."
+msgstr "Ce créneau n'est plus disponible. Merci d'en choisir un autre dans le calendrier ci-dessous."
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:248
 #: public/class-tmsm-aquatonic-course-booking-public.php:636

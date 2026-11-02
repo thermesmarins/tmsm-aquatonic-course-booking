@@ -772,7 +772,7 @@ msgid "No time slot found"
 msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php
-msgid "This time slot is no longer available, please choose another one."
+msgid "This time slot is no longer available. Please choose another one in the calendar below."
 msgstr ""
 
 #: public/class-tmsm-aquatonic-course-booking-public.php:248
