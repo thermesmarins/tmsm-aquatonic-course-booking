@@ -85,8 +85,11 @@ test.describe('Validation du créneau à la soumission', () => {
     const timeField = page.locator('.tmsm-aquatonic-course-hourminutes');
     await expect(timeField).toHaveClass(/gfield_error/, { timeout: 20000 });
     await expect(page.locator(SLOTS_CONTAINER)).toBeVisible();
-    // Le champ heure est masqué : le message doit être visible dans le bandeau d'erreur du formulaire.
+    // Le champ heure est masqué : un encadré dédié affiche le message, en haut du formulaire.
     await expect(timeField).toBeHidden();
-    await expect(page.locator('.gform_validation_errors').getByText(UNAVAILABLE_MESSAGE)).toBeVisible();
+    await expect(page.locator('.tmsm-aquatonic-course-timeslot-error').getByText(UNAVAILABLE_MESSAGE)).toBeVisible();
+    // Le titre générique de GravityForms (« vérifiez les champs ci-dessous ») ne mène nulle part : il est remplacé.
+    // (GravityForms garde son conteneur, qui reçoit le focus : seul son titre disparaît.)
+    await expect(page.locator('.gform_validation_errors h2')).toHaveCount(0);
   });
 });

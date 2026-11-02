@@ -158,16 +158,29 @@ class TimeslotValidationTest extends Abstract_Times_Test_Case {
 
 	private const BANNER = '<div class="gform_validation_errors"><h2>Une erreur s’est produite</h2></div>';
 
-	public function test_banner_shows_the_message_of_the_hidden_time_field(): void {
+	public function test_time_slot_error_alone_replaces_the_generic_banner_by_its_own_message(): void {
 		$this->hourminutes_field->failed_validation  = true;
-		$this->hourminutes_field->validation_message = 'This time slot is no longer available, please choose another one.';
+		$this->hourminutes_field->validation_message = 'This time slot is no longer available. Please choose another one in the calendar below.';
 
 		$banner = $this->current->gform_validation_message_timeslot( self::BANNER, $this->form );
 
-		$this->assertStringContainsString( 'This time slot is no longer available, please choose another one.', $banner );
-		$this->assertStringContainsString( 'Une erreur s’est produite', $banner, 'le bandeau d\'origine est conservé' );
-		// Le message est dans le bandeau, avant sa balise fermante.
-		$this->assertLessThan( strrpos( $banner, '</div>' ), strpos( $banner, 'no longer available' ) );
+		$this->assertStringContainsString( 'This time slot is no longer available. Please choose another one in the calendar below.', $banner );
+		$this->assertStringContainsString( 'tmsm-aquatonic-course-timeslot-error', $banner );
+		$this->assertStringContainsString( 'role="alert"', $banner );
+		// « Vérifiez les champs ci-dessous » ne mène nulle part : aucun champ visible n'est en erreur.
+		$this->assertStringNotContainsString( 'Une erreur s’est produite', $banner );
+	}
+
+	public function test_generic_banner_is_kept_when_another_field_is_also_in_error(): void {
+		$this->hourminutes_field->failed_validation  = true;
+		$this->hourminutes_field->validation_message = 'Heure invalide';
+		$this->form['fields'][0]->failed_validation  = true; // participants aussi en erreur
+
+		$banner = $this->current->gform_validation_message_timeslot( self::BANNER, $this->form );
+
+		$this->assertStringContainsString( 'Une erreur s’est produite', $banner, 'le bandeau d\'origine reste utile' );
+		$this->assertStringContainsString( 'Heure invalide', $banner );
+		$this->assertLessThan( strrpos( $banner, '</div>' ), strpos( $banner, 'Heure invalide' ), 'le message est dans le bandeau' );
 	}
 
 	public function test_banner_is_unchanged_when_the_time_field_is_valid(): void {
@@ -190,6 +203,7 @@ class TimeslotValidationTest extends Abstract_Times_Test_Case {
 	public function test_banner_without_closing_tag_gets_the_message_appended(): void {
 		$this->hourminutes_field->failed_validation  = true;
 		$this->hourminutes_field->validation_message = 'Heure invalide';
+		$this->form['fields'][0]->failed_validation  = true; // un autre champ en erreur : le bandeau d'origine est gardé
 
 		$banner = $this->current->gform_validation_message_timeslot( 'Erreur', $this->form );
 

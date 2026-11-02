@@ -1848,7 +1848,7 @@ WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s"
 
 		if ( ! $this->is_timeslot_available( $date, $hourminutes, absint( $participants ) ) ) {
 			$result['is_valid'] = false;
-			$result['message']  = __( 'This time slot is no longer available, please choose another one.', 'tmsm-aquatonic-course-booking' );
+			$result['message']  = __( 'This time slot is no longer available. Please choose another one in the calendar below.', 'tmsm-aquatonic-course-booking' );
 		}
 
 		return $result;
@@ -1864,18 +1864,38 @@ WHERE ( status = %s OR status = %s ) AND course_start <= %s AND course_end > %s"
 	 * @return string
 	 */
 	function gform_validation_message_timeslot( $message, $form ) {
+		$time_field      = null;
+		$has_other_error = false;
+
 		foreach ( $form['fields'] as $field ) {
-			if ( false === strpos( (string) $field->cssClass, 'tmsm-aquatonic-course-hourminutes' ) || empty( $field->failed_validation ) ) {
+			if ( empty( $field->failed_validation ) ) {
 				continue;
 			}
 
-			$notice = '<p class="tmsm-aquatonic-course-timeslot-error">' . esc_html( $field->validation_message ) . '</p>';
-			$end    = strripos( $message, '</div>' );
-
-			return false === $end ? $message . $notice : substr_replace( $message, $notice, $end, 0 );
+			if ( false !== strpos( (string) $field->cssClass, 'tmsm-aquatonic-course-hourminutes' ) ) {
+				$time_field = $field;
+			} else {
+				$has_other_error = true;
+			}
 		}
 
-		return $message;
+		if ( null === $time_field ) {
+			return $message;
+		}
+
+		$text = esc_html( $time_field->validation_message );
+
+		// Time slot alone: the generic text ("check the fields below") leads nowhere because the time field is hidden.
+		// Only a clear message, to be seen, replaces it.
+		if ( ! $has_other_error ) {
+			return '<div class="tmsm-aquatonic-course-timeslot-error" role="alert"><p>' . $text . '</p></div>';
+		}
+
+		// Other fields are also invalid: the generic banner stays useful, the time slot message is added to it.
+		$notice = '<p class="tmsm-aquatonic-course-timeslot-error">' . $text . '</p>';
+		$end    = strripos( $message, '</div>' );
+
+		return false === $end ? $message . $notice : substr_replace( $message, $notice, $end, 0 );
 	}
 
 	/**
