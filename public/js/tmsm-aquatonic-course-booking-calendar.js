@@ -21,6 +21,7 @@
         selectedMinutes:     null,
         calendarReady:       false,
         weekRequest:         null, // requête AJAX "semaine" en cours (pour l'annuler si on change de semaine)
+        weekRequestKey:      null, // "participants|date de début" de la requête en cours (évite un doublon)
         weekRequestId:       0     // identifie la dernière demande : une réponse plus ancienne est ignorée
     };
 
@@ -101,7 +102,6 @@
 
     // ─── Calendrier (datepicker) ──────────────────────────────────────────────
     function renderCalendar() {
-        console.log('Rendering calendar with week offset:', state.weekOffset);
         var $container = $(SEL.container);
         if (!$container.length) return;
 
@@ -223,14 +223,21 @@
     // Une seule requête pour toute la semaine : la réponse est { "YYYY-MM-DD": [créneaux], ... },
     // chaque jour ayant le même contenu que l'ancienne action "tmsm-aquatonic-course-booking-times".
     function fetchWeekSlots(dates) {
-        // Toute nouvelle demande rend la précédente obsolète (changement de semaine ou de participants).
+        var cacheKey = state.participants + '|' + dates[0];
+
+        // Même semaine et mêmes participants déjà en cours de chargement (ex. le datepicker et le rendu
+        // initial demandent la même semaine) : la requête en cours remplira la nouvelle grille, pas de doublon.
+        if (state.weekRequest && state.weekRequestKey === cacheKey) {
+            return;
+        }
+
+        // Toute autre demande rend la précédente obsolète (changement de semaine ou de participants).
         if (state.weekRequest) {
             state.weekRequest.abort();
             state.weekRequest = null;
         }
         var requestId = ++state.weekRequestId;
 
-        var cacheKey = state.participants + '|' + dates[0];
         var cached   = weekCache[cacheKey];
         if (cached && Date.now() - cached.at < WEEK_CACHE_TTL_MS) {
             fillWeek(dates, cached.days);
@@ -248,6 +255,15 @@
                 days:         dates.length,
                 participants: state.participants
             }
+        });
+        state.weekRequestKey = cacheKey;
+
+        state.weekRequest
+        .always(function () {
+            // Requête terminée (réussie, en échec ou annulée) : seule la dernière libère l'état.
+            if (requestId !== state.weekRequestId) return;
+            state.weekRequest    = null;
+            state.weekRequestKey = null;
         })
         .done(function (days) {
             if (requestId !== state.weekRequestId) return;
