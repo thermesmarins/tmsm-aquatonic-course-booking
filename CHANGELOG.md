@@ -1,3 +1,7 @@
+### 2.3.1: November 16th, 2026
+* Calendar: the day labels of the week list (e.g. "LUN 16") and the month labels are bigger and easier to read; the month is now shown in blue with a capital first letter
+* Fix: the selected day was unreadable (blue text on blue background) when it was also today's date
+
 ### 2.3.0: November 2nd, 2026
 * Feature: when the booking form is validated, a time slot that is no longer available (filled in the meantime, or not offered by the calendar) is refused by the server with the same rules as the calendar, for every user role
 * The error is shown in a visible box with a clear message, replacing the generic Gravity Forms title when the time slot is the only invalid field
